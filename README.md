@@ -73,7 +73,7 @@
     </path>
   </g>
   
-  <!-- Main Title: Stay-Ease -->
+  <!-- Main Title: Stayandaman -->
   <text x="450" y="95" 
         font-family="Georgia,serif" 
         font-size="52" 
@@ -82,7 +82,7 @@
         text-anchor="middle"
         letter-spacing="3"
         filter="url(#glow)">
-    Stay-Ease
+    Stayandaman
     <animate attributeName="opacity" values="0;1" dur="1.5s" fill="freeze"/>
   </text>
   
@@ -173,7 +173,7 @@
 
 <div align="center">
 
-### What Makes Stay-Ease Special
+### What Makes Stayandaman Special
 
 </div>
 
@@ -227,7 +227,7 @@
 A clean, modular directory structure containing models, middleware, controllers, public styles, and server logic:
 
 ```text
-Stay-Ease/
+Stayandaman/
 │
 ├── middleware/
 │   ├── isAdminLoggedIn.js  # Restricts routes to active admin sessions
@@ -283,7 +283,7 @@ Stay-Ease/
 
 ## Quick Start
 
-Follow these steps to set up and run Stay-Ease locally on your computer:
+Follow these steps to set up and run Stayandaman locally on your computer:
 
 ### Prerequisites
 
@@ -294,8 +294,8 @@ Follow these steps to set up and run Stay-Ease locally on your computer:
 ### 1 Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/stay-ease.git
-cd stay-ease
+git clone https://github.com/yourusername/stayandaman.git
+cd stayandaman
 ```
 
 ### 2 Install Dependencies
@@ -314,7 +314,7 @@ Create a `.env` file in the root directory:
 mongodb_url = mongodb+srv://<username>:<password>@cluster0.mongodb.net/
 
 # Session Secret (Required)
-SESSION_SECRET = stayease-session-secret-key-2026
+SESSION_SECRET = stayandaman-session-secret-key-2026
 
 # Port (Optional, defaults to 5050 if unset)
 PORT = 5050
@@ -348,7 +348,7 @@ Depending on the configuration in `.env` (defaulting to Port `5050`), visit thes
 
 ```mermaid
 graph TD
-    A[Visit Stay-Ease] --> B{Landing Page}
+    A[Visit Stayandaman] --> B{Landing Page}
     B --> C[User Portal]
     B --> D[Admin Portal]
     
@@ -376,9 +376,9 @@ A default administrator is auto-seeded in the database for instant verification:
 
 | Role | Username | Email | Access Level |
 |------|----------|-------|--------------|
-| **Admin** | `admin` | `admin@stayease.com` | Access to control statistics, listing updates, user toggle, and bookings CSV downloads |
+| **Admin** | `admin` | `admin@stayandaman.com` | Access to control statistics, listing updates, user toggle, and bookings CSV downloads |
 
-> **Security Note:** Login utilizes username + email matching. Administrative actions are fully protected via middleware. To add secondary administrators, visit the hidden signup portal at `/admin/signup` with the secret code: `STAYEASE_ADMIN_2025`.
+> **Security Note:** Login utilizes username + email matching. Administrative actions are fully protected via middleware. To add secondary administrators, visit the hidden signup portal at `/admin/signup` with the secret code: `STAYANDAMAN_ADMIN_2025`.
 
 ---
 
@@ -594,7 +594,7 @@ graph LR
 
 ## Contributing
 
-We welcome contributions to Stay-Ease! To contribute, follow these guidelines:
+We welcome contributions to Stayandaman! To contribute, follow these guidelines:
 
 1. **Fork the Repository** on GitHub.
 2. **Create a Feature Branch**:

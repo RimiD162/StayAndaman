@@ -20,9 +20,17 @@
 }
 
 @keyframes gradientShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* ===== Floating Decorative Circles ===== */
@@ -139,10 +147,11 @@
 /* ===== Cards Wrapper ===== */
 .landing-cards {
   display: flex;
+  justify-content: center;
   align-items: stretch;
-  gap: var(--space-8);
+  gap: var(--space-6);
   width: 100%;
-  max-width: 900px;
+  max-width: 1100px;
 }
 
 /* ===== Portal Card (Glass) ===== */
@@ -184,22 +193,31 @@
   opacity: 1;
 }
 
-/* — Admin Card — */
-.card-admin:hover {
+/* — Hotel Card — */
+.card-hotel:hover {
   box-shadow: var(--shadow-gold);
 }
 
-.card-admin::before {
+.card-hotel::before {
   background: linear-gradient(135deg, rgba(245, 166, 35, 0.08) 0%, transparent 60%);
 }
 
-/* — User Card — */
-.card-user:hover {
+/* — Lodge Card — */
+.card-lodge:hover {
   box-shadow: var(--shadow-teal);
 }
 
-.card-user::before {
+.card-lodge::before {
   background: linear-gradient(135deg, rgba(10, 191, 138, 0.08) 0%, transparent 60%);
+}
+
+/* — Rental Card — */
+.card-rental:hover {
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.25);
+}
+
+.card-rental::before {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
 }
 
 /* ===== Card Icon ===== */
@@ -217,14 +235,19 @@
   height: 32px;
 }
 
-.card-admin .portal-card-icon {
+.card-hotel .portal-card-icon {
   background: rgba(245, 166, 35, 0.15);
   color: var(--secondary);
 }
 
-.card-user .portal-card-icon {
+.card-lodge .portal-card-icon {
   background: rgba(10, 191, 138, 0.15);
   color: var(--accent);
+}
+
+.card-rental .portal-card-icon {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
 }
 
 /* ===== Card Content ===== */
@@ -276,25 +299,36 @@
   transform: scale(0.97);
 }
 
-.card-admin .portal-card-btn {
+.card-hotel .portal-card-btn {
   background: linear-gradient(135deg, var(--secondary), #e09510);
   color: #fff;
   box-shadow: 0 2px 12px rgba(245, 166, 35, 0.3);
 }
 
-.card-admin .portal-card-btn:hover {
+.card-hotel .portal-card-btn:hover {
   box-shadow: 0 4px 20px rgba(245, 166, 35, 0.45);
   transform: translateY(-1px);
 }
 
-.card-user .portal-card-btn {
+.card-lodge .portal-card-btn {
   background: linear-gradient(135deg, var(--accent), #089e72);
   color: #fff;
   box-shadow: 0 2px 12px rgba(10, 191, 138, 0.3);
 }
 
-.card-user .portal-card-btn:hover {
+.card-lodge .portal-card-btn:hover {
   box-shadow: 0 4px 20px rgba(10, 191, 138, 0.45);
+  transform: translateY(-1px);
+}
+
+.card-rental .portal-card-btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.3);
+}
+
+.card-rental .portal-card-btn:hover {
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.45);
   transform: translateY(-1px);
 }
 
@@ -303,32 +337,77 @@
   height: 16px;
 }
 
-/* ===== OR Divider ===== */
-.landing-divider {
+/* ===== Landing Navigation ===== */
+.landing-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: var(--space-5) var(--space-8);
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-  flex-shrink: 0;
+  z-index: 10;
 }
 
-.landing-divider-line {
-  width: 1px;
-  height: 80px;
-  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.2), transparent);
-}
-
-.landing-divider-badge {
-  padding: var(--space-2) var(--space-4);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: var(--radius-pill);
-  font-size: 12px;
+.landing-nav-logo {
+  font-family: var(--font-display);
+  font-size: 24px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 2px;
+  color: #fff;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.landing-nav-logo span {
+  color: var(--secondary);
+}
+
+.landing-nav-logo-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--secondary);
+}
+
+.landing-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.btn-nav-signin {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  transition: var(--transition);
+}
+
+.btn-nav-signin:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-nav-signup {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, var(--secondary), #e09510);
+  box-shadow: 0 4px 12px rgba(245, 166, 35, 0.25);
+  transition: var(--transition);
+}
+
+.btn-nav-signup:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(245, 166, 35, 0.4);
 }
 
 /* ===== Trust Badges ===== */
@@ -368,20 +447,37 @@
 }
 
 /* ===== Responsive ===== */
+@media (max-width: 992px) {
+  .landing-cards {
+    max-width: 900px;
+    gap: var(--space-4);
+  }
+}
+
 @media (max-width: 768px) {
+  .landing-nav {
+    padding: var(--space-4) var(--space-4);
+  }
+
+  .landing-nav-logo-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .landing-nav-logo {
+    font-size: 20px;
+  }
+
+  .btn-nav-signin,
+  .btn-nav-signup {
+    font-size: 13px;
+    padding: var(--space-2) var(--space-4);
+  }
+
   .landing-cards {
     flex-direction: column;
     gap: var(--space-6);
-  }
-
-  .landing-divider {
-    flex-direction: row;
-    gap: var(--space-4);
-  }
-
-  .landing-divider-line {
-    width: 80px;
-    height: 1px;
+    max-width: 480px;
   }
 
   .landing-logo-text {
@@ -402,6 +498,8 @@
 
   .landing-container {
     gap: var(--space-8);
+    padding-top: 100px;
+    /* space for absolute navbar */
   }
 }
 

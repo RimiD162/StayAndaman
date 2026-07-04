@@ -2,20 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/images/logo-favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Book <%= listing.name %> on Stay-Ease. Read reviews, explore amenities, and book your stay instantly.">
+  <meta name="description" content="Book <%= listing.name %> on Stayandaman. Read reviews, explore amenities, and book your stay instantly.">
   <link rel="stylesheet" href="/css/global.css">
   <link rel="stylesheet" href="/css/home.css">
   <link rel="stylesheet" href="/css/listings.css">
   <link rel="stylesheet" href="/css/detail.css">
   <link rel="stylesheet" href="/css/booking.css">
-  <title><%= listing.name %> — Stay-Ease</title>
+  <title><%= listing.name %> — Stayandaman</title>
 </head>
 <body>
 
   <!-- ===== Navbar ===== -->
   <nav class="navbar" id="main-navbar">
-    <a href="/home" class="navbar-logo">Stay<span>Ease</span></a>
+    <a href="/home" class="navbar-logo">Stay<span>Andaman</span></a>
 
     <div class="navbar-links" id="navbar-links">
       <a href="/home" class="navbar-link">Home</a>
@@ -169,12 +170,7 @@
         <section class="location-section">
           <h2 class="section-subtitle-detail">Location</h2>
           <div class="address-box">
-            <strong>📍 Full Address:</strong> <%= listing.location || 'Stay-Ease Property Address, Shimla, India' %>
-          </div>
-          <div class="map-placeholder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <span>📍 [Map: <%= listing.name %>, <%= listing.location %>]</span>
-            <small style="font-weight:400; opacity:0.8;">Map rendering active for booked guest credentials</small>
+            <strong>📍 Full Address:</strong> <%= listing.location || 'Stayandaman Property Address, Shimla, India' %>
           </div>
         </section>
 
@@ -185,99 +181,86 @@
       <!-- Right Column (40%) -->
       <div class="detail-right">
         
-        <!-- Sticky Booking Card -->
-        <div class="booking-sticky-card">
-          <div class="booking-card-price-row">
-            <div class="booking-card-price">
-              ₹<span id="price-per-night"><%= listing.price %></span>
-              <span>/ night</span>
-            </div>
-          </div>
-
-          <div class="booking-card-meta">
-            <span>⭐ <%= listing.rating || 0 %>.0</span>
-            <span>📍 <%= listing.location.split(',')[0] %></span>
-          </div>
-
-          <!-- Date Inputs -->
-          <div class="date-pickers-container">
-            <div class="date-picker-box">
-              <div class="date-picker-label">Check In</div>
-              <input type="date" id="check-in-date" class="date-picker-input" onchange="onDatesChanged()">
-            </div>
-            <div class="date-picker-box">
-              <div class="date-picker-label">Check Out</div>
-              <input type="date" id="check-out-date" class="date-picker-input" onchange="onDatesChanged()">
-            </div>
-          </div>
-
-          <!-- Guest Count Select -->
-          <div class="guest-picker-container">
-            <div class="date-picker-label">Guests</div>
-            <select id="guest-count" class="guest-picker-select" onchange="onGuestsChanged()">
-              <% for (let i = 1; i <= 10; i++) { %>
-                <option value="<%= i %>"><%= i %> Adult<%= i > 1 ? 's' : '' %></option>
-              <% } %>
-            </select>
-          </div>
-
-          <!-- Price Breakdown Container -->
-          <div id="breakdown-area" style="display: none;">
-            <div class="price-breakdown">
-              <div class="breakdown-row">
-                <span id="subtotal-calc-label">1 night = ₹3,455</span>
-                <span id="subtotal-calc-val">₹3,455</span>
-              </div>
-              <div class="breakdown-row">
-                <span>Taxes (18%)</span>
-                <span id="taxes-val">₹622</span>
-              </div>
-              <div class="breakdown-row total">
-                <span>Total</span>
-                <span id="total-amount-val">₹4,077</span>
-              </div>
-            </div>
-          </div>
+        <!-- Sticky Sidebar Wrapper -->
+        <div class="detail-sidebar-sticky">
           
-          <div id="select-dates-hint" style="color: var(--text-soft); font-size: 13px; text-align: center; margin-bottom: var(--space-4); font-weight: 500;">
-            Please select valid check-in and check-out dates to calculate total pricing.
+          <!-- Sticky Booking Card -->
+          <div class="booking-sticky-card">
+            <div class="booking-card-price-row">
+              <div class="booking-card-price">
+                ₹<span id="price-per-night"><%= listing.price %></span>
+                <span>/ night</span>
+              </div>
+            </div>
+
+            <div class="booking-card-meta">
+              <span>⭐ <%= listing.rating || 0 %>.0</span>
+              <span>📍 <%= listing.location.split(',')[0] %></span>
+            </div>
+
+            <!-- Date Inputs -->
+            <div class="date-pickers-container">
+              <div class="date-picker-box">
+                <div class="date-picker-label">Check In</div>
+                <input type="date" id="check-in-date" class="date-picker-input" onchange="onDatesChanged()">
+              </div>
+              <div class="date-picker-box">
+                <div class="date-picker-label">Check Out</div>
+                <input type="date" id="check-out-date" class="date-picker-input" onchange="onDatesChanged()">
+              </div>
+            </div>
+
+            <!-- Guest Count Select -->
+            <div class="guest-picker-container">
+              <div class="date-picker-label">Guests</div>
+              <select id="guest-count" class="guest-picker-select" onchange="onGuestsChanged()">
+                <% for (let i = 1; i <= 10; i++) { %>
+                  <option value="<%= i %>"><%= i %> Adult<%= i > 1 ? 's' : '' %></option>
+                <% } %>
+              </select>
+            </div>
+
+            <!-- Price Breakdown Container -->
+            <div id="breakdown-area" style="display: none;">
+              <div class="price-breakdown">
+                <div class="breakdown-row">
+                  <span id="subtotal-calc-label">1 night = ₹3,455</span>
+                  <span id="subtotal-calc-val">₹3,455</span>
+                </div>
+                <div class="breakdown-row total">
+                  <span>Total</span>
+                  <span id="total-amount-val">₹4,077</span>
+                </div>
+              </div>
+            </div>
+            
+            <div id="select-dates-hint" style="color: var(--text-soft); font-size: 13px; text-align: center; margin-bottom: var(--space-4); font-weight: 500;">
+              Please select valid check-in and check-out dates to calculate total pricing.
+            </div>
+
+            <!-- Action Button -->
+            <button id="btn-open-booking" class="btn-book-now" onclick="openBookingModal()" disabled>
+              Book Now
+            </button>
+
+            <!-- Security Badges -->
+            <div class="booking-card-benefits">
+              <div class="benefit-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>✓ Free cancellation up to 24 hours prior</span>
+              </div>
+              <div class="benefit-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>✓ No booking fees or hidden costs</span>
+              </div>
+              <div class="benefit-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>✓ Instant booking confirmation</span>
+              </div>
+            </div>
+
           </div>
 
-          <!-- Action Button -->
-          <button id="btn-open-booking" class="btn-book-now" onclick="openBookingModal()" disabled>
-            Book Now
-          </button>
-
-          <!-- Security Badges -->
-          <div class="booking-card-benefits">
-            <div class="benefit-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>✓ Free cancellation up to 24 hours prior</span>
-            </div>
-            <div class="benefit-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>✓ No booking fees or hidden costs</span>
-            </div>
-            <div class="benefit-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><polyline points="20 6 9 17 4 12"/></svg>
-              <span>✓ Instant booking confirmation</span>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- Contact Host Section -->
-        <div class="contact-host-card">
-          <div class="contact-title">📞 Contact Property</div>
-          <div class="contact-phone">Property Phone: <%= listing.contact || '+91 98765 43210' %></div>
-          <div class="contact-actions">
-            <a href="tel:<%= listing.contact || '+919876543210' %>" class="btn-contact phone">
-              📱 Call Now
-            </a>
-            <a href="https://wa.me/<%= (listing.contact || '+919876543210').replace(/[^0-9]/g, '') %>" target="_blank" class="btn-contact whatsapp">
-              💬 WhatsApp
-            </a>
-          </div>
         </div>
 
       </div>
@@ -320,9 +303,6 @@
               <div class="grid-card-footer">
                 <div class="grid-card-price">₹<%= sim.price ? sim.price.toLocaleString('en-IN') : '—' %> <span>/ night</span></div>
                 <div class="grid-card-buttons">
-                  <button type="button" class="btn-save" onclick="event.preventDefault(); toggleSaveListing('<%= sim._id || sim.id %>', event)">
-                    <span class="heart-icon">❤</span> Save
-                  </button>
                   <a href="/listing/<%= sim._id || sim.id %>" class="btn-view-details">View Details &rarr;</a>
                 </div>
               </div>
@@ -512,7 +492,7 @@
             <!-- Terms checkbox -->
             <label class="terms-checkbox-wrap">
               <input type="checkbox" id="booking-terms" required onchange="validateFormState()">
-              <span class="terms-text">I agree to the cancellation policies, standard house rules, and Stay-Ease Terms of Service.</span>
+              <span class="terms-text">I agree to the cancellation policies, standard house rules, and Stayandaman Terms of Service.</span>
             </label>
 
           </form>
@@ -540,7 +520,7 @@
   <footer class="site-footer">
     <div class="footer-grid">
       <div>
-        <div class="footer-brand-logo">Stay<span>Ease</span></div>
+        <div class="footer-brand-logo">Stay<span>Andaman</span></div>
         <p class="footer-brand-text">Your perfect stay, simplified.</p>
       </div>
       <div>
@@ -552,10 +532,10 @@
       </div>
       <div>
         <h4 class="footer-heading">Contact</h4>
-        <a href="#" class="footer-link">support@stayease.com</a>
+        <a href="#" class="footer-link">support@stayandaman.com</a>
       </div>
     </div>
-    <div class="footer-bottom">© 2025 Stay-Ease. All rights reserved.</div>
+    <div class="footer-bottom">© 2025 Stayandaman. All rights reserved.</div>
   </footer>
 
   <!-- ===== Details / Gallery JS ===== -->
@@ -679,13 +659,12 @@
       stayDetails.checkOut = checkoutStr;
       stayDetails.nights = diffDays;
       stayDetails.subtotal = diffDays * pricePerNight;
-      stayDetails.tax = stayDetails.subtotal * 0.18;
-      stayDetails.total = stayDetails.subtotal + stayDetails.tax;
+      stayDetails.tax = 0;
+      stayDetails.total = stayDetails.subtotal;
 
       // Update Card Breakdown UI
       document.getElementById('subtotal-calc-label').innerText = `${diffDays} night${diffDays > 1 ? 's' : ''} = ₹${pricePerNight.toLocaleString('en-IN')}/night`;
       document.getElementById('subtotal-calc-val').innerText = `₹${stayDetails.subtotal.toLocaleString('en-IN')}`;
-      document.getElementById('taxes-val').innerText = `₹${stayDetails.tax.toLocaleString('en-IN')}`;
       document.getElementById('total-amount-val').innerText = `₹${stayDetails.total.toLocaleString('en-IN')}`;
       
       // Update Button label

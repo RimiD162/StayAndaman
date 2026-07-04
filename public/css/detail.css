@@ -168,6 +168,9 @@
   font-size: 15px;
   line-height: 1.6;
   color: var(--text-mid);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ===== Amenities Pill Grid ===== */
@@ -311,16 +314,23 @@
   line-height: 1.5;
 }
 
-/* ===== Sticky Booking Card ===== */
-.booking-sticky-card {
+/* ===== Sticky Sidebar Wrapper ===== */
+.detail-sidebar-sticky {
   position: sticky;
   top: 94px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  z-index: 5;
+}
+
+/* ===== Sticky Booking Card ===== */
+.booking-sticky-card {
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(26, 31, 54, 0.08);
   padding: var(--space-5);
   border: 1px solid var(--border);
-  z-index: 5;
 }
 
 .booking-card-price-row {
@@ -477,7 +487,7 @@
 
 /* ===== Contact Host ===== */
 .contact-host-card {
-  margin-top: var(--space-5);
+  margin-top: 0;
   background: var(--bg-light);
   border-radius: 12px;
   padding: var(--space-4);
@@ -538,8 +548,10 @@
   .detail-layout {
     flex-direction: column;
   }
-  .booking-sticky-card {
+  .detail-sidebar-sticky {
     position: static;
+  }
+  .booking-sticky-card {
     margin-top: var(--space-6);
   }
 }

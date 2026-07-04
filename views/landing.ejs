@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/images/logo-favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Stay-Ease — Your perfect stay, simplified. Explore premium hotels, cozy lodges, and private rentals all in one place.">
+  <meta name="description" content="Stayandaman — Your perfect stay, simplified. Explore premium hotels, cozy lodges, and private rentals all in one place.">
   <link rel="stylesheet" href="/css/global.css">
   <link rel="stylesheet" href="/css/landing.css">
-  <title>Welcome to Stay-Ease — Your Perfect Stay, Simplified</title>
+  <title>Welcome to Stayandaman — Your Perfect Stay, Simplified</title>
 </head>
 <body class="landing-body" style="background: none; min-height: 100vh; padding: 0; margin: 0;">
   <div style="
@@ -23,6 +24,29 @@
     justify-content: center;
     position: relative;
   ">
+
+  <!-- ===== Navigation ===== -->
+  <nav class="landing-nav">
+    <a href="/" class="landing-nav-logo">
+      <svg class="landing-nav-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <path d="M9 12l2 2 4-4" stroke-width="2"/>
+      </svg>
+      Stay<span>Andaman</span>
+    </a>
+    <div class="landing-nav-actions">
+      <% if (locals.user) { %>
+        <span style="color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; margin-right: 8px;">Hello, <%= user.fullName.split(' ')[0] %></span>
+        <a href="/home" class="btn-nav-signup">Go to Home</a>
+      <% } else if (locals.admin) { %>
+        <span style="color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; margin-right: 8px;">Hello, Admin <%= admin.fullName.split(' ')[0] %></span>
+        <a href="/admin/dashboard" class="btn-nav-signup">Go to Dashboard</a>
+      <% } else { %>
+        <a href="/user/login" class="btn-nav-signin">Sign In</a>
+        <a href="/user/signup" class="btn-nav-signup">Get Started</a>
+      <% } %>
+    </div>
+  </nav>
 
   <!-- Floating Dots Pattern -->
   <div class="landing-dots" aria-hidden="true">
@@ -46,7 +70,7 @@
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           <path d="M9 12l2 2 4-4" stroke-width="2"/>
         </svg>
-        <h1 class="landing-logo-text">Stay<span>Ease</span></h1>
+        <h1 class="landing-logo-text">Stay<span>Andaman</span></h1>
       </div>
       <p class="landing-tagline">Your Perfect Stay, Simplified</p>
       <p class="landing-subtitle">Hotels • Lodges • Rentals — all in one place</p>
@@ -55,58 +79,75 @@
     <!-- ===== Portal Cards ===== -->
     <div class="landing-cards">
 
-      <!-- LEFT CARD: Admin Portal -->
-      <section class="portal-card card-admin" id="admin-portal-card" onclick="navigateTo('/admin/login')" style="background-image: linear-gradient(rgba(26,31,54,0.92),rgba(26,31,54,0.88)), url('https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800&q=80&fit=crop'); background-size: cover; background-position: center;">
+      <!-- HOTEL CARD -->
+      <section class="portal-card card-hotel" id="hotel-card" onclick="navigateTo('<%= locals.user ? '/home/hotel' : '/user/login' %>')" style="background-image: linear-gradient(rgba(26,31,54,0.92),rgba(26,31,54,0.88)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80&fit=crop'); background-size: cover; background-position: center;">
         <div class="portal-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <rect x="9" y="9" width="6" height="5" rx="1"/>
-            <path d="M12 9V7"/>
+            <path d="M3 21h18"/>
+            <path d="M9 21V9a3 3 0 0 1 6 0v12"/>
+            <path d="M2 2h20v4H2z"/>
+            <path d="M19 6v14"/>
+            <path d="M5 6v14"/>
           </svg>
         </div>
-        <h2 class="portal-card-title">Admin Portal</h2>
-        <p class="portal-card-desc">Manage listings, bookings & users from a powerful dashboard</p>
+        <h2 class="portal-card-title">Premium Hotels</h2>
+        <p class="portal-card-desc">Experience luxury and world-class services at verified stays</p>
         <div class="portal-card-stats">
-          <span>120+ Listings</span>
-          <span class="stat-divider"></span>
-          <span>3 Categories</span>
-          <span class="stat-divider"></span>
-          <span>Real-time</span>
-        </div>
-        <a href="/admin/login" class="portal-card-btn" onclick="event.stopPropagation();">
-          Enter Dashboard
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-        </a>
-      </section>
-
-      <!-- OR Divider -->
-      <div class="landing-divider" aria-hidden="true">
-        <div class="landing-divider-line"></div>
-        <span class="landing-divider-badge">OR</span>
-        <div class="landing-divider-line"></div>
-      </div>
-
-      <!-- RIGHT CARD: User/Guest Portal -->
-      <section class="portal-card card-user" id="user-portal-card" onclick="navigateTo('/user/login')" style="background-image: linear-gradient(rgba(10,191,138,0.85),rgba(26,31,54,0.8)), url('https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=800&q=80&fit=crop'); background-size: cover; background-position: center;">
-        <div class="portal-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/>
-            <path d="M2 12h20"/>
-            <path d="M12 8l4 4-4 4"/>
-          </svg>
-        </div>
-        <h2 class="portal-card-title">Find Your Stay</h2>
-        <p class="portal-card-desc">Explore handpicked hotels, lodges & rentals across destinations</p>
-        <div class="portal-card-stats">
-          <span>500+ Reviews</span>
+          <span>120+ Stays</span>
           <span class="stat-divider"></span>
           <span>Top Rated</span>
           <span class="stat-divider"></span>
           <span>Best Price</span>
         </div>
-        <a href="/user/login" class="portal-card-btn" onclick="event.stopPropagation();">
-          Explore Now
+        <a href="<%= locals.user ? '/home/hotel' : '/user/login' %>" class="portal-card-btn" onclick="event.stopPropagation();">
+          Explore Hotels
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+      </section>
+
+      <!-- LODGE CARD -->
+      <section class="portal-card card-lodge" id="lodge-card" onclick="navigateTo('<%= locals.user ? '/home/lodges' : '/user/login' %>')" style="background-image: linear-gradient(rgba(26,31,54,0.92),rgba(26,31,54,0.88)), url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&q=80&fit=crop'); background-size: cover; background-position: center;">
+        <div class="portal-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 22 12 5 5 22h14Z"/>
+            <path d="M12 5v17"/>
+            <path d="m14 12-2 2-2-2"/>
+          </svg>
+        </div>
+        <h2 class="portal-card-title">Cozy Lodges</h2>
+        <p class="portal-card-desc">Escape to nature in scenic, verified cabins and wilderness lodges</p>
+        <div class="portal-card-stats">
+          <span>80+ Stays</span>
+          <span class="stat-divider"></span>
+          <span>Nature Bound</span>
+          <span class="stat-divider"></span>
+          <span>Scenic Views</span>
+        </div>
+        <a href="<%= locals.user ? '/home/lodges' : '/user/login' %>" class="portal-card-btn" onclick="event.stopPropagation();">
+          Explore Lodges
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+      </section>
+
+      <!-- RENTAL CARD -->
+      <section class="portal-card card-rental" id="rental-card" onclick="navigateTo('<%= locals.user ? '/home/rentals' : '/user/login' %>')" style="background-image: linear-gradient(rgba(26,31,54,0.92),rgba(26,31,54,0.88)), url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&q=80&fit=crop'); background-size: cover; background-position: center;">
+        <div class="portal-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <h2 class="portal-card-title">Private Rentals</h2>
+        <p class="portal-card-desc">Enjoy space and privacy in premium apartments and beachfront villas</p>
+        <div class="portal-card-stats">
+          <span>60+ Stays</span>
+          <span class="stat-divider"></span>
+          <span>Private Space</span>
+          <span class="stat-divider"></span>
+          <span>Home Comforts</span>
+        </div>
+        <a href="<%= locals.user ? '/home/rentals' : '/user/login' %>" class="portal-card-btn" onclick="event.stopPropagation();">
+          Explore Rentals
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
         </a>
       </section>
@@ -137,7 +178,7 @@
 
   <!-- Footer -->
   <footer class="landing-footer">
-    © 2025 Stay-Ease. All rights reserved.
+    © 2025 Stayandaman. All rights reserved.
   </footer>
 
   </div>

@@ -21,8 +21,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ===== Middleware =====
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // serve static files
 app.use(express.static(path.join(__dirname, "public")));
@@ -67,15 +67,15 @@ function getRandomFallback(category) {
   return imgs[Math.floor(Math.random() * imgs.length)];
 }
 
-app.locals.getFallbackImage  = getFallbackImage;
+app.locals.getFallbackImage = getFallbackImage;
 app.locals.getRandomFallback = getRandomFallback;
-app.locals.FALLBACK_IMAGES   = FALLBACK_IMAGES;
+app.locals.FALLBACK_IMAGES = FALLBACK_IMAGES;
 
 
 // ===== Session =====
 app.use(
   session({
-    secret: "stayease-session-secret-key-2026",
+    secret: "stayandaman-session-secret-key-2026",
     resave: false,
     saveUninitialized: false,
     cookie: { maxAge: 24 * 60 * 60 * 1000 }, // 24 hours default
@@ -110,7 +110,7 @@ app.use((req, res, next) => {
     avatar: req.session.userAvatar,
     username: req.session.userUsername
   } : null;
-  
+
   res.locals.admin = req.session && req.session.adminId ? {
     id: req.session.adminId,
     fullName: req.session.adminFullName,
@@ -118,7 +118,7 @@ app.use((req, res, next) => {
     avatar: req.session.adminAvatar,
     username: req.session.adminUsername
   } : null;
-  
+
   next();
 });
 
@@ -148,10 +148,10 @@ app.post("/user/login", async (req, res) => {
   const { username, email, rememberMe } = req.body;
   try {
     if (!username || !email) {
-      return res.render("userLogin", { 
-        error: "Please enter both username and email.", 
-        success: null, 
-        oldValues: { username, email } 
+      return res.render("userLogin", {
+        error: "Please enter both username and email.",
+        success: null,
+        oldValues: { username, email }
       });
     }
 
@@ -161,29 +161,29 @@ app.post("/user/login", async (req, res) => {
     // 1. Check if user exists by username
     const userByUsername = await dbService.findUserByUsername(trimmedUsername);
     if (!userByUsername) {
-      return res.render("userLogin", { 
-        error: "Username not found. Please sign up first", 
-        success: null, 
-        oldValues: { username, email } 
+      return res.render("userLogin", {
+        error: "Username not found. Please sign up first",
+        success: null,
+        oldValues: { username, email }
       });
     }
 
     // 2. Check if username and email match the same user record
     const matchedUser = await dbService.findUserByUsernameAndEmail(trimmedUsername, trimmedEmail);
     if (!matchedUser) {
-      return res.render("userLogin", { 
-        error: "Email does not match this username", 
-        success: null, 
-        oldValues: { username, email } 
+      return res.render("userLogin", {
+        error: "Email does not match this username",
+        success: null,
+        oldValues: { username, email }
       });
     }
 
     // 3. Check if account is active
     if (matchedUser.isActive === false) {
-      return res.render("userLogin", { 
-        error: "Account deactivated, contact admin", 
-        success: null, 
-        oldValues: { username, email } 
+      return res.render("userLogin", {
+        error: "Account deactivated, contact admin",
+        success: null,
+        oldValues: { username, email }
       });
     }
 
@@ -208,10 +208,10 @@ app.post("/user/login", async (req, res) => {
     res.redirect(redirectTo);
   } catch (err) {
     console.error("User login error:", err);
-    res.render("userLogin", { 
-      error: "An error occurred during login.", 
-      success: null, 
-      oldValues: { username, email } 
+    res.render("userLogin", {
+      error: "An error occurred during login.",
+      success: null,
+      oldValues: { username, email }
     });
   }
 });
@@ -229,9 +229,9 @@ app.post("/user/signup", async (req, res) => {
   const { fullName, username, email, phone, gender, dateOfBirth, city, avatar } = req.body;
   try {
     if (!fullName || !username || !email || !phone || !gender) {
-      return res.render("userSignup", { 
-        error: "Please fill in all required fields.", 
-        oldValues: req.body 
+      return res.render("userSignup", {
+        error: "Please fill in all required fields.",
+        oldValues: req.body
       });
     }
 
@@ -241,27 +241,27 @@ app.post("/user/signup", async (req, res) => {
     // Check lowercase format
     const usernameRegex = /^[a-z0-9_]+$/;
     if (!usernameRegex.test(lowercaseUsername)) {
-      return res.render("userSignup", { 
-        error: "Username can only contain lowercase letters, numbers, and underscores.", 
-        oldValues: req.body 
+      return res.render("userSignup", {
+        error: "Username can only contain lowercase letters, numbers, and underscores.",
+        oldValues: req.body
       });
     }
 
     // Check unique username
     const existingUsername = await dbService.findUserByUsername(lowercaseUsername);
     if (existingUsername) {
-      return res.render("userSignup", { 
-        error: "Username is already taken.", 
-        oldValues: req.body 
+      return res.render("userSignup", {
+        error: "Username is already taken.",
+        oldValues: req.body
       });
     }
 
     // Check unique email
     const existingEmail = await dbService.findUserByEmail(lowercaseEmail);
     if (existingEmail) {
-      return res.render("userSignup", { 
-        error: "Email is already registered.", 
-        oldValues: req.body 
+      return res.render("userSignup", {
+        error: "Email is already registered.",
+        oldValues: req.body
       });
     }
 
@@ -282,9 +282,9 @@ app.post("/user/signup", async (req, res) => {
     res.redirect("/user/login?signupSuccess=true");
   } catch (err) {
     console.error("User signup error:", err);
-    res.render("userSignup", { 
-      error: "An error occurred during sign up.", 
-      oldValues: req.body 
+    res.render("userSignup", {
+      error: "An error occurred during sign up.",
+      oldValues: req.body
     });
   }
 });
@@ -313,7 +313,7 @@ app.post("/user/logout", (req, res) => {
     req.session.userEmail = null;
     req.session.userAvatar = null;
     req.session.userUsername = null;
-    
+
     // Completely destroy session if no admin is logged in
     if (!req.session.adminId) {
       req.session.destroy(() => {
@@ -378,18 +378,18 @@ app.get("/home", isUserLoggedIn, async (req, res) => {
   try {
     const { search } = req.query;
     const listings = await dbService.getListings();
-    
+
     let searchResults = [];
     if (search) {
       const q = search.toLowerCase().trim();
-      searchResults = listings.filter(l => 
-        (l.name && l.name.toLowerCase().includes(q)) || 
+      searchResults = listings.filter(l =>
+        (l.name && l.name.toLowerCase().includes(q)) ||
         (l.location && l.location.toLowerCase().includes(q)) ||
         (l.category && l.category.toLowerCase().includes(q))
       );
     }
-    
-    res.render("home", { 
+
+    res.render("home", {
       listings: listings.slice(0, 6),
       searchResults,
       searchQuery: search || ""
@@ -442,7 +442,7 @@ app.get("/listing/:id", isUserLoggedIn, async (req, res) => {
     if (!listing) {
       return res.status(404).send("Listing not found");
     }
-    
+
     // Fetch 3 similar listings of the same category, excluding the current one
     const category = listing.category;
     const allOfCat = await dbService.getListings({ category });
@@ -452,7 +452,7 @@ app.get("/listing/:id", isUserLoggedIn, async (req, res) => {
 
     // Image Gallery — only include images the admin actually uploaded
     const galleryImages = [];
-    if (listing.image)  galleryImages.push(listing.image);
+    if (listing.image) galleryImages.push(listing.image);
     if (listing.image2) galleryImages.push(listing.image2);
     if (listing.image3) galleryImages.push(listing.image3);
     if (listing.image4) galleryImages.push(listing.image4);
@@ -543,7 +543,7 @@ app.post("/booking/cancel/:id", isUserLoggedIn, async (req, res) => {
     // Check if the booking belongs to this user
     const bookings = await dbService.getBookingsByUser(req.session.userId);
     const hasBooking = bookings.some(b => (b._id || b.id).toString() === bookingId.toString());
-    
+
     if (!hasBooking) {
       return res.status(403).json({ success: false, error: "Unauthorized access to booking." });
     }
@@ -574,10 +574,10 @@ app.post("/admin/login", async (req, res) => {
   const { username, email } = req.body;
   try {
     if (!username || !email) {
-      return res.render("adminLogin", { 
-        error: "Please enter both admin username and email.", 
-        success: null, 
-        oldValues: { username, email } 
+      return res.render("adminLogin", {
+        error: "Please enter both admin username and email.",
+        success: null,
+        oldValues: { username, email }
       });
     }
 
@@ -587,20 +587,20 @@ app.post("/admin/login", async (req, res) => {
     // 1. Check if admin exists
     const adminByUsername = await dbService.findAdminByUsername(trimmedUsername);
     if (!adminByUsername) {
-      return res.render("adminLogin", { 
-        error: "Admin not found. Contact super admin.", 
-        success: null, 
-        oldValues: { username, email } 
+      return res.render("adminLogin", {
+        error: "Admin not found. Contact super admin.",
+        success: null,
+        oldValues: { username, email }
       });
     }
 
     // 2. Check if username and email match same record
     const matchedAdmin = await dbService.findAdminByUsernameAndEmail(trimmedUsername, trimmedEmail);
     if (!matchedAdmin) {
-      return res.render("adminLogin", { 
-        error: "Email does not match this admin username", 
-        success: null, 
-        oldValues: { username, email } 
+      return res.render("adminLogin", {
+        error: "Email does not match this admin username",
+        success: null,
+        oldValues: { username, email }
       });
     }
 
@@ -617,10 +617,10 @@ app.post("/admin/login", async (req, res) => {
     res.redirect("/admin/dashboard");
   } catch (err) {
     console.error("Admin login error:", err);
-    res.render("adminLogin", { 
-      error: "An error occurred during admin login.", 
-      success: null, 
-      oldValues: { username, email } 
+    res.render("adminLogin", {
+      error: "An error occurred during admin login.",
+      success: null,
+      oldValues: { username, email }
     });
   }
 });
@@ -635,16 +635,16 @@ app.post("/admin/signup", async (req, res) => {
   const { fullName, username, email, phone, secretCode } = req.body;
   try {
     if (!fullName || !username || !email || !secretCode) {
-      return res.render("adminSignup", { 
-        error: "Please fill in all required fields.", 
-        oldValues: req.body 
+      return res.render("adminSignup", {
+        error: "Please fill in all required fields.",
+        oldValues: req.body
       });
     }
 
-    if (secretCode !== "STAYEASE_ADMIN_2025") {
-      return res.render("adminSignup", { 
-        error: "Invalid admin access code", 
-        oldValues: req.body 
+    if (secretCode !== process.env.ADMIN_SECRET_CODE) {
+      return res.render("adminSignup", {
+        error: "Invalid admin access code",
+        oldValues: req.body
       });
     }
 
@@ -654,18 +654,18 @@ app.post("/admin/signup", async (req, res) => {
     // Check unique username
     const existingAdminByUsername = await dbService.findAdminByUsername(trimmedUsername);
     if (existingAdminByUsername) {
-      return res.render("adminSignup", { 
-        error: "Admin username is already taken.", 
-        oldValues: req.body 
+      return res.render("adminSignup", {
+        error: "Admin username is already taken.",
+        oldValues: req.body
       });
     }
 
     // Check unique email
     const existingAdminByEmail = await dbService.findAdminByEmail(lowercaseEmail);
     if (existingAdminByEmail) {
-      return res.render("adminSignup", { 
-        error: "Admin email is already registered.", 
-        oldValues: req.body 
+      return res.render("adminSignup", {
+        error: "Admin email is already registered.",
+        oldValues: req.body
       });
     }
 
@@ -682,9 +682,9 @@ app.post("/admin/signup", async (req, res) => {
     res.redirect("/admin/login?signupSuccess=true");
   } catch (err) {
     console.error("Admin signup error:", err);
-    res.render("adminSignup", { 
-      error: "An error occurred during registration.", 
-      oldValues: req.body 
+    res.render("adminSignup", {
+      error: "An error occurred during registration.",
+      oldValues: req.body
     });
   }
 });
@@ -697,7 +697,7 @@ app.post("/admin/logout", (req, res) => {
     req.session.adminEmail = null;
     req.session.adminAvatar = null;
     req.session.adminUsername = null;
-    
+
     // Completely destroy session if no user is logged in
     if (!req.session.userId) {
       req.session.destroy(() => {

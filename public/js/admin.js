@@ -1052,33 +1052,40 @@ function renderBookingsStats() {
     const revPendingEl = document.getElementById('rev-pending');
     const revCancelledEl = document.getElementById('rev-cancelled-count');
     
-    if (!revTotalEl) return;
+    const activeBookings = allBookings.filter(b => b.status !== 'Cancelled');
 
     // Total revenue from all non-cancelled bookings
-    const activeBookings = allBookings.filter(b => b.status !== 'Cancelled');
-    const totalRev = activeBookings.reduce((sum, b) => sum + (b.totalAmount || 0), 0);
-    revTotalEl.textContent = `₹${totalRev.toLocaleString('en-IN')}`;
+    if (revTotalEl) {
+        const totalRev = activeBookings.reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+        revTotalEl.textContent = `₹${totalRev.toLocaleString('en-IN')}`;
+    }
 
     // This month's revenue (non-cancelled bookings created in current month)
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    const thisMonthRev = activeBookings
-        .filter(b => {
-            const d = new Date(b.createdAt);
-            return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-        })
-        .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
-    revMonthEl.textContent = `₹${thisMonthRev.toLocaleString('en-IN')}`;
+    if (revMonthEl) {
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
+        const thisMonthRev = activeBookings
+            .filter(b => {
+                const d = new Date(b.createdAt);
+                return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+            })
+            .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+        revMonthEl.textContent = `₹${thisMonthRev.toLocaleString('en-IN')}`;
+    }
 
     // Pending revenue (status is Pending or payment method is Pay at Property and status is Confirmed/Pending)
-    const pendingAmount = allBookings
-        .filter(b => b.status === 'Pending' || (b.paymentMethod === 'Pay at Property' && b.status !== 'Cancelled'))
-        .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
-    revPendingEl.textContent = `₹${pendingAmount.toLocaleString('en-IN')}`;
+    if (revPendingEl) {
+        const pendingAmount = allBookings
+            .filter(b => b.status === 'Pending' || (b.paymentMethod === 'Pay at Property' && b.status !== 'Cancelled'))
+            .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+        revPendingEl.textContent = `₹${pendingAmount.toLocaleString('en-IN')}`;
+    }
 
     // Cancelled count
-    const cancelledCount = allBookings.filter(b => b.status === 'Cancelled').length;
-    revCancelledEl.textContent = cancelledCount;
+    if (revCancelledEl) {
+        const cancelledCount = allBookings.filter(b => b.status === 'Cancelled').length;
+        revCancelledEl.textContent = cancelledCount;
+    }
 }
 
 // ===== Render Bookings Table =====
@@ -1301,10 +1308,12 @@ function viewAdminBookingDetails(id) {
                         <span>Room Subtotal (${booking.nights} nights &times; ₹${booking.pricePerNight.toLocaleString('en-IN')})</span>
                         <span>₹${booking.subtotal.toLocaleString('en-IN')}</span>
                     </div>
+                    ${booking.tax && booking.tax > 0 ? `
                     <div style="display:flex; justify-content:space-between;">
                         <span>GST Tax Charges (18%)</span>
                         <span>₹${booking.tax.toLocaleString('en-IN')}</span>
                     </div>
+                    ` : ''}
                     <div style="display:flex; justify-content:space-between; font-weight:700; font-size:14px; border-top:1px dashed var(--admin-border); padding-top:6px; margin-top:4px;">
                         <span>Total Paid Amount (${booking.paymentMethod})</span>
                         <span>₹${booking.totalAmount.toLocaleString('en-IN')}</span>

@@ -3,14 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/images/logo-favicon.svg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Stay-Ease Admin Dashboard — Manage Hotels, Lodges, and Rentals">
+    <meta name="description" content="Stayandaman Admin Dashboard — Manage Hotels, Lodges, and Rentals">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/admin.css">
-    <title>Admin Dashboard — Stay-Ease</title>
+    <title>Admin Dashboard — Stayandaman</title>
 </head>
 
 <body class="admin-body">
@@ -24,7 +25,7 @@
         <aside class="admin-sidebar" id="admin-sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
-                    <span class="sidebar-logo-text">Stay<span class="sidebar-logo-accent">Ease</span></span>
+                    <span class="sidebar-logo-text">Stay<span class="sidebar-logo-accent">Andaman</span></span>
                     <span class="sidebar-badge">Admin</span>
                 </div>
             </div>
@@ -164,25 +165,7 @@
                                 <div class="stat-sub" id="stat-bookings-today" style="font-size: 0.78rem; opacity: 0.7; margin-top: 4px;">0 New Today</div>
                             </div>
                         </div>
-                        <div class="stat-card revenue-stat">
-                            <div class="stat-icon revenue-icon" style="background: rgba(46, 204, 113, 0.1); color: var(--success); display:flex; align-items:center; justify-content:center;">
-                                <span style="font-size: 20px; font-weight: 700; font-family:var(--font-mono);">₹</span>
-                            </div>
-                            <div class="stat-info">
-                                <div class="stat-label">Total Revenue</div>
-                                <div class="stat-number" id="stat-revenue">₹0</div>
-                                <div class="stat-sub" style="font-size: 0.78rem; opacity: 0.7; margin-top: 4px;">Revenue sum</div>
-                            </div>
-                        </div>
-                        <div class="stat-card total-stat">
-                            <div class="stat-icon total-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                            </div>
-                            <div class="stat-info">
-                                <div class="stat-label">Total Listings</div>
-                                <div class="stat-number" id="stat-total">0</div>
-                            </div>
-                        </div>
+
                     </div>
 
                     <div class="section-header">
@@ -389,25 +372,7 @@
                     </div>
 
                     <!-- Revenue Summary Card -->
-                    <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 24px;">
-                        <div class="stat-card">
-                            <div class="stat-info">
-                                <div class="stat-label">Total Revenue</div>
-                                <div class="stat-number" style="color: var(--primary);" id="rev-total">₹0</div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-info">
-                                <div class="stat-label">This Month Revenue</div>
-                                <div class="stat-number" style="color: var(--accent);" id="rev-month">₹0</div>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-info">
-                                <div class="stat-label">Pending Amount</div>
-                                <div class="stat-number" style="color: var(--secondary);" id="rev-pending">₹0</div>
-                            </div>
-                        </div>
+                    <div class="stats-grid" style="grid-template-columns: repeat(1, 1fr); max-width: 280px; margin-bottom: 24px;">
                         <div class="stat-card">
                             <div class="stat-info">
                                 <div class="stat-label">Cancelled Count</div>
@@ -654,11 +619,8 @@
                             <input class="form-input" type="number" id="listing-price" name="price" required min="0" placeholder="e.g., 3500">
                         </div>
 
-                        <!-- Contact -->
-                        <div class="form-group">
-                            <label class="form-label" for="listing-contact">Contact Number</label>
-                            <input class="form-input" type="text" id="listing-contact" name="contact" placeholder="e.g., +91 98765 43210">
-                        </div>
+                        <!-- Contact (Hidden) -->
+                        <input type="hidden" id="listing-contact" name="contact" value="">
 
                         <!-- Rating -->
                         <div class="form-group">

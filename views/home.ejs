@@ -3,20 +3,21 @@
 
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/images/logo-favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Stay-Ease — Find your perfect stay. Explore verified hotels, cozy lodges, and private rentals.">
+    content="Stayandaman — Find your perfect stay. Explore verified hotels, cozy lodges, and private rentals.">
   <link rel="stylesheet" href="/css/global.css">
   <link rel="stylesheet" href="/css/home.css">
   <link rel="stylesheet" href="/css/listings.css">
-  <title>Home — Stay-Ease</title>
+  <title>Home — Stayandaman</title>
 </head>
 
 <body>
 
   <!-- ===== Navbar ===== -->
   <nav class="navbar" id="main-navbar">
-    <a href="/home" class="navbar-logo">Stay<span>Ease</span></a>
+    <a href="/home" class="navbar-logo">Stay<span>Andaman</span></a>
 
     <div class="navbar-links" id="navbar-links">
       <a href="/home" class="navbar-link active">Home</a>
@@ -86,16 +87,6 @@
         <p class="hero-subtitle">Explore verified hotels, cozy lodges &amp; private rentals across the best destinations
         </p>
 
-        <div class="hero-search">
-          <input type="text" class="hero-search-input" placeholder="Search by location, property name..." value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
-          <button class="hero-search-btn" onclick="performSearch()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            Search
-          </button>
-        </div>
   </section>
 
   <% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
@@ -135,9 +126,6 @@
           <div class="grid-card-footer">
             <div class="grid-card-price">₹<%= listing.price ? listing.price.toLocaleString('en-IN') : '—' %> <span>/ night</span></div>
             <div class="grid-card-buttons">
-              <button type="button" class="btn-save" onclick="event.preventDefault(); toggleSaveListing('<%= listing._id || listing.id %>', event)">
-                <span class="heart-icon">❤</span> Save
-              </button>
               <a href="/listing/<%= listing._id || listing.id %>" class="btn-view-details">View Details &rarr;</a>
             </div>
           </div>
@@ -209,9 +197,9 @@
   </section>
 
 
-  <!-- ===== Why Stay-Ease ==== -->
+  <!-- ===== Why Stayandaman ==== -->
   <section class="section" style="background: var(--bg-light);">
-    <h2 class="section-title">Why Stay-Ease</h2>
+    <h2 class="section-title">Why Stayandaman</h2>
     <p class="section-subtitle">Everything you need for the perfect travel experience</p>
 
     <div class="features-grid">
@@ -242,7 +230,7 @@
   <footer class="site-footer">
     <div class="footer-grid">
       <div>
-        <div class="footer-brand-logo">Stay<span>Ease</span></div>
+        <div class="footer-brand-logo">Stay<span>Andaman</span></div>
         <p class="footer-brand-text">Your perfect stay, simplified. Explore premium hotels, cozy lodges, and private
           rentals all in one place.</p>
       </div>
@@ -261,7 +249,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      © 2025 Stay-Ease. All rights reserved.
+      © 2025 Stayandaman. All rights reserved.
     </div>
   </footer>
 
@@ -331,22 +319,7 @@
       }
     });
 
-    // Search function handler
-    function performSearch() {
-      const q = document.querySelector('.hero-search-input').value.trim();
-      if (q) {
-        window.location.href = '/home?search=' + encodeURIComponent(q);
-      } else {
-        window.location.href = '/home';
-      }
-    }
-    
-    // Bind enter key on search input
-    document.querySelector('.hero-search-input').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        performSearch();
-      }
-    });
+
 
     // Auto-scroll to search results if searching
     <% if (typeof searchQuery !== 'undefined' && searchQuery) { %>

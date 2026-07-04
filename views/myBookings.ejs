@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/images/logo-favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Manage your Stay-Ease bookings. View active and past trips or cancel bookings.">
+  <meta name="description" content="Manage your Stayandaman bookings. View active and past trips or cancel bookings.">
   <link rel="stylesheet" href="/css/global.css">
   <link rel="stylesheet" href="/css/home.css">
   <link rel="stylesheet" href="/css/listings.css">
-  <title>My Bookings — Stay-Ease</title>
+  <title>My Bookings — Stayandaman</title>
   <style>
     .my-bookings-container {
       max-width: 1000px;
@@ -386,7 +387,7 @@
 
   <!-- ===== Navbar ===== -->
   <nav class="navbar" id="main-navbar">
-    <a href="/home" class="navbar-logo">Stay<span>Ease</span></a>
+    <a href="/home" class="navbar-logo">Stay<span>Andaman</span></a>
 
     <div class="navbar-links" id="navbar-links">
       <a href="/home" class="navbar-link">Home</a>
@@ -690,10 +691,12 @@
                 <span>Subtotal (${booking.nights} night${booking.nights > 1 ? 's' : ''} &times; ₹${booking.pricePerNight.toLocaleString('en-IN')})</span>
                 <span>₹${booking.subtotal.toLocaleString('en-IN')}</span>
               </div>
+              ${booking.tax && booking.tax > 0 ? `
               <div style="display:flex; justify-content:space-between;">
                 <span>GST Taxes (18%)</span>
                 <span>₹${booking.tax.toLocaleString('en-IN')}</span>
               </div>
+              ` : ''}
               <div style="display:flex; justify-content:space-between; font-weight:700; color:var(--primary); font-size:15px; border-top:1px dashed var(--border); padding-top:6px; margin-top:4px;">
                 <span>Total Amount paid (${booking.paymentMethod})</span>
                 <span>₹${booking.totalAmount.toLocaleString('en-IN')}</span>
