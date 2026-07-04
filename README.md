@@ -106,7 +106,7 @@
 </svg>
 
 <!-- Typing SVG Badge -->
-![Typing SVG](https://readme-typing-svg.demolab.com?font=Playfair+Display&size=22&duration=3000&pause=1000&color=F5A623&center=true&vCenter=true&width=600&lines=Discover+Premium+Hotels;Explore+Cozy+Lodges;Find+Perfect+Rentals;Your+Journey+Starts+Here)
+![Typing SVG](https://readme-typing-svg.demolab.com?font=Playfair+Display&size=22&duration=3000&pause=1000&color=F5A623&center=true&vCenter=true&width=600&lines=Discover+Premium+Hotels;Explore+Cozy+Lodges;Find+Perfect+Rentals;Your+Andaman+Journey+Starts+Here)
 
 </div>
 
@@ -156,16 +156,17 @@
 | 1 | [Features](#features) |
 | 2 | [Application Preview](#application-preview) |
 | 3 | [Tech Stack](#tech-stack) |
-| 4 | [Project Structure](#project-structure) |
-| 5 | [Quick Start](#quick-start) |
-| 6 | [Authentication](#authentication) |
-| 7 | [Database](#database) |
-| 8 | [API Routes](#api-routes) |
-| 9 | [Project Stats](#project-stats) |
-| 10 | [Property Categories](#property-categories) |
-| 11 | [UI Highlights](#ui-highlights) |
-| 12 | [Contributing](#contributing) |
-| 13 | [License](#license) |
+| 4 | [Logo & Brand Identity](#logo--brand-identity) |
+| 5 | [Project Structure](#project-structure) |
+| 6 | [Quick Start](#quick-start) |
+| 7 | [Authentication](#authentication) |
+| 8 | [Database](#database) |
+| 9 | [API Routes](#api-routes) |
+| 10 | [Project Stats](#project-stats) |
+| 11 | [Property Categories](#property-categories) |
+| 12 | [UI Highlights](#ui-highlights) |
+| 13 | [Contributing](#contributing) |
+| 14 | [License](#license) |
 
 ---
 
@@ -183,7 +184,7 @@
 | **Passwordless Login** | Sign in securely and instantly with just username + email matching. |
 | **Browse Listings** | Explore properties under three rich categories: Hotels, Lodges & Rentals. |
 | **Smart Filters** | Search and filter listings by name, category, location, and rating. |
-| **View Details** | Detailed property view showing full galleries, amenities list, contact details, and description. |
+| **View Details** | Detailed property view showing full galleries, amenities list, and description. |
 | **Book Now** | Complete bookings using an interactive modal form with date pickers. |
 | **Price Calculator** | Real-time calculations of subtotal, 18% GST tax, and net payable amount. |
 | **My Bookings** | Track, review, and cancel active reservations in real-time. |
@@ -222,6 +223,30 @@
 
 ---
 
+## Logo & Brand Identity
+
+Stayandaman includes a complete **SVG logo system** with 6 professionally designed variations stored in `public/images/`:
+
+| File | Dimensions | Use Case |
+|------|-----------|----------|
+| `logo-primary.svg` | 320×80 | Navbar, email headers, presentations (includes CSS float/shimmer animations) |
+| `logo-stacked.svg` | 200×180 | Landing page hero, splash screens, about pages |
+| `logo-icon.svg` | 100×100 | App icon, social media avatar, profile pictures |
+| `logo-dark.svg` | 320×80 | Admin sidebar, dark navbar, footer (white + gold on dark backgrounds) |
+| `logo-mono.svg` | 320×80 | Print, watermarks, documents (all-navy, no gradients) |
+| `logo-favicon.svg` | 32×32 | Browser tab favicon, PWA icon (pixel-perfect at 16px) |
+
+**Brand Colors:**
+- Primary Navy: `#1a1f36` — Trust, luxury, depth
+- Warm Gold: `#f5a623` — Premium, warmth, energy
+- Fresh Teal: `#0abf8a` — Modern, calm, nature
+
+**Icon Concept:** Roof + Location Pin fusion — a stylised hotel rooftop forming the top half of a location pin, combining travel and stay identity. Gold roof, navy pin body, teal windows.
+
+**Preview:** Start the app and visit `/images/logo-preview.html` to see all 6 logos on one page.
+
+---
+
 ## Project Structure
 
 A clean, modular directory structure containing models, middleware, controllers, public styles, and server logic:
@@ -250,6 +275,15 @@ Stayandaman/
 │   │   ├── landing.css     # Clean visual gateway layout (Role Selector)
 │   │   ├── listings.css    # Grid views for listing cards (hover lift & shadows)
 │   │   └── profile.css     # Form layouts for profile editing and avatar cropping
+│   │
+│   ├── images/
+│   │   ├── logo-primary.svg   # Horizontal animated logo (navbar, headers)
+│   │   ├── logo-stacked.svg   # Vertical stacked logo (landing, splash)
+│   │   ├── logo-icon.svg      # Icon-only mark (app icon, social media)
+│   │   ├── logo-dark.svg      # Dark background variant (admin sidebar)
+│   │   ├── logo-mono.svg      # Monochrome print-ready version
+│   │   ├── logo-favicon.svg   # Ultra-simple 32×32 favicon
+│   │   └── logo-preview.html  # Preview page showing all logo variations
 │   │
 │   ├── js/
 │   │   └── admin.js        # Dynamic front-end logic for Single Page Admin Panel
@@ -294,8 +328,8 @@ Follow these steps to set up and run Stayandaman locally on your computer:
 ### 1 Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/stayandaman.git
-cd stayandaman
+git clone https://github.com/RimiD162/StayEase.git
+cd StayEase
 ```
 
 ### 2 Install Dependencies
@@ -369,17 +403,6 @@ graph TD
     M --> N[Book Now]
     N --> O[Booking Confirmed]
 ```
-
-### Default Credentials
-
-A default administrator is auto-seeded in the database for instant verification:
-
-| Role | Username | Email | Access Level |
-|------|----------|-------|--------------|
-| **Admin** | `admin` | `admin@stayandaman.com` | Access to control statistics, listing updates, user toggle, and bookings CSV downloads |
-
-> **Security Note:** Login utilizes username + email matching. Administrative actions are fully protected via middleware. To add secondary administrators, visit the hidden signup portal at `/admin/signup` with the secret code: `STAYANDAMAN_ADMIN_2025`.
-
 ---
 
 ## API Routes
@@ -472,7 +495,6 @@ graph LR
   "amenities": ["WiFi", "AC", "Pool", "Parking", "Breakfast"],
   "rating": 5,
   "available": true,
-  "contact": "9876543210",
   "image": "data:image/png;base64,iVBORw0KGgo...",
   "image2": "",
   "image3": "",
@@ -584,6 +606,8 @@ graph LR
 | **Design Style** | Premium Glassmorphism overlay + modern flat layout grids |
 | **Color Palette** | Navy `#1a1f36` (Dominant) • Gold `#f5a623` (Accents) • Teal `#0abf8a` (Highlights) |
 | **Typography** | Playfair Display (Serif headings) + Inter (Clean sans-serif reading text) |
+| **Logo System** | 6 SVG logo variations (primary, stacked, icon, dark, mono, favicon) with CSS animations |
+| **Favicon** | Custom SVG favicon (Roof + Pin icon) displayed on every page across the app |
 | **Animations** | Responsive micro-interactions, springy hover card lifts, and smooth page fades |
 | **Responsive** | Dynamic media queries tailoring components for Mobile, Tablet, and Desktop screen widths |
 | **Admin Theme** | Deep navy sidebar configuration paired with a high-contrast clean content workspace |
