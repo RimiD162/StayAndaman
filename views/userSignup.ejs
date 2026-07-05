@@ -9,108 +9,80 @@
   <link rel="stylesheet" href="/css/auth.css">
   <title>Create Account — Stayandaman</title>
 </head>
-<body class="auth-body">
+<body class="auth-center-body">
 
-  <div class="auth-split">
+  <!-- Logo placed absolutely at the top-left on desktops -->
+  <a href="/" class="auth-left-logo">Stay<span>Andaman</span></a>
 
-    <!-- ===== Left Decorative Panel ===== -->
-    <div class="auth-panel" style="background-image: linear-gradient(160deg,rgba(10,191,138,0.78),rgba(26,31,54,0.82)), url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=900&q=80&fit=crop'); background-size: cover; animation: none;">
-      <a href="/" class="auth-panel-logo">Stay<span>Andaman</span></a>
+  <div class="auth-center-container">
 
-      <div class="auth-panel-content">
-        <h1 class="auth-panel-title">Join<br><span class="highlight">Stayandaman</span></h1>
-        <p class="auth-panel-text">Create your free account and unlock access to the best stays around.</p>
-
-        <div class="auth-panel-benefits">
-          <div class="auth-benefit">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            Access 800+ verified stays
+    <div class="auth-center-card">
+      
+      <!-- Header Row with Profile Photo -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 12px; position: relative;">
+        <div>
+          <h2 class="auth-title" style="font-size: 26px; margin: 0; text-align: left;">Create Account</h2>
+          <p class="auth-subtitle" style="margin: 4px 0 0 0; text-align: left;">Already have an account? <a href="/user/login">Sign In &rarr;</a></p>
+        </div>
+        
+        <!-- Compact Avatar Upload on the right -->
+        <div class="form-group" id="avatar-group" style="margin: 0; display: flex; flex-direction: column; align-items: center;">
+          <div class="avatar-upload-compact" id="avatar-upload-zone" style="width: 64px; height: 64px; border-width: 2px;">
+            <div class="avatar-preview-box">
+              <img id="avatar-preview-img" alt="Avatar Preview">
+              <svg id="avatar-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 28px; height: 28px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="avatar-edit-badge" style="width: 20px; height: 20px; border-width: 1.5px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 8px; height: 8px;"><path d="M12 5v14M5 12h14"/></svg>
+            </div>
           </div>
-          <div class="auth-benefit">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            Save your favorite properties
-          </div>
-          <div class="auth-benefit">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            Get exclusive member deals
-          </div>
-          <div class="auth-benefit">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            Quick &amp; passwordless login
-          </div>
+          <span style="font-size: 9px; font-weight: 600; color: var(--text-soft); margin-top: 4px;">Photo (Optional)</span>
+          <input type="file" id="avatar-file-input" accept="image/*" style="display:none;">
+          <div class="field-error" style="text-align: center; font-size: 10px; position: absolute; top: 100%; right: 0; width: 120px;">Invalid file</div>
         </div>
       </div>
-    </div>
 
-    <!-- ===== Right Form Panel ===== -->
-    <div class="auth-form-panel">
-      <div class="auth-form-wrapper" style="max-width:500px;">
-
-        <a href="/" class="auth-mobile-logo">Stay<span>Andaman</span></a>
-
-        <div class="auth-header">
-          <h2 class="auth-title">Create Account</h2>
-          <p class="auth-subtitle">Already have an account? <a href="/user/login">Sign In &rarr;</a></p>
+      <!-- Progress Bar -->
+      <div class="signup-progress" style="margin-bottom: 16px;">
+        <div class="signup-progress-info" style="margin-bottom: 4px;">
+          <span class="signup-progress-label" style="font-size: 12px;">Profile Completion</span>
+          <span class="signup-progress-pct" id="progress-pct" style="font-size: 12px;">0%</span>
         </div>
-
-        <!-- Progress Bar -->
-        <div class="signup-progress">
-          <div class="signup-progress-info">
-            <span class="signup-progress-label">Profile Completion</span>
-            <span class="signup-progress-pct" id="progress-pct">0%</span>
-          </div>
-          <div class="signup-progress-track">
-            <div class="signup-progress-fill" id="progress-fill"></div>
-          </div>
+        <div class="signup-progress-track" style="height: 4px;">
+          <div class="signup-progress-fill" id="progress-fill"></div>
         </div>
+      </div>
 
-        <% if (typeof error !== 'undefined' && error) { %>
-        <div class="auth-alert auth-alert-error">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-          <%= error %>
-        </div>
-        <% } %>
+      <% if (typeof error !== 'undefined' && error) { %>
+      <div class="auth-alert auth-alert-error" style="margin-bottom: 16px; padding: 12px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        <%= error %>
+      </div>
+      <% } %>
 
-        <form id="signup-form" class="auth-form" action="/user/signup" method="POST">
-          <input type="hidden" name="avatar" id="avatar-data" value="">
+      <form id="signup-form" class="auth-form" action="/user/signup" method="POST" style="gap: 12px;">
+        <input type="hidden" name="avatar" id="avatar-data" value="">
 
-          <!-- Avatar Upload -->
-          <div class="form-group" id="avatar-group">
-            <div class="avatar-upload" id="avatar-upload-zone">
-              <div class="avatar-preview-box">
-                <img id="avatar-preview-img" alt="Avatar Preview">
-                <svg id="avatar-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              </div>
-              <div class="avatar-upload-text">
-                <span class="avatar-upload-title">Profile Photo (Optional)</span>
-                <span class="avatar-upload-hint">Click to upload JPG or PNG (Max 2MB)</span>
-              </div>
-            </div>
-            <input type="file" id="avatar-file-input" accept="image/*" style="display:none;">
-            <div class="field-error">Invalid image file</div>
-          </div>
-
-          <!-- Row 1: Full Name + Username -->
+          <!-- Row 1: First Name + Last Name -->
           <div class="form-group-row">
-            <div class="form-group" id="fullname-group">
+            <div class="form-group" id="firstname-group">
               <div class="input-wrapper">
                 <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                <input type="text" class="form-input" id="fullname-input" name="fullName" placeholder=" " required value="<%= typeof oldValues !== 'undefined' && oldValues.fullName ? oldValues.fullName : '' %>">
-                <label class="form-label" for="fullname-input">Full Name *</label>
+                <input type="text" class="form-input" id="firstname-input" name="firstName" placeholder=" " required value="<%= typeof oldValues !== 'undefined' && oldValues.firstName ? oldValues.firstName : '' %>">
+                <label class="form-label" for="firstname-input">First Name *</label>
                 <div class="input-focus-line"></div>
               </div>
-              <div class="field-error">Full name is required</div>
+              <div class="field-error">First name is required</div>
             </div>
 
-            <div class="form-group" id="username-group">
+            <div class="form-group" id="lastname-group">
               <div class="input-wrapper">
-                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0V12a10 10 0 1 0-3.92 7.94"/></svg>
-                <input type="text" class="form-input" id="username-input" name="username" placeholder=" " required autocomplete="username" style="padding-right:100px;" value="<%= typeof oldValues !== 'undefined' && oldValues.username ? oldValues.username : '' %>">
-                <label class="form-label" for="username-input">Username *</label>
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <input type="text" class="form-input" id="lastname-input" name="lastName" placeholder=" " required value="<%= typeof oldValues !== 'undefined' && oldValues.lastName ? oldValues.lastName : '' %>">
+                <label class="form-label" for="lastname-input">Last Name *</label>
                 <div class="input-focus-line"></div>
-                <div class="username-status" id="username-status"></div>
               </div>
-              <div class="field-error">Lowercase letters, numbers, underscores only</div>
+              <div class="field-error">Last name is required</div>
             </div>
           </div>
 
@@ -140,22 +112,17 @@
           <!-- Row 3: Gender + Date of Birth -->
           <div class="form-group-row">
             <div class="form-group" id="gender-group">
-              <div class="gender-group">
-                <span class="gender-group-label">Gender *</span>
-                <div class="gender-pills">
-                  <div class="gender-pill">
-                    <input type="radio" id="gender-male" name="gender" value="Male" required <%= typeof oldValues !== 'undefined' && oldValues.gender === 'Male' ? 'checked' : '' %>>
-                    <label for="gender-male">Male</label>
-                  </div>
-                  <div class="gender-pill">
-                    <input type="radio" id="gender-female" name="gender" value="Female" <%= typeof oldValues !== 'undefined' && oldValues.gender === 'Female' ? 'checked' : '' %>>
-                    <label for="gender-female">Female</label>
-                  </div>
-                  <div class="gender-pill">
-                    <input type="radio" id="gender-other" name="gender" value="Other" <%= typeof oldValues !== 'undefined' && oldValues.gender === 'Other' ? 'checked' : '' %>>
-                    <label for="gender-other">Other</label>
-                  </div>
-                </div>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <select class="form-input" id="gender-input" name="gender" required style="padding-right: 40px;">
+                  <option value="" disabled selected hidden></option>
+                  <option value="Male" <%= typeof oldValues !== 'undefined' && oldValues.gender === 'Male' ? 'selected' : '' %>>Male</option>
+                  <option value="Female" <%= typeof oldValues !== 'undefined' && oldValues.gender === 'Female' ? 'selected' : '' %>>Female</option>
+                  <option value="Other" <%= typeof oldValues !== 'undefined' && oldValues.gender === 'Other' ? 'selected' : '' %>>Other</option>
+                </select>
+                <label class="form-label" for="gender-input">Gender *</label>
+                <div class="input-focus-line"></div>
+                <svg class="select-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
               </div>
               <div class="field-error">Please select a gender</div>
             </div>
@@ -163,8 +130,8 @@
             <div class="form-group" id="dob-group">
               <div class="input-wrapper">
                 <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                <input type="date" class="form-input" id="dob-input" name="dateOfBirth" placeholder=" " value="<%= typeof oldValues !== 'undefined' && oldValues.dateOfBirth ? oldValues.dateOfBirth : '' %>" style="padding-right:16px;">
-                <label class="form-label" for="dob-input" style="top:0;transform:translateY(-50%) scale(0.85);background:var(--bg-card);left:12px;font-weight:600;color:var(--text-mid);">Date of Birth</label>
+                <input type="<%= typeof oldValues !== 'undefined' && oldValues.dateOfBirth ? 'date' : 'text' %>" class="form-input" id="dob-input" name="dateOfBirth" placeholder=" " onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'" value="<%= typeof oldValues !== 'undefined' && oldValues.dateOfBirth ? oldValues.dateOfBirth : '' %>">
+                <label class="form-label" for="dob-input">Date of Birth</label>
                 <div class="input-focus-line"></div>
               </div>
             </div>
@@ -202,7 +169,6 @@
         </form>
       </div>
     </div>
-  </div>
 
   <script src="/js/auth.js"></script>
   

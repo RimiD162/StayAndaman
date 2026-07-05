@@ -139,42 +139,45 @@ app.get("/user/login", (req, res) => {
   if (req.session && req.session.userId) {
     return res.redirect("/home");
   }
-  const successMsg = req.query.signupSuccess === "true" ? "Account created! You can now log in." : null;
+  let successMsg = null;
+  if (req.query.signupSuccess === "true") {
+    successMsg = "Account created! You can now log in using your first name and email.";
+  }
   res.render("userLogin", { error: null, success: successMsg, oldValues: {} });
 });
 
-// User Login POST (Passwordless: username + email match)
+// User Login POST (Passwordless: first name + email match)
 app.post("/user/login", async (req, res) => {
-  const { username, email, rememberMe } = req.body;
+  const { firstName, email, rememberMe } = req.body;
   try {
-    if (!username || !email) {
+    if (!firstName || !email) {
       return res.render("userLogin", {
-        error: "Please enter both username and email.",
+        error: "Please enter both first name and email.",
         success: null,
-        oldValues: { username, email }
+        oldValues: { firstName, email }
       });
     }
 
-    const trimmedUsername = username.toLowerCase().trim();
+    const trimmedFirstName = firstName.trim();
     const trimmedEmail = email.toLowerCase().trim();
 
-    // 1. Check if user exists by username
-    const userByUsername = await dbService.findUserByUsername(trimmedUsername);
-    if (!userByUsername) {
+    // 1. Check if user exists by email
+    const matchedUser = await dbService.findUserByEmail(trimmedEmail);
+    if (!matchedUser) {
       return res.render("userLogin", {
-        error: "Username not found. Please sign up first",
+        error: "Email address not found. Please sign up first.",
         success: null,
-        oldValues: { username, email }
+        oldValues: { firstName, email }
       });
     }
 
-    // 2. Check if username and email match the same user record
-    const matchedUser = await dbService.findUserByUsernameAndEmail(trimmedUsername, trimmedEmail);
-    if (!matchedUser) {
+    // 2. Check if first name matches the first part of the stored full name
+    const storedFirstName = matchedUser.fullName ? matchedUser.fullName.split(' ')[0].toLowerCase().trim() : "";
+    if (storedFirstName !== trimmedFirstName.toLowerCase().trim()) {
       return res.render("userLogin", {
-        error: "Email does not match this username",
+        error: "First name does not match this email address",
         success: null,
-        oldValues: { username, email }
+        oldValues: { firstName, email }
       });
     }
 
@@ -183,7 +186,7 @@ app.post("/user/login", async (req, res) => {
       return res.render("userLogin", {
         error: "Account deactivated, contact admin",
         success: null,
-        oldValues: { username, email }
+        oldValues: { firstName, email }
       });
     }
 
@@ -211,7 +214,7 @@ app.post("/user/login", async (req, res) => {
     res.render("userLogin", {
       error: "An error occurred during login.",
       success: null,
-      oldValues: { username, email }
+      oldValues: { firstName, email }
     });
   }
 });
@@ -226,35 +229,17 @@ app.get("/user/signup", (req, res) => {
 
 // User Signup POST
 app.post("/user/signup", async (req, res) => {
-  const { fullName, username, email, phone, gender, dateOfBirth, city, avatar } = req.body;
+  console.log("Signup req.body:", req.body);
+  const { firstName, lastName, email, phone, gender, dateOfBirth, city, avatar } = req.body;
   try {
-    if (!fullName || !username || !email || !phone || !gender) {
+    if (!firstName || !lastName || !email || !phone || !gender) {
       return res.render("userSignup", {
         error: "Please fill in all required fields.",
         oldValues: req.body
       });
     }
 
-    const lowercaseUsername = username.toLowerCase().replace(/\s+/g, "").trim();
     const lowercaseEmail = email.toLowerCase().trim();
-
-    // Check lowercase format
-    const usernameRegex = /^[a-z0-9_]+$/;
-    if (!usernameRegex.test(lowercaseUsername)) {
-      return res.render("userSignup", {
-        error: "Username can only contain lowercase letters, numbers, and underscores.",
-        oldValues: req.body
-      });
-    }
-
-    // Check unique username
-    const existingUsername = await dbService.findUserByUsername(lowercaseUsername);
-    if (existingUsername) {
-      return res.render("userSignup", {
-        error: "Username is already taken.",
-        oldValues: req.body
-      });
-    }
 
     // Check unique email
     const existingEmail = await dbService.findUserByEmail(lowercaseEmail);
@@ -265,8 +250,24 @@ app.post("/user/signup", async (req, res) => {
       });
     }
 
+    // Generate unique username from firstName and lastName
+    let baseUsername = `${firstName.trim()}_${lastName.trim()}`.toLowerCase().replace(/[^a-z0-9_]/g, "");
+    if (!baseUsername) {
+      baseUsername = "user";
+    }
+    let lowercaseUsername = baseUsername;
+    let existingUsername = await dbService.findUserByUsername(lowercaseUsername);
+    let counter = 1;
+    while (existingUsername) {
+      lowercaseUsername = `${baseUsername}${counter}`;
+      existingUsername = await dbService.findUserByUsername(lowercaseUsername);
+      counter++;
+    }
+
+    const fullName = `${firstName.trim()} ${lastName.trim()}`;
+
     // Create user
-    await dbService.createUserRecord({
+    const newUser = await dbService.createUserRecord({
       fullName,
       username: lowercaseUsername,
       email: lowercaseEmail,
@@ -279,7 +280,14 @@ app.post("/user/signup", async (req, res) => {
       createdAt: new Date()
     });
 
-    res.redirect("/user/login?signupSuccess=true");
+    // Automatically log in the user by establishing a session
+    req.session.userId = newUser._id || newUser.id;
+    req.session.userFullName = newUser.fullName;
+    req.session.userEmail = newUser.email;
+    req.session.userAvatar = newUser.avatar || "";
+    req.session.userUsername = newUser.username;
+
+    res.redirect("/home");
   } catch (err) {
     console.error("User signup error:", err);
     res.render("userSignup", {
@@ -400,7 +408,7 @@ app.get("/home", isUserLoggedIn, async (req, res) => {
   }
 });
 
-app.get("/home/hotel", isUserLoggedIn, async (req, res) => {
+app.get("/home/hotel", async (req, res) => {
   try {
     const listings = await dbService.getListings({ category: "Hotel" });
     res.render("hotels", { listings });
@@ -410,7 +418,7 @@ app.get("/home/hotel", isUserLoggedIn, async (req, res) => {
   }
 });
 
-app.get("/home/rentals", isUserLoggedIn, async (req, res) => {
+app.get("/home/rentals", async (req, res) => {
   try {
     const listings = await dbService.getListings({ category: "Rental" });
     res.render("rentals", { listings });
@@ -420,7 +428,7 @@ app.get("/home/rentals", isUserLoggedIn, async (req, res) => {
   }
 });
 
-app.get("/home/lodges", isUserLoggedIn, async (req, res) => {
+app.get("/home/lodges", async (req, res) => {
   try {
     const listings = await dbService.getListings({ category: "Lodge" });
     res.render("lodges", { listings });
@@ -436,7 +444,7 @@ app.get("/home/lodges", isUserLoggedIn, async (req, res) => {
 // =============================================
 
 // GET /listing/:id - Detail page
-app.get("/listing/:id", isUserLoggedIn, async (req, res) => {
+app.get("/listing/:id", async (req, res) => {
   try {
     const listing = await dbService.getListingById(req.params.id);
     if (!listing) {
@@ -641,7 +649,8 @@ app.post("/admin/signup", async (req, res) => {
       });
     }
 
-    if (secretCode !== process.env.ADMIN_SECRET_CODE) {
+    const requiredCode = (process.env.ADMIN_SECRET_CODE || "RIMI@162").trim();
+    if (secretCode.trim() !== requiredCode) {
       return res.render("adminSignup", {
         error: "Invalid admin access code",
         oldValues: req.body

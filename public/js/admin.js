@@ -456,12 +456,11 @@ function deleteUserPrompt(id, name) {
     const deleteModalEl = document.getElementById('delete-modal');
     if (!deleteModalEl) return;
     
-    document.getElementById('delete-listing-name').textContent = name;
     deleteModalEl.querySelector('.delete-modal-title').textContent = 'Delete User';
-    deleteModalEl.querySelector('.delete-modal-text').innerHTML = `Are you sure you want to delete <strong>${name}</strong>? This action cannot be undone.`;
+    deleteModalEl.querySelector('.delete-modal-text').innerHTML = `Are you sure you want to delete <strong id="delete-listing-name">${escapeHtml(name)}</strong>? This action cannot be undone.`;
     
     const confirmBtn = document.getElementById('btn-delete-confirm');
-    confirmBtn.setAttribute('onclick', 'confirmDeleteUser()');
+    confirmBtn.onclick = confirmDeleteUser;
 
     deleteModalEl.classList.add('active');
 }
@@ -472,7 +471,6 @@ async function confirmDeleteUser() {
         const res = await fetch(`/api/admin/users/${userDeletingId}`, { method: 'DELETE' });
         if (res.ok) {
             showToast('User permanently deleted successfully.', 'success');
-            closeDeleteModal();
             fetchUsers();
         } else {
             const data = await res.json();
@@ -481,6 +479,8 @@ async function confirmDeleteUser() {
     } catch (err) {
         console.error(err);
         showToast('Failed to delete user', 'error');
+    } finally {
+        closeDeleteModal();
     }
 }
 
@@ -771,12 +771,11 @@ function openDeleteModal(id, name) {
     const deleteModalEl = document.getElementById('delete-modal');
     if (!deleteModalEl) return;
     
-    document.getElementById('delete-listing-name').textContent = name;
     deleteModalEl.querySelector('.delete-modal-title').textContent = 'Delete Listing';
-    deleteModalEl.querySelector('.delete-modal-text').innerHTML = `Are you sure you want to delete <strong>${name}</strong>? This action cannot be undone.`;
+    deleteModalEl.querySelector('.delete-modal-text').innerHTML = `Are you sure you want to delete <strong id="delete-listing-name">${escapeHtml(name)}</strong>? This action cannot be undone.`;
     
     const confirmBtn = document.getElementById('btn-delete-confirm');
-    confirmBtn.setAttribute('onclick', 'confirmDelete()');
+    confirmBtn.onclick = confirmDelete;
 
     deleteModalEl.classList.add('active');
 }
@@ -784,6 +783,8 @@ function openDeleteModal(id, name) {
 function closeDeleteModal() {
     if (deleteModal) deleteModal.classList.remove('active');
     deletingId = null;
+    userDeletingId = null;
+    bookingDeletingId = null;
 }
 
 async function confirmDelete() {
@@ -797,11 +798,12 @@ async function confirmDelete() {
         if (!res.ok) throw new Error('Failed to delete');
 
         showToast('Listing deleted successfully!', 'success');
-        closeDeleteModal();
         await fetchListings();
     } catch (err) {
         console.error(err);
         showToast('Failed to delete listing. Please try again.', 'error');
+    } finally {
+        closeDeleteModal();
     }
 }
 
@@ -1394,12 +1396,11 @@ function deleteBookingPrompt(id, bookingId) {
     const deleteModalEl = document.getElementById('delete-modal');
     if (!deleteModalEl) return;
 
-    document.getElementById('delete-listing-name').textContent = `#${bookingId}`;
     deleteModalEl.querySelector('.delete-modal-title').textContent = 'Delete Booking';
-    deleteModalEl.querySelector('.delete-modal-text').innerHTML = `Are you sure you want to delete Booking record <strong>#${bookingId}</strong>? This action cannot be undone.`;
+    deleteModalEl.querySelector('.delete-modal-text').innerHTML = `Are you sure you want to delete Booking record <strong id="delete-listing-name">#${bookingId}</strong>? This action cannot be undone.`;
 
     const confirmBtn = document.getElementById('btn-delete-confirm');
-    confirmBtn.setAttribute('onclick', 'confirmDeleteBooking()');
+    confirmBtn.onclick = confirmDeleteBooking;
 
     deleteModalEl.classList.add('active');
 }
@@ -1420,7 +1421,6 @@ async function confirmDeleteBooking() {
         showToast('Failed to delete booking', 'error');
     } finally {
         closeDeleteModal();
-        bookingDeletingId = null;
     }
 }
 

@@ -223,7 +223,8 @@
       }
 
       // Gender check
-      const genderChecked = this.querySelector('input[name="gender"]:checked');
+      const genderSelect = this.querySelector('select[name="gender"]');
+      const genderChecked = genderSelect ? genderSelect.value : this.querySelector('input[name="gender"]:checked');
       if (!genderChecked) {
         const genderGroup = document.getElementById('gender-group');
         if (genderGroup) genderGroup.classList.add('has-error');

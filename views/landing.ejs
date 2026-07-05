@@ -80,7 +80,7 @@
     <div class="landing-cards">
 
       <!-- HOTEL CARD -->
-      <section class="portal-card card-hotel" id="hotel-card" onclick="navigateTo('<%= locals.user ? '/home/hotel' : '/user/login' %>')" style="background-image: linear-gradient(rgba(26,31,54,0.92),rgba(26,31,54,0.88)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80&fit=crop'); background-size: cover; background-position: center;">
+      <section class="portal-card card-hotel" id="hotel-card" onclick="handleCategorySelect('/home/hotel', event)" style="background-image: linear-gradient(rgba(26,31,54,0.92),rgba(26,31,54,0.88)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80&fit=crop'); background-size: cover; background-position: center;">
         <div class="portal-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M3 21h18"/>
@@ -99,14 +99,14 @@
           <span class="stat-divider"></span>
           <span>Best Price</span>
         </div>
-        <a href="<%= locals.user ? '/home/hotel' : '/user/login' %>" class="portal-card-btn" onclick="event.stopPropagation();">
+        <a href="/home/hotel" class="portal-card-btn" onclick="handleCategorySelect('/home/hotel', event)">
           Explore Hotels
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
         </a>
       </section>
 
       <!-- LODGE CARD -->
-      <section class="portal-card card-lodge" id="lodge-card" onclick="navigateTo('<%= locals.user ? '/home/lodges' : '/user/login' %>')" style="background-image: linear-gradient(rgba(26,31,54,0.92),rgba(26,31,54,0.88)), url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&q=80&fit=crop'); background-size: cover; background-position: center;">
+      <section class="portal-card card-lodge" id="lodge-card" onclick="handleCategorySelect('/home/lodges', event)" style="background-image: linear-gradient(rgba(26,31,54,0.92),rgba(26,31,54,0.88)), url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&q=80&fit=crop'); background-size: cover; background-position: center;">
         <div class="portal-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 22 12 5 5 22h14Z"/>
@@ -123,14 +123,14 @@
           <span class="stat-divider"></span>
           <span>Scenic Views</span>
         </div>
-        <a href="<%= locals.user ? '/home/lodges' : '/user/login' %>" class="portal-card-btn" onclick="event.stopPropagation();">
+        <a href="/home/lodges" class="portal-card-btn" onclick="handleCategorySelect('/home/lodges', event)">
           Explore Lodges
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
         </a>
       </section>
 
       <!-- RENTAL CARD -->
-      <section class="portal-card card-rental" id="rental-card" onclick="navigateTo('<%= locals.user ? '/home/rentals' : '/user/login' %>')" style="background-image: linear-gradient(rgba(26,31,54,0.92),rgba(26,31,54,0.88)), url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&q=80&fit=crop'); background-size: cover; background-position: center;">
+      <section class="portal-card card-rental" id="rental-card" onclick="handleCategorySelect('/home/rentals', event)" style="background-image: linear-gradient(rgba(26,31,54,0.92),rgba(26,31,54,0.88)), url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&q=80&fit=crop'); background-size: cover; background-position: center;">
         <div class="portal-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
@@ -146,7 +146,7 @@
           <span class="stat-divider"></span>
           <span>Home Comforts</span>
         </div>
-        <a href="<%= locals.user ? '/home/rentals' : '/user/login' %>" class="portal-card-btn" onclick="event.stopPropagation();">
+        <a href="/home/rentals" class="portal-card-btn" onclick="handleCategorySelect('/home/rentals', event)">
           Explore Rentals
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
         </a>
@@ -181,9 +181,73 @@
     © 2025 Stayandaman. All rights reserved.
   </footer>
 
+  <!-- Auth Suggestion Modal -->
+  <div id="auth-suggestion-modal" class="auth-modal-overlay">
+    <div class="auth-modal-container">
+      <button class="auth-modal-close" onclick="closeSignInModal(true)" aria-label="Close modal">&times;</button>
+      <div class="auth-modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+          <polyline points="10 17 15 12 10 7"/>
+          <line x1="15" y1="12" x2="3" y2="12"/>
+        </svg>
+      </div>
+      <h2 class="auth-modal-title">Welcome to Stay<span>Andaman</span></h2>
+      <p class="auth-modal-text">Sign in to unlock bookings, manage your profile, and see your customized bookings in one place.</p>
+      <div class="auth-modal-actions">
+        <a href="/user/login" class="auth-modal-btn-signin">Sign In / Register</a>
+        <button class="auth-modal-btn-guest" onclick="continueAsGuest()">Continue as Guest</button>
+      </div>
+    </div>
+  </div>
+
   </div>
 
   <script>
+    let targetCategoryUrl = '';
+
+    function handleCategorySelect(url, event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      
+      const isLoggedIn = <%= locals.user ? 'true' : 'false' %>;
+      const isAdmin = <%= locals.admin ? 'true' : 'false' %>;
+      const promptShown = sessionStorage.getItem('stayEase_signInPromptShown');
+
+      if (!isLoggedIn && !isAdmin && promptShown !== 'true') {
+        targetCategoryUrl = url;
+        showSignInModal();
+      } else {
+        navigateTo(url);
+      }
+    }
+
+    function showSignInModal() {
+      const modal = document.getElementById('auth-suggestion-modal');
+      if (modal) {
+        modal.classList.add('active');
+      }
+    }
+
+    function closeSignInModal(setFlag) {
+      const modal = document.getElementById('auth-suggestion-modal');
+      if (modal) {
+        modal.classList.remove('active');
+      }
+      if (setFlag) {
+        sessionStorage.setItem('stayEase_signInPromptShown', 'true');
+      }
+    }
+
+    function continueAsGuest() {
+      closeSignInModal(true);
+      if (targetCategoryUrl) {
+        navigateTo(targetCategoryUrl);
+      }
+    }
+
     function navigateTo(url) {
       document.body.style.opacity = '0';
       document.body.style.transition = 'opacity 0.4s ease';
