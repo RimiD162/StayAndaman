@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/images/logo-favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Browse premium hotels on Stayandaman. Find verified properties with the best amenities and prices.">
+  <meta name="description"
+    content="Browse premium hotels on Stayandaman. Find verified properties with the best amenities and prices.">
   <link rel="stylesheet" href="/css/global.css">
   <link rel="stylesheet" href="/css/home.css">
   <link rel="stylesheet" href="/css/listings.css">
   <title>Hotels — Stayandaman</title>
 </head>
+
 <body>
 
   <!-- ===== Navbar ===== -->
@@ -22,94 +25,166 @@
       <a href="/home/rentals" class="navbar-link">Rentals</a>
     </div>
     <% if (user) { %>
-    <div class="navbar-user" id="navbar-user" onclick="toggleDropdown()">
-      <div class="navbar-avatar">
-        <% if (user.avatar) { %><img src="<%= user.avatar %>" alt=""><% } else { %><%= user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U' %><% } %>
+      <div class="navbar-user" id="navbar-user" onclick="toggleDropdown()">
+        <div class="navbar-avatar">
+          <% if (user.avatar) { %><img src="<%= user.avatar %>" alt="">
+            <% } else { %>
+              <%= user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U' %>
+                <% } %>
+        </div>
+        <span class="navbar-username">
+          <%= user.fullName ? user.fullName.split(' ')[0] : ' User' %>
+        </span>
+        <svg class="navbar-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+        <div class="navbar-dropdown" id="navbar-dropdown">
+          <a href="/profile" class="navbar-dropdown-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>My Profile</a>
+          <div class="navbar-dropdown-divider"></div>
+          <form action="/user/logout" method="POST" style="margin:0;"><button type="submit"
+              class="navbar-dropdown-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>Logout</button></form>
+        </div>
       </div>
-      <span class="navbar-username"><%= user.fullName ? user.fullName.split(' ')[0] : 'User' %></span>
-      <svg class="navbar-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-      <div class="navbar-dropdown" id="navbar-dropdown">
-        <a href="/profile" class="navbar-dropdown-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Profile</a>
-        <div class="navbar-dropdown-divider"></div>
-        <form action="/user/logout" method="POST" style="margin:0;"><button type="submit" class="navbar-dropdown-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</button></form>
-      </div>
-    </div>
-    <% } else { %>
-    <a href="/user/login" class="btn btn-gold btn-sm">Sign In</a>
-    <% } %>
-    <button class="navbar-toggle" onclick="document.querySelector('.navbar-links').classList.toggle('show-mobile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <% } else { %>
+        <a href="/user/login" class="btn btn-gold btn-sm">Sign In</a>
+        <% } %>
+          <button class="navbar-toggle"
+            onclick="document.querySelector('.navbar-links').classList.toggle('show-mobile')"><svg viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg></button>
   </nav>
 
   <!-- ===== Page Header ===== -->
-  <header class="listing-header theme-navy page-banner" style="background-image: linear-gradient(rgba(26,31,54,0.78),rgba(26,31,54,0.6)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600&q=80&fit=crop'); height: 260px; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;">
+  <header class="listing-header theme-navy page-banner"
+    style="background-image: linear-gradient(rgba(26,31,54,0.78),rgba(26,31,54,0.6)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600&q=80&fit=crop'); height: 260px; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;">
     <div class="listing-header-breadcrumb">
       <a href="/home">Home</a>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
       <span>Hotels</span>
     </div>
     <h1 class="listing-header-title">Hotels</h1>
-    <div class="listing-header-count"><%= listings.length %> properties found</div>
+    <div class="listing-header-count">
+      <%= listings.length %> properties found
+    </div>
   </header>
 
   <!-- ===== Content ===== -->
   <div class="listing-content">
     <!-- Listings Grid -->
     <main class="listings-area">
+      <!-- ===== Location Filter ===== -->
+      <div class="location-filter-wrapper"
+        style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; background: #f8fafc; padding: 14px 20px; border-radius: 10px; border: 1px solid #e2e8f0; width: 100%;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <svg style="width: 18px; height: 18px; color: #1e293b;" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+          <span style="font-weight: 600; color: #1e293b; font-size: 0.9rem;">Filter by Location / Place</span>
+        </div>
+        <select id="location-search-dropdown" onchange="filterListingsByLocation(this.value)"
+          style="padding: 8px 14px; font-size: 0.85rem; font-weight: 500; border-radius: 6px; border: 1px solid #cbd5e1; outline: none; background-color: #ffffff; min-width: 220px; cursor: pointer; color: #334155;">
+          <option value="">All Locations</option>
+          <option value="Aberdeen bazar">Aberdeen bazar</option>
+          <option value="Dairy farm">Dairy farm</option>
+          <option value="Bhatubasti">Bhatubasti</option>
+          <option value="Garacharma">Garacharma</option>
+          <option value="Rangat">Rangat</option>
+          <option value="Middle Andaman">Middle Andaman</option>
+          <option value="Diglipur">Diglipur</option>
+        </select>
+      </div>
+
       <div class="listings-grid" id="listings-grid">
-        <% if (listings.length === 0) { %>
-        <div class="empty-state">
-          <div class="empty-state-icon"></div>
-          <h3 class="empty-state-title">No Hotels Found</h3>
-          <p class="empty-state-text">There are no hotel listings at the moment. Check back soon!</p>
-          <a href="/home" class="btn btn-gold">Back to Home</a>
-        </div>
-        <% } else { %>
-        <% 
-        const cycleImgs = [
-          'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80&fit=crop', // Hotel_1
-          'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80&fit=crop', // Hotel_2
-          'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80&fit=crop', // Hotel_4
-          'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80&fit=crop', // Hotel_5
-          'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80&fit=crop', // Hotel_6
-          'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80&fit=crop'  // Hotel_8
-        ];
-        %>
-        <% listings.forEach(function(listing, index) { %>
-        <div class="grid-card listing-card" data-name="<%= (listing.name || '').toLowerCase() %>" data-rating="<%= listing.rating || 0 %>" data-available="<%= listing.available !== false ? 'true' : 'false' %>">
-          <div class="card-img-wrapper grid-card-img-wrap">
-            <img class="grid-card-img loaded" src="<%= listing.image || cycleImgs[index % cycleImgs.length] %>" alt="<%= listing.name %>" loading="lazy" onerror="this.src='<%= cycleImgs[index % cycleImgs.length] %>'">
-            <span class="grid-card-badge hotel">Hotel</span>
-            <span class="grid-card-avail <%= listing.available !== false ? 'available' : 'unavailable' %>"><%= listing.available !== false ? 'Available' : 'Full' %></span>
+        <% if (listings.length===0) { %>
+          <div class="empty-state">
+            <div class="empty-state-icon"></div>
+            <h3 class="empty-state-title">No Hotels Found</h3>
+            <p class="empty-state-text">There are no hotel listings at the moment. Check back soon!</p>
+            <a href="/home" class="btn btn-gold">Back to Home</a>
           </div>
-          <div class="grid-card-body">
-            <h3 class="grid-card-name"><%= listing.name %></h3>
-            <div class="grid-card-location">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <%= listing.location || 'Location not specified' %>
-            </div>
-            <div class="grid-card-rating">
-              <% for (let i = 1; i <= 5; i++) { %>
-              <svg class="star <%= i <= (listing.rating || 0) ? '' : 'empty' %>" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              <% } %>
-              <span><%= listing.rating || 0 %>/5</span>
-            </div>
-            <% if (listing.amenities && listing.amenities.length > 0) { %>
-            <div class="grid-card-amenities">
-              <% listing.amenities.slice(0, 4).forEach(function(a) { %>
-              <span class="amenity-tag"><%= a %></span>
-              <% }); %>
-            </div>
-            <% } %>
-            <div class="grid-card-footer">
-              <div class="grid-card-price">₹<%= listing.price ? listing.price.toLocaleString('en-IN') : '—' %> <span>/ night</span></div>
-              <div class="grid-card-buttons">
-                <a href="/listing/<%= listing._id || listing.id %>" class="btn-view-details">View Details &rarr;</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <% }); %>
-        <% } %>
+          <% } else { %>
+            <% const cycleImgs = [
+              'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80&fit=crop', // Hotel_1
+              'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80&fit=crop', // Hotel_2
+              'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80&fit=crop', // Hotel_4
+              'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=800&q=80&fit=crop', // Hotel_5
+              'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80&fit=crop', // Hotel_6
+              'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800&q=80&fit=crop'  // Hotel_8
+            ];
+            %>
+              <% listings.forEach(function(listing, index) { %>
+                <div class="grid-card listing-card" data-name="<%= (listing.name || '').toLowerCase() %>"
+                  data-rating="<%= listing.rating || 0 %>"
+                  data-available="<%= listing.available !== false ? 'true' : 'false' %>"
+                  data-location="<%= (listing.location || '').toLowerCase() %>">
+                  <div class="card-img-wrapper grid-card-img-wrap">
+                    <img class="grid-card-img loaded" src="<%= listing.image || cycleImgs[index % cycleImgs.length] %>"
+                      alt="<%= listing.name %>" loading="lazy"
+                      onerror="this.src='<%= cycleImgs[index % cycleImgs.length] %>'">
+                    <span class="grid-card-badge hotel">Hotel</span>
+                    <span class="grid-card-avail <%= listing.available !== false ? 'available' : 'unavailable' %>">
+                      <%= listing.available !==false ? 'Available' : 'Full' %>
+                    </span>
+                  </div>
+                  <div class="grid-card-body">
+                    <h3 class="grid-card-name">
+                      <%= listing.name %>
+                    </h3>
+                    <div class="grid-card-location">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                        <circle cx="12" cy="10" r="3" />
+                      </svg>
+                      <%= listing.location || 'Location not specified' %>
+                    </div>
+                    <div class="grid-card-rating">
+                      <% for (let i=1; i <=5; i++) { %>
+                        <svg class="star <%= i <= (listing.rating || 0) ? '' : 'empty' %>" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="1.5">
+                          <polygon
+                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
+                        <% } %>
+                          <span>
+                            <%= listing.rating || 0 %>/5
+                          </span>
+                    </div>
+                    <% if (listing.amenities && listing.amenities.length> 0) { %>
+                      <div class="grid-card-amenities">
+                        <% listing.amenities.slice(0, 4).forEach(function(a) { %>
+                          <span class="amenity-tag">
+                            <%= a %>
+                          </span>
+                          <% }); %>
+                      </div>
+                      <% } %>
+                        <div class="grid-card-footer">
+                          <div class="grid-card-price">₹<%= listing.price ? listing.price.toLocaleString('en-IN') : '—'
+                              %> <span>/ night</span></div>
+                          <div class="grid-card-buttons">
+                            <a href="/listing/<%= listing._id || listing.id %>" class="btn-view-details">View Details
+                              &rarr;</a>
+                          </div>
+                        </div>
+                  </div>
+                </div>
+                <% }); %>
+                  <% } %>
       </div>
     </main>
   </div>
@@ -130,7 +205,8 @@
       </div>
       <div>
         <h4 class="footer-heading">Contact</h4>
-        <a href="#" class="footer-link">support@stayandaman.com</a>
+        <a href="mailto:gourabsuper999@gmail.com" class="footer-link">gourabsuper999@gmail.com</a>
+        <a href="tel:9531820286" class="footer-link">9531820286</a>
       </div>
     </div>
     <div class="footer-bottom">© 2025 Stayandaman. All rights reserved.</div>
@@ -177,9 +253,9 @@
       setTimeout(() => toast.remove(), 3000);
     }
 
-    window.addEventListener('scroll',()=>{document.getElementById('main-navbar').classList.toggle('scrolled',window.scrollY>10);});
-    function toggleDropdown(){const u=document.getElementById('navbar-user'),d=document.getElementById('navbar-dropdown');if(u&&d){u.classList.toggle('open');d.classList.toggle('show');}}
-    document.addEventListener('click',(e)=>{const u=document.getElementById('navbar-user');if(u&&!u.contains(e.target)){u.classList.remove('open');const d=document.getElementById('navbar-dropdown');if(d)d.classList.remove('show');}});
+    window.addEventListener('scroll', () => { document.getElementById('main-navbar').classList.toggle('scrolled', window.scrollY > 10); });
+    function toggleDropdown() { const u = document.getElementById('navbar-user'), d = document.getElementById('navbar-dropdown'); if (u && d) { u.classList.toggle('open'); d.classList.toggle('show'); } }
+    document.addEventListener('click', (e) => { const u = document.getElementById('navbar-user'); if (u && !u.contains(e.target)) { u.classList.remove('open'); const d = document.getElementById('navbar-dropdown'); if (d) d.classList.remove('show'); } });
 
     let currentStarFilter = 0;
     function setStarFilter(n) {
@@ -204,12 +280,12 @@
     function resetFilters() {
       currentStarFilter = 0;
       document.querySelectorAll('.filter-star-btn').forEach(b => b.classList.remove('active'));
-      const s = document.getElementById('filter-search'); if(s) s.value = '';
-      const a = document.getElementById('filter-avail'); if(a) a.checked = false;
+      const s = document.getElementById('filter-search'); if (s) s.value = '';
+      const a = document.getElementById('filter-avail'); if (a) a.checked = false;
       filterListings();
     }
   </script>
-  
+
   <script>
     // Lazy load fade-in
     document.querySelectorAll('img').forEach(img => {
@@ -224,5 +300,66 @@
       }
     });
   </script>
+  <script>
+    function filterListingsByLocation(selectedLocation) {
+      const cards = document.querySelectorAll('.grid-card.listing-card');
+      const lowerSelected = selectedLocation.toLowerCase().trim();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cardLocation = (card.dataset.location || '').toLowerCase().trim();
+
+        if (!lowerSelected || cardLocation.includes(lowerSelected)) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Update property found count
+      const countEl = document.querySelector('.listing-header-count');
+      if (countEl) {
+        countEl.textContent = `${visibleCount} properties found`;
+      }
+
+      // Handle empty state if no properties are visible
+      let emptyStateEl = document.getElementById('filter-empty-state');
+      if (visibleCount === 0) {
+        if (!emptyStateEl) {
+          emptyStateEl = document.createElement('div');
+          emptyStateEl.id = 'filter-empty-state';
+          emptyStateEl.className = 'empty-state';
+          emptyStateEl.style.width = '100%';
+          emptyStateEl.style.gridColumn = '1 / -1';
+          emptyStateEl.style.padding = '40px 20px';
+          emptyStateEl.style.textAlign = 'center';
+          emptyStateEl.innerHTML = `
+            <div class="empty-state-icon" style="font-size: 3rem; margin-bottom: 12px; display: flex; justify-content: center; align-items: center;">🔍</div>
+            <h3 class="empty-state-title" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">No Listings Found</h3>
+            <p class="empty-state-text" style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">There are no properties in "${selectedLocation}" at the moment.</p>
+            <button class="btn btn-gold" onclick="resetLocationFilter()">Clear Filter</button>
+          `;
+          document.getElementById('listings-grid').appendChild(emptyStateEl);
+        } else {
+          emptyStateEl.style.display = 'block';
+          emptyStateEl.querySelector('.empty-state-text').textContent = `There are no properties in "${selectedLocation}" at the moment.`;
+        }
+      } else {
+        if (emptyStateEl) {
+          emptyStateEl.style.display = 'none';
+        }
+      }
+    }
+
+    function resetLocationFilter() {
+      const selectEl = document.getElementById('location-search-dropdown');
+      if (selectEl) {
+        selectEl.value = '';
+        filterListingsByLocation('');
+      }
+    }
+  </script>
 </body>
+
 </html>

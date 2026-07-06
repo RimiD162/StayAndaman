@@ -1530,6 +1530,84 @@ button {
   opacity: 0.8;
 }
 
+/* ===== Users Directory Table Layout Adjustments to Fit One Screen ===== */
+#page-users .admin-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+#page-users .admin-table th,
+#page-users .admin-table td {
+  padding: 10px 8px;
+  font-size: 0.82rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  vertical-align: middle;
+}
+
+#page-users .admin-table th {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--admin-text-light);
+}
+
+#page-users .col-avatar {
+  width: 55px;
+  text-align: center;
+}
+
+#page-users .col-name {
+  width: 12%;
+  font-weight: 600;
+  color: var(--admin-text-dark);
+}
+
+#page-users .col-email {
+  width: 22%;
+  word-break: break-all;
+}
+
+#page-users .col-phone {
+  width: 11%;
+  white-space: nowrap;
+}
+
+#page-users .col-gender {
+  width: 7%;
+}
+
+#page-users .col-city {
+  width: 8%;
+}
+
+#page-users .col-joined {
+  width: 10%;
+}
+
+#page-users .col-lastlogin {
+  width: 15%;
+  font-size: 0.75rem;
+}
+
+#page-users .col-status {
+  width: 10%;
+}
+
+#page-users .col-actions {
+  width: 65px;
+  text-align: center;
+}
+
+#page-users .table-actions {
+  justify-content: center;
+}
+
+#page-users .status-badge {
+  padding: 4px 8px;
+  font-size: 0.7rem;
+}
+
 /* ===== Responsive Breakpoints ===== */
 @media (max-width: 1100px) {
   .stats-grid {
@@ -1647,4 +1725,28 @@ button {
     height: 72px;
     font-size: 1.6rem;
   }
+}
+
+/* ===== Users Directory Table Responsive Hiding ===== */
+@media (max-width: 768px) {
+  #page-users .col-gender,
+  #page-users .col-city,
+  #page-users .col-joined {
+    display: none;
+  }
+  #page-users .col-name { width: 20%; }
+  #page-users .col-email { width: 35%; }
+  #page-users .col-phone { width: 20%; }
+  #page-users .col-lastlogin { width: 15%; }
+  #page-users .col-status { width: 10%; }
+}
+
+@media (max-width: 576px) {
+  #page-users .col-lastlogin,
+  #page-users .col-phone {
+    display: none;
+  }
+  #page-users .col-name { width: 30%; }
+  #page-users .col-email { width: 50%; }
+  #page-users .col-status { width: 20%; }
 }

@@ -532,7 +532,8 @@
       </div>
       <div>
         <h4 class="footer-heading">Contact</h4>
-        <a href="#" class="footer-link">support@stayandaman.com</a>
+        <a href="mailto:gourabsuper999@gmail.com" class="footer-link">gourabsuper999@gmail.com</a>
+        <a href="tel:9531820286" class="footer-link">9531820286</a>
       </div>
     </div>
     <div class="footer-bottom">© 2025 Stayandaman. All rights reserved.</div>
@@ -697,7 +698,7 @@
   <script>
     function openBookingModal() {
       // Confirm user is logged in
-      const userLoggedIn = <%= user ? 'true' : 'false' %>;
+      const userLoggedIn = !!document.getElementById('navbar-user');
       if (!userLoggedIn) {
         // Save redirect URL in session and prompt login
         showToastNotification("Redirecting to login first...");

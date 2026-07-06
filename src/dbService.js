@@ -178,10 +178,16 @@ export const dbService = {
   },
 
   // ===== Legacy/Dashboard Admin Profile compatibility functions =====
-  async getAdminProfile() {
+  async getAdminProfile(adminId) {
     if (!useJsonDb) {
       try {
-        let admin = await Admin.findOne({ username: "admin" });
+        let admin = null;
+        if (adminId) {
+          admin = await Admin.findById(adminId);
+        }
+        if (!admin) {
+          admin = await Admin.findOne({ username: "admin" });
+        }
         if (!admin) {
           admin = new Admin({
             fullName: "Super Admin",
@@ -211,7 +217,13 @@ export const dbService = {
     }
 
     const db = readJsonDb();
-    let admin = db.admins.find(a => a.username === "admin");
+    let admin = null;
+    if (adminId) {
+      admin = db.admins.find(a => a._id === adminId || a.id === adminId);
+    }
+    if (!admin) {
+      admin = db.admins.find(a => a.username === "admin");
+    }
     if (!admin) {
       admin = {
         id: "1",
@@ -241,10 +253,16 @@ export const dbService = {
     };
   },
 
-  async updateAdminProfile(data) {
+  async updateAdminProfile(adminId, data) {
     if (!useJsonDb) {
       try {
-        let admin = await Admin.findOne({ username: "admin" });
+        let admin = null;
+        if (adminId) {
+          admin = await Admin.findById(adminId);
+        }
+        if (!admin) {
+          admin = await Admin.findOne({ username: "admin" });
+        }
         if (!admin) {
           admin = new Admin({ username: "admin", fullName: data.displayName || "Admin", email: data.email });
         }
@@ -273,10 +291,16 @@ export const dbService = {
     }
 
     const db = readJsonDb();
-    let idx = db.admins.findIndex(a => a.username === "admin");
+    let idx = -1;
+    if (adminId) {
+      idx = db.admins.findIndex(a => a._id === adminId || a.id === adminId);
+    }
+    if (idx === -1) {
+      idx = db.admins.findIndex(a => a.username === "admin");
+    }
     if (idx === -1) {
       const newAdmin = {
-        id: "json_admin_" + Math.random().toString(36).substr(2, 9),
+        id: adminId || "json_admin_" + Math.random().toString(36).substr(2, 9),
         fullName: data.displayName || "Admin",
         username: "admin",
         email: data.email || "admin@stayandaman.com",

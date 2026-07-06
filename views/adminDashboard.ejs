@@ -99,9 +99,15 @@
                 </div>
                 <div class="topbar-right">
                     <div class="topbar-admin-info" style="cursor:pointer" onclick="switchPage('profile')" title="View Profile">
-                        <div class="admin-avatar" id="topbar-avatar">A</div>
+                        <div class="admin-avatar" id="topbar-avatar">
+                            <% if (admin && admin.avatar) { %>
+                                <img src="<%= admin.avatar %>" alt="<%= admin.fullName %>" style="width:100%;height:100%;border-radius:50%;object-fit:cover">
+                            <% } else { %>
+                                <%= admin && admin.fullName ? admin.fullName.charAt(0).toUpperCase() : 'A' %>
+                            <% } %>
+                        </div>
                         <div>
-                            <div class="admin-name" id="topbar-admin-name">Admin</div>
+                            <div class="admin-name" id="topbar-admin-name"><%= admin && admin.fullName ? admin.fullName : 'Admin' %></div>
                             <div class="admin-role">Administrator</div>
                         </div>
                     </div>
@@ -341,16 +347,16 @@
                             <table class="admin-table">
                                 <thead>
                                     <tr>
-                                        <th>Avatar</th>
-                                        <th>Full Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>Gender</th>
-                                        <th>City</th>
-                                        <th>Joined Date</th>
-                                        <th>Last Login</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
+                                        <th class="col-avatar">Avatar</th>
+                                        <th class="col-name">Full Name</th>
+                                        <th class="col-email">Email</th>
+                                        <th class="col-phone">Phone</th>
+                                        <th class="col-gender">Gender</th>
+                                        <th class="col-city">City</th>
+                                        <th class="col-joined">Joined Date</th>
+                                        <th class="col-lastlogin">Last Login</th>
+                                        <th class="col-status">Status</th>
+                                        <th class="col-actions">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="users-table-body">
@@ -610,7 +616,16 @@
                         <!-- Location -->
                         <div class="form-group">
                             <label class="form-label" for="listing-location">Location / Address *</label>
-                            <input class="form-input" type="text" id="listing-location" name="location" required placeholder="e.g., Shimla, Himachal Pradesh">
+                            <select class="form-select" id="listing-location" name="location" required>
+                                <option value="">Select Location</option>
+                                <option value="Aberdeen bazar">Aberdeen bazar</option>
+                                <option value="Dairy farm">Dairy farm</option>
+                                <option value="Bhatubasti">Bhatubasti</option>
+                                <option value="Garacharma">Garacharma</option>
+                                <option value="Rangat">Rangat</option>
+                                <option value="Middle Andaman">Middle Andaman</option>
+                                <option value="Diglipur">Diglipur</option>
+                            </select>
                         </div>
 
                         <!-- Price -->

@@ -45,6 +45,24 @@
 
   <div class="listing-content">
     <main class="listings-area">
+      <!-- ===== Location Filter ===== -->
+      <div class="location-filter-wrapper" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; background: #f8fafc; padding: 14px 20px; border-radius: 10px; border: 1px solid #e2e8f0; width: 100%;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <svg style="width: 18px; height: 18px; color: #1e293b;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span style="font-weight: 600; color: #1e293b; font-size: 0.9rem;">Filter by Location / Place</span>
+        </div>
+        <select id="location-search-dropdown" onchange="filterListingsByLocation(this.value)" style="padding: 8px 14px; font-size: 0.85rem; font-weight: 500; border-radius: 6px; border: 1px solid #cbd5e1; outline: none; background-color: #ffffff; min-width: 220px; cursor: pointer; color: #334155;">
+          <option value="">All Locations</option>
+          <option value="Aberdeen bazar">Aberdeen bazar</option>
+          <option value="Dairy farm">Dairy farm</option>
+          <option value="Bhatubasti">Bhatubasti</option>
+          <option value="Garacharma">Garacharma</option>
+          <option value="Rangat">Rangat</option>
+          <option value="Middle Andaman">Middle Andaman</option>
+          <option value="Diglipur">Diglipur</option>
+        </select>
+      </div>
+
       <div class="listings-grid" id="listings-grid">
         <% 
         const cycleImgs = [
@@ -59,7 +77,7 @@
         <% if(listings.length===0){%>
         <div class="empty-state"><div class="empty-state-icon"></div><h3 class="empty-state-title">No Lodges Found</h3><p class="empty-state-text">There are no lodge listings at the moment.</p><a href="/home" class="btn btn-teal">Back to Home</a></div>
         <%}else{listings.forEach(function(listing, index){%>
-        <div class="grid-card listing-card" data-name="<%=(listing.name||'').toLowerCase()%>" data-rating="<%=listing.rating||0%>" data-available="<%=listing.available!==false?'true':'false'%>">
+        <div class="grid-card listing-card" data-name="<%=(listing.name||'').toLowerCase()%>" data-rating="<%=listing.rating||0%>" data-available="<%=listing.available!==false?'true':'false'%>" data-location="<%=(listing.location||'').toLowerCase()%>">
           <div class="card-img-wrapper grid-card-img-wrap">
             <img class="grid-card-img loaded" src="<%= listing.image || cycleImgs[index % cycleImgs.length] %>" alt="<%= listing.name %>" loading="lazy" onerror="this.src='<%= cycleImgs[index % cycleImgs.length] %>'">
             <span class="grid-card-badge lodge">Lodge</span>
@@ -83,7 +101,7 @@
     </main>
   </div>
 
-  <footer class="site-footer"><div class="footer-grid"><div><div class="footer-brand-logo">Stay<span>Andaman</span></div><p class="footer-brand-text">Your perfect stay, simplified.</p></div><div><h4 class="footer-heading">Quick Links</h4><a href="/home" class="footer-link">Home</a><a href="/home/hotel" class="footer-link">Hotels</a><a href="/home/lodges" class="footer-link">Lodges</a><a href="/home/rentals" class="footer-link">Rentals</a></div><div><h4 class="footer-heading">Contact</h4><a href="#" class="footer-link">support@stayandaman.com</a></div></div><div class="footer-bottom">© 2025 Stayandaman. All rights reserved.</div></footer>
+  <footer class="site-footer"><div class="footer-grid"><div><div class="footer-brand-logo">Stay<span>Andaman</span></div><p class="footer-brand-text">Your perfect stay, simplified.</p></div><div><h4 class="footer-heading">Quick Links</h4><a href="/home" class="footer-link">Home</a><a href="/home/hotel" class="footer-link">Hotels</a><a href="/home/lodges" class="footer-link">Lodges</a><a href="/home/rentals" class="footer-link">Rentals</a></div><div><h4 class="footer-heading">Contact</h4><a href="mailto:gourabsuper999@gmail.com" class="footer-link">gourabsuper999@gmail.com</a><a href="tel:9531820286" class="footer-link">9531820286</a></div></div><div class="footer-bottom">© 2025 Stayandaman. All rights reserved.</div></footer>
 
   <script>
     function toggleSaveListing(id, event) {
@@ -148,6 +166,66 @@
         });
       }
     });
+  </script>
+  <script>
+    function filterListingsByLocation(selectedLocation) {
+      const cards = document.querySelectorAll('.grid-card.listing-card');
+      const lowerSelected = selectedLocation.toLowerCase().trim();
+      let visibleCount = 0;
+      
+      cards.forEach(card => {
+        const cardLocation = (card.dataset.location || '').toLowerCase().trim();
+        
+        if (!lowerSelected || cardLocation.includes(lowerSelected)) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Update property found count
+      const countEl = document.querySelector('.listing-header-count');
+      if (countEl) {
+        countEl.textContent = `${visibleCount} properties found`;
+      }
+      
+      // Handle empty state if no properties are visible
+      let emptyStateEl = document.getElementById('filter-empty-state');
+      if (visibleCount === 0) {
+        if (!emptyStateEl) {
+          emptyStateEl = document.createElement('div');
+          emptyStateEl.id = 'filter-empty-state';
+          emptyStateEl.className = 'empty-state';
+          emptyStateEl.style.width = '100%';
+          emptyStateEl.style.gridColumn = '1 / -1';
+          emptyStateEl.style.padding = '40px 20px';
+          emptyStateEl.style.textAlign = 'center';
+          emptyStateEl.innerHTML = `
+            <div class="empty-state-icon" style="font-size: 3rem; margin-bottom: 12px; display: flex; justify-content: center; align-items: center;">🔍</div>
+            <h3 class="empty-state-title" style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">No Listings Found</h3>
+            <p class="empty-state-text" style="color: var(--text-soft); font-size: 0.9rem; margin-bottom: 16px;">There are no properties in "${selectedLocation}" at the moment.</p>
+            <button class="btn btn-teal" onclick="resetLocationFilter()">Clear Filter</button>
+          `;
+          document.getElementById('listings-grid').appendChild(emptyStateEl);
+        } else {
+          emptyStateEl.style.display = 'block';
+          emptyStateEl.querySelector('.empty-state-text').textContent = `There are no properties in "${selectedLocation}" at the moment.`;
+        }
+      } else {
+        if (emptyStateEl) {
+          emptyStateEl.style.display = 'none';
+        }
+      }
+    }
+    
+    function resetLocationFilter() {
+      const selectEl = document.getElementById('location-search-dropdown');
+      if (selectEl) {
+        selectEl.value = '';
+        filterListingsByLocation('');
+      }
+    }
   </script>
 </body>
 </html>

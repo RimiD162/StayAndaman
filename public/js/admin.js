@@ -183,7 +183,7 @@ function renderRecentTable() {
                 : 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&q=80&fit=crop';
         return `
         <tr>
-            <td><img src="${l.image || fallbackImg}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80&fit=crop'"></td>
+            <td><img class="loaded" src="${l.image || l.image2 || l.image3 || l.image4 || fallbackImg}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80&fit=crop'"></td>
             <td class="table-name">${escapeHtml(l.name)}</td>
             <td><span class="category-badge cat-${l.category}">${l.category}</span></td>
             <td>${escapeHtml(l.location)}</td>
@@ -214,7 +214,7 @@ function renderCategoryTable(category, tbodyId) {
                 : 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&q=80&fit=crop';
         return `
         <tr>
-            <td><img src="${l.image || fallbackImg}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80&fit=crop'"></td>
+            <td><img class="loaded" src="${l.image || l.image2 || l.image3 || l.image4 || fallbackImg}" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80&fit=crop'"></td>
             <td class="table-name">${escapeHtml(l.name)}</td>
             <td>${escapeHtml(l.location)}</td>
             <td><strong>₹${(l.price || 0).toLocaleString('en-IN')}</strong></td>
@@ -329,23 +329,23 @@ function renderUsersTable() {
 
     tbody.innerHTML = filteredUsers.map(u => `
         <tr class="${!u.isActive ? 'user-inactive-row' : ''}">
-            <td>
-                ${u.avatar ? `<img class="table-thumb" style="border-radius: 50%;" src="${u.avatar}" alt="${escapeHtml(u.fullName)}">` : `<div class="table-thumb-placeholder" style="border-radius: 50%; background: #f5a623; color: #1a1f36; font-weight: 700; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 14px;">${escapeHtml(u.fullName).charAt(0).toUpperCase()}</div>`}
+            <td class="col-avatar">
+                ${u.avatar ? `<img class="table-thumb loaded" style="border-radius: 50%;" src="${u.avatar}" alt="${escapeHtml(u.fullName)}">` : `<div class="table-thumb-placeholder" style="border-radius: 50%; background: #f5a623; color: #1a1f36; font-weight: 700; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 14px;">${escapeHtml(u.fullName).charAt(0).toUpperCase()}</div>`}
             </td>
-            <td class="table-name">${escapeHtml(u.fullName)}</td>
-            <td>${escapeHtml(u.email)}</td>
-            <td>${escapeHtml(u.phone)}</td>
-            <td>${u.gender || '-'}</td>
-            <td>${escapeHtml(u.city) || '-'}</td>
-            <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '-'}</td>
-            <td>${u.lastLogin ? new Date(u.lastLogin).toLocaleString() : 'Never'}</td>
-            <td>
+            <td class="table-name col-name">${escapeHtml(u.fullName)}</td>
+            <td class="col-email">${escapeHtml(u.email)}</td>
+            <td class="col-phone">${escapeHtml(u.phone)}</td>
+            <td class="col-gender">${u.gender || '-'}</td>
+            <td class="col-city">${escapeHtml(u.city) || '-'}</td>
+            <td class="col-joined">${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '-'}</td>
+            <td class="col-lastlogin">${u.lastLogin ? new Date(u.lastLogin).toLocaleString() : 'Never'}</td>
+            <td class="col-status">
                 <span class="status-badge ${u.isActive ? 'available' : 'unavailable'}" style="cursor: pointer;" onclick="toggleUserStatus('${u._id}')">
                     <span class="status-dot"></span>
                     ${u.isActive ? 'Active' : 'Inactive'}
                 </span>
             </td>
-            <td>
+            <td class="col-actions">
                 <div class="table-actions">
                     <button class="btn-action btn-edit" title="View Details" onclick="viewUserDetails('${u._id}')">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -394,7 +394,7 @@ function viewUserDetails(id) {
     modalBody.innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; margin-bottom: 24px;">
             <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; border: 3px solid var(--admin-border); background: var(--admin-card-bg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-                ${user.avatar ? `<img src="${user.avatar}" alt="${escapeHtml(user.fullName)}" style="width:100%; height:100%; object-fit:cover;">` : `<div style="font-size: 36px; font-weight: 700; color: #f5a623;">${escapeHtml(user.fullName).charAt(0).toUpperCase()}</div>`}
+                ${user.avatar ? `<img class="loaded" src="${user.avatar}" alt="${escapeHtml(user.fullName)}" style="width:100%; height:100%; object-fit:cover;">` : `<div style="font-size: 36px; font-weight: 700; color: #f5a623;">${escapeHtml(user.fullName).charAt(0).toUpperCase()}</div>`}
             </div>
             <div>
                 <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 4px; color: var(--admin-text);">${escapeHtml(user.fullName)}</h3>
@@ -406,33 +406,33 @@ function viewUserDetails(id) {
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 12px; background: rgba(0,0,0,0.02); border: 1px solid var(--admin-border); border-radius: 8px; padding: 20px; color: var(--admin-text);">
-            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px;">
-                <span style="color: var(--admin-text-light); font-size: 13px;">Email Address</span>
-                <strong style="font-size: 14px;">${escapeHtml(user.email)}</strong>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px; gap: 12px;">
+                <span style="color: var(--admin-text-light); font-size: 13px; flex-shrink: 0;">Email Address</span>
+                <strong style="font-size: 14px; word-break: break-all; text-align: right;">${escapeHtml(user.email)}</strong>
             </div>
-            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px;">
-                <span style="color: var(--admin-text-light); font-size: 13px;">Phone Number</span>
-                <strong style="font-size: 14px;">${escapeHtml(user.phone)}</strong>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px; gap: 12px;">
+                <span style="color: var(--admin-text-light); font-size: 13px; flex-shrink: 0;">Phone Number</span>
+                <strong style="font-size: 14px; word-break: break-all; text-align: right;">${escapeHtml(user.phone)}</strong>
             </div>
-            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px;">
-                <span style="color: var(--admin-text-light); font-size: 13px;">Gender</span>
-                <strong style="font-size: 14px;">${user.gender || 'Not specified'}</strong>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px; gap: 12px;">
+                <span style="color: var(--admin-text-light); font-size: 13px; flex-shrink: 0;">Gender</span>
+                <strong style="font-size: 14px; word-break: break-word; text-align: right;">${user.gender || 'Not specified'}</strong>
             </div>
-            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px;">
-                <span style="color: var(--admin-text-light); font-size: 13px;">Date of Birth</span>
-                <strong style="font-size: 14px;">${dobFormatted}</strong>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px; gap: 12px;">
+                <span style="color: var(--admin-text-light); font-size: 13px; flex-shrink: 0;">Date of Birth</span>
+                <strong style="font-size: 14px; word-break: break-word; text-align: right;">${dobFormatted}</strong>
             </div>
-            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px;">
-                <span style="color: var(--admin-text-light); font-size: 13px;">City / Location</span>
-                <strong style="font-size: 14px;">${escapeHtml(user.city) || 'Not provided'}</strong>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px; gap: 12px;">
+                <span style="color: var(--admin-text-light); font-size: 13px; flex-shrink: 0;">City / Location</span>
+                <strong style="font-size: 14px; word-break: break-word; text-align: right;">${escapeHtml(user.city) || 'Not provided'}</strong>
             </div>
-            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px;">
-                <span style="color: var(--admin-text-light); font-size: 13px;">Joined Date</span>
-                <strong style="font-size: 14px;">${joinedFormatted}</strong>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px; gap: 12px;">
+                <span style="color: var(--admin-text-light); font-size: 13px; flex-shrink: 0;">Joined Date</span>
+                <strong style="font-size: 14px; word-break: break-word; text-align: right;">${joinedFormatted}</strong>
             </div>
-            <div style="display: flex; justify-content: space-between; padding-bottom: 4px;">
-                <span style="color: var(--admin-text-light); font-size: 13px;">Last Login</span>
-                <strong style="font-size: 14px;">${lastLoginFormatted}</strong>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 4px; gap: 12px;">
+                <span style="color: var(--admin-text-light); font-size: 13px; flex-shrink: 0;">Last Login</span>
+                <strong style="font-size: 14px; word-break: break-word; text-align: right;">${lastLoginFormatted}</strong>
             </div>
         </div>
 

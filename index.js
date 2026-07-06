@@ -949,7 +949,7 @@ app.get("/api/admin/users/export", requireAdmin, async (req, res) => {
 // GET admin profile details
 app.get("/api/admin/profile", requireAdmin, async (req, res) => {
   try {
-    const profile = await dbService.getAdminProfile();
+    const profile = await dbService.getAdminProfile(req.session.adminId);
     res.json(profile);
   } catch (err) {
     console.error("Fetch profile error:", err);
@@ -960,7 +960,10 @@ app.get("/api/admin/profile", requireAdmin, async (req, res) => {
 // PUT update admin profile details
 app.put("/api/admin/profile", requireAdmin, async (req, res) => {
   try {
-    const profile = await dbService.updateAdminProfile(req.body);
+    const profile = await dbService.updateAdminProfile(req.session.adminId, req.body);
+    // Sync update to currently active session
+    req.session.adminFullName = profile.displayName;
+    req.session.adminAvatar = profile.avatar || "";
     res.json(profile);
   } catch (err) {
     console.error("Update profile error:", err);
