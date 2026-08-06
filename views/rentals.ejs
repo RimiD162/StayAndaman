@@ -16,9 +16,8 @@
 <body>
   <!-- Navbar -->
   <nav class="navbar" id="main-navbar">
-    <a href="/home" class="navbar-logo">Stay<span>Andaman</span></a>
+    <a href="/home/hotel" class="navbar-logo">Stay<span>Andaman</span></a>
     <div class="navbar-links">
-      <a href="/home" class="navbar-link">Home</a>
       <a href="/home/hotel" class="navbar-link">Hotels</a>
       <a href="/home/lodges" class="navbar-link">Lodges</a>
       <a href="/home/rentals" class="navbar-link active">Rentals</a>
@@ -66,7 +65,7 @@
   <header class="listing-header theme-gold page-banner"
     style="background-image: linear-gradient(rgba(245,166,35,0.45),rgba(26,31,54,0.8)), url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600&q=80&fit=crop'); height: 260px; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;">
     <div class="listing-header-breadcrumb">
-      <a href="/home">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <a href="/home/hotel">Hotels</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="9 18 15 12 9 6" />
       </svg><span>Rentals</span>
     </div>
@@ -109,8 +108,8 @@
             <div class="empty-state">
               <div class="empty-state-icon"></div>
               <h3 class="empty-state-title">No Rentals Found</h3>
-              <p class="empty-state-text">There are no rental listings at the moment.</p><a href="/home"
-                class="btn btn-gold">Back to Home</a>
+              <p class="empty-state-text">There are no rental listings at the moment.</p><a href="/home/hotel"
+                class="btn btn-gold">Browse Hotels</a>
             </div>
             <%}else{listings.forEach(function(listing, index){%>
               <div class="grid-card listing-card animate-fade-in-up stagger-delay-<%= (index % 6) + 1 %>" data-name="<%=(listing.name||'').toLowerCase()%>"
@@ -174,7 +173,7 @@
         <p class="footer-brand-text">Your perfect stay, simplified.</p>
       </div>
       <div>
-        <h4 class="footer-heading">Quick Links</h4><a href="/home" class="footer-link">Home</a><a href="/home/hotel"
+        <h4 class="footer-heading">Quick Links</h4><a href="/home/hotel"
           class="footer-link">Hotels</a><a href="/home/lodges" class="footer-link">Lodges</a><a href="/home/rentals"
           class="footer-link">Rentals</a>
       </div>

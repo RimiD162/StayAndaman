@@ -37,7 +37,7 @@
     <div class="landing-nav-actions">
       <% if (locals.user) { %>
         <span style="color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; margin-right: 8px;">Hello, <%= user.fullName.split(' ')[0] %></span>
-        <a href="/home" class="btn-nav-signup">Go to Home</a>
+        <a href="/home/hotel" class="btn-nav-signup">Browse Listings</a>
       <% } else if (locals.admin) { %>
         <span style="color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; margin-right: 8px;">Hello, Admin <%= admin.fullName.split(' ')[0] %></span>
         <a href="/admin/dashboard" class="btn-nav-signup">Go to Dashboard</a>

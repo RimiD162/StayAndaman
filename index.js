@@ -137,7 +137,7 @@ app.get("/", (req, res) => {
 // User Login GET
 app.get("/user/login", (req, res) => {
   if (req.session && req.session.userId) {
-    return res.redirect("/home");
+    return res.redirect("/home/hotel");
   }
   let successMsg = null;
   if (req.query.signupSuccess === "true") {
@@ -206,7 +206,7 @@ app.post("/user/login", async (req, res) => {
       req.session.cookie.maxAge = 24 * 60 * 60 * 1000; // 24 hours
     }
 
-    const redirectTo = req.session.redirectTo || "/home";
+    const redirectTo = req.session.redirectTo || "/home/hotel";
     delete req.session.redirectTo;
     res.redirect(redirectTo);
   } catch (err) {
@@ -222,7 +222,7 @@ app.post("/user/login", async (req, res) => {
 // User Signup GET
 app.get("/user/signup", (req, res) => {
   if (req.session && req.session.userId) {
-    return res.redirect("/home");
+    return res.redirect("/home/hotel");
   }
   res.render("userSignup", { error: null, oldValues: {} });
 });
@@ -287,7 +287,7 @@ app.post("/user/signup", async (req, res) => {
     req.session.userAvatar = newUser.avatar || "";
     req.session.userUsername = newUser.username;
 
-    res.redirect("/home");
+    res.redirect("/home/hotel");
   } catch (err) {
     console.error("User signup error:", err);
     res.render("userSignup", {
@@ -345,7 +345,7 @@ app.get("/profile", isUserLoggedIn, async (req, res) => {
     res.render("userProfile", { profileDetails, success: null });
   } catch (err) {
     console.error(err);
-    res.redirect("/home");
+    res.redirect("/home/hotel");
   }
 });
 
@@ -382,31 +382,7 @@ app.get("/hotels", (req, res) => res.redirect("/home/hotel"));
 app.get("/lodges", (req, res) => res.redirect("/home/lodges"));
 app.get("/rentals", (req, res) => res.redirect("/home/rentals"));
 
-app.get("/home", isUserLoggedIn, async (req, res) => {
-  try {
-    const { search } = req.query;
-    const listings = await dbService.getListings();
-
-    let searchResults = [];
-    if (search) {
-      const q = search.toLowerCase().trim();
-      searchResults = listings.filter(l =>
-        (l.name && l.name.toLowerCase().includes(q)) ||
-        (l.location && l.location.toLowerCase().includes(q)) ||
-        (l.category && l.category.toLowerCase().includes(q))
-      );
-    }
-
-    res.render("home", {
-      listings: listings.slice(0, 6),
-      searchResults,
-      searchQuery: search || ""
-    });
-  } catch (err) {
-    console.error(err);
-    res.render("home", { listings: [], searchResults: [], searchQuery: "" });
-  }
-});
+app.get("/home", (req, res) => res.redirect("/home/hotel"));
 
 app.get("/home/hotel", async (req, res) => {
   try {
@@ -468,7 +444,7 @@ app.get("/listing/:id", async (req, res) => {
     res.render("listingDetail", { listing, similarListings, galleryImages });
   } catch (err) {
     console.error(err);
-    res.redirect("/home");
+    res.redirect("/home/hotel");
   }
 });
 
@@ -540,7 +516,7 @@ app.get("/my-bookings", isUserLoggedIn, async (req, res) => {
     res.render("myBookings", { bookings });
   } catch (err) {
     console.error(err);
-    res.redirect("/home");
+    res.redirect("/home/hotel");
   }
 });
 

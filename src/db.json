@@ -1,5 +1,19 @@
 {
-  "users": [],
+  "users": [
+    {
+      "_id": "json_user_0ld3j2i74",
+      "fullName": "rimi Dutta",
+      "username": "rimi_dutta",
+      "email": "rimid341@gmail.com",
+      "phone": "08372853564",
+      "gender": "Female",
+      "dateOfBirth": null,
+      "city": "Barasat",
+      "avatar": "",
+      "isActive": true,
+      "createdAt": "2026-07-21T06:43:54.702Z"
+    }
+  ],
   "listings": [
     {
       "_id": "json_z5nhu4j5h",
@@ -32,7 +46,7 @@
       "website": "https://stayandaman.com",
       "bio": "Stayandaman Administrator",
       "createdAt": "2025-01-01",
-      "lastLogin": "2026-07-06T04:06:41.999Z"
+      "lastLogin": "2026-07-21T06:47:21.732Z"
     }
   ]
 }

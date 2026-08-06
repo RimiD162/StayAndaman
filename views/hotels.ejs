@@ -17,9 +17,8 @@
 
   <!-- ===== Navbar ===== -->
   <nav class="navbar" id="main-navbar">
-    <a href="/home" class="navbar-logo">Stay<span>Andaman</span></a>
+    <a href="/home/hotel" class="navbar-logo">Stay<span>Andaman</span></a>
     <div class="navbar-links">
-      <a href="/home" class="navbar-link">Home</a>
       <a href="/home/hotel" class="navbar-link active">Hotels</a>
       <a href="/home/lodges" class="navbar-link">Lodges</a>
       <a href="/home/rentals" class="navbar-link">Rentals</a>
@@ -69,7 +68,7 @@
   <header class="listing-header theme-navy page-banner"
     style="background-image: linear-gradient(rgba(26,31,54,0.78),rgba(26,31,54,0.6)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600&q=80&fit=crop'); height: 260px; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;">
     <div class="listing-header-breadcrumb">
-      <a href="/home">Home</a>
+      <a href="/">Home</a>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="9 18 15 12 9 6" />
       </svg>
@@ -115,7 +114,7 @@
             <div class="empty-state-icon"></div>
             <h3 class="empty-state-title">No Hotels Found</h3>
             <p class="empty-state-text">There are no hotel listings at the moment. Check back soon!</p>
-            <a href="/home" class="btn btn-gold">Back to Home</a>
+            <a href="/home/hotel" class="btn btn-gold">Browse All Hotels</a>
           </div>
           <% } else { %>
             <% const cycleImgs = [
@@ -198,7 +197,6 @@
       </div>
       <div>
         <h4 class="footer-heading">Quick Links</h4>
-        <a href="/home" class="footer-link">Home</a>
         <a href="/home/hotel" class="footer-link">Hotels</a>
         <a href="/home/lodges" class="footer-link">Lodges</a>
         <a href="/home/rentals" class="footer-link">Rentals</a>

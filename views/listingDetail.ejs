@@ -16,10 +16,9 @@
 
   <!-- ===== Navbar ===== -->
   <nav class="navbar" id="main-navbar">
-    <a href="/home" class="navbar-logo">Stay<span>Andaman</span></a>
+    <a href="/home/hotel" class="navbar-logo">Stay<span>Andaman</span></a>
 
     <div class="navbar-links" id="navbar-links">
-      <a href="/home" class="navbar-link">Home</a>
       <a href="/home/hotel" class="navbar-link <%= listing.category === 'Hotel' ? 'active' : '' %>">Hotels</a>
       <a href="/home/lodges" class="navbar-link <%= listing.category === 'Lodge' ? 'active' : '' %>">Lodges</a>
       <a href="/home/rentals" class="navbar-link <%= listing.category === 'Rental' ? 'active' : '' %>">Rentals</a>
@@ -69,8 +68,6 @@
     
     <!-- Breadcrumbs -->
     <div class="listing-header-breadcrumb" style="justify-content: flex-start; margin-bottom: var(--space-4);">
-      <a href="/home" style="color: var(--text-soft);">Home</a>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;color: var(--text-soft);"><polyline points="9 18 15 12 9 6"/></svg>
       <a href="/home/<%= listing.category ? listing.category.toLowerCase() + 's' : 'hotel' %>" style="color: var(--text-soft);"><%= listing.category %>s</a>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;color: var(--text-soft);"><polyline points="9 18 15 12 9 6"/></svg>
       <span style="color: var(--text-dark); font-weight: 500;"><%= listing.name %></span>
@@ -525,7 +522,6 @@
       </div>
       <div>
         <h4 class="footer-heading">Quick Links</h4>
-        <a href="/home" class="footer-link">Home</a>
         <a href="/home/hotel" class="footer-link">Hotels</a>
         <a href="/home/lodges" class="footer-link">Lodges</a>
         <a href="/home/rentals" class="footer-link">Rentals</a>
@@ -937,7 +933,7 @@
 
           <div class="success-actions">
             <a href="/my-bookings" class="btn btn-success-bookings">View My Bookings</a>
-            <a href="/home" class="btn btn-success-home">Back to Home</a>
+            <a href="/home/hotel" class="btn btn-success-home">Browse Listings</a>
           </div>
         </div>
       `;
