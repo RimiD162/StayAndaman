@@ -667,3 +667,108 @@ img::after {
   position: absolute;
   inset: 0;
 }
+
+/* ── Premium Animations & Modern Enhancements ── */
+
+@keyframes premiumSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes premiumFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in-up {
+  animation: premiumSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.animate-fade-in {
+  animation: premiumFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* Staggered Delay for grid items */
+.stagger-delay-1 { animation-delay: 0.05s; }
+.stagger-delay-2 { animation-delay: 0.1s; }
+.stagger-delay-3 { animation-delay: 0.15s; }
+.stagger-delay-4 { animation-delay: 0.2s; }
+.stagger-delay-5 { animation-delay: 0.25s; }
+.stagger-delay-6 { animation-delay: 0.3s; }
+
+/* Premium Grid Card elevation */
+.grid-card {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.grid-card:hover {
+  transform: translateY(-8px) scale(1.01) !important;
+  box-shadow: 0 20px 45px rgba(26, 31, 54, 0.15) !important;
+}
+.grid-card-img {
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.grid-card:hover .grid-card-img {
+  transform: scale(1.06) !important;
+}
+
+/* Glassmorphism overlays on grid cards */
+.grid-card-badge {
+  backdrop-filter: blur(8px) !important;
+  background: rgba(26, 31, 54, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+.grid-card-avail {
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+.grid-card-avail.available {
+  background: rgba(10, 191, 138, 0.85) !important;
+}
+.grid-card-avail.unavailable {
+  background: rgba(231, 76, 60, 0.85) !important;
+}
+
+/* Luxury button shine animation */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: 0.75s ease;
+  z-index: 1;
+}
+.btn:hover::after {
+  left: 125%;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Premium form and search elements glow */
+.filter-input:focus, .search-bar input:focus, .form-select:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 4px rgba(10, 191, 138, 0.15) !important;
+}

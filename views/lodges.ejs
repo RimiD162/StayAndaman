@@ -77,7 +77,7 @@
         <% if(listings.length===0){%>
         <div class="empty-state"><div class="empty-state-icon"></div><h3 class="empty-state-title">No Lodges Found</h3><p class="empty-state-text">There are no lodge listings at the moment.</p><a href="/home" class="btn btn-teal">Back to Home</a></div>
         <%}else{listings.forEach(function(listing, index){%>
-        <div class="grid-card listing-card" data-name="<%=(listing.name||'').toLowerCase()%>" data-rating="<%=listing.rating||0%>" data-available="<%=listing.available!==false?'true':'false'%>" data-location="<%=(listing.location||'').toLowerCase()%>">
+        <div class="grid-card listing-card animate-fade-in-up stagger-delay-<%= (index % 6) + 1 %>" data-name="<%=(listing.name||'').toLowerCase()%>" data-rating="<%=listing.rating||0%>" data-available="<%=listing.available!==false?'true':'false'%>" data-location="<%=(listing.location||'').toLowerCase()%>">
           <div class="card-img-wrapper grid-card-img-wrap">
             <img class="grid-card-img loaded" src="<%= listing.image || cycleImgs[index % cycleImgs.length] %>" alt="<%= listing.name %>" loading="lazy" onerror="this.src='<%= cycleImgs[index % cycleImgs.length] %>'">
             <span class="grid-card-badge lodge">Lodge</span>

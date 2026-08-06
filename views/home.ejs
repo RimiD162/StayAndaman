@@ -81,10 +81,10 @@
   <section class="hero hero-section"
     style="background-image: linear-gradient(rgba(26,31,54,0.55),rgba(26,31,54,0.65)), url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=1600&q=85&fit=crop'); height: 580px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background-attachment: fixed; background-size: cover; background-position: center;">
     <% if (user) { %>
-      <p class="hero-greeting">Hello, <%= user.fullName ? user.fullName.split(' ')[0] : ' Traveler' %>!</p>
+      <p class="hero-greeting animate-fade-in">Hello, <%= user.fullName ? user.fullName.split(' ')[0] : ' Traveler' %>!</p>
       <% } %>
-        <h1 class="hero-title">Find Your Perfect Stay</h1>
-        <p class="hero-subtitle">Explore verified hotels, cozy lodges &amp; private rentals across the best destinations
+        <h1 class="hero-title animate-fade-in" style="animation-delay: 0.1s;">Find Your Perfect Stay</h1>
+        <p class="hero-subtitle animate-fade-in" style="animation-delay: 0.2s;">Explore verified hotels, cozy lodges &amp; private rentals across the best destinations
         </p>
 
   </section>
@@ -177,7 +177,7 @@
 
         <div class="categories-grid">
           <!-- Hotels -->
-          <a href="/home/hotel" class="category-card">
+          <a href="/home/hotel" class="category-card animate-fade-in-up stagger-delay-1">
             <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=800&q=80&fit=crop" loading="lazy"
               alt="Hotels"
               onerror="this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80&fit=crop'">
@@ -194,7 +194,7 @@
           </a>
 
           <!-- Lodges -->
-          <a href="/home/lodges" class="category-card">
+          <a href="/home/lodges" class="category-card animate-fade-in-up stagger-delay-2">
             <img src="https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=800&q=80&fit=crop" loading="lazy"
               alt="Lodges"
               onerror="this.src='https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80&fit=crop'">
@@ -211,7 +211,7 @@
           </a>
 
           <!-- Rentals -->
-          <a href="/home/rentals" class="category-card">
+          <a href="/home/rentals" class="category-card animate-fade-in-up stagger-delay-3">
             <img src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&q=80&fit=crop" loading="lazy"
               alt="Rentals"
               onerror="this.src='https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80&fit=crop'">

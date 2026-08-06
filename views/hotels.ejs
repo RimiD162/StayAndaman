@@ -128,7 +128,7 @@
             ];
             %>
               <% listings.forEach(function(listing, index) { %>
-                <div class="grid-card listing-card" data-name="<%= (listing.name || '').toLowerCase() %>"
+                <div class="grid-card listing-card animate-fade-in-up stagger-delay-<%= (index % 6) + 1 %>" data-name="<%= (listing.name || '').toLowerCase() %>"
                   data-rating="<%= listing.rating || 0 %>"
                   data-available="<%= listing.available !== false ? 'true' : 'false' %>"
                   data-location="<%= (listing.location || '').toLowerCase() %>">
