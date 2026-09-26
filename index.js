@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import Listing from "./models/Listing.js";
 import Admin from "./models/Admin.js";
 import { dbService } from "./src/dbService.js";
@@ -72,31 +73,45 @@ app.locals.getRandomFallback = getRandomFallback;
 app.locals.FALLBACK_IMAGES = FALLBACK_IMAGES;
 
 
-// ===== Session =====
-app.use(
-  session({
-    secret: "stayandaman-session-secret-key-2026",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 }, // 24 hours default
-  })
-);
-
-// ===== MongoDB Connection =====
+// ===== MongoDB Atlas Connection =====
 const mongoUrl = process.env.mongodb_url;
+const isMongoConfigured = Boolean(mongoUrl && !mongoUrl.includes("xxxxx"));
 
-if (mongoUrl && !mongoUrl.includes("xxxxx")) {
+if (isMongoConfigured) {
   mongoose
     .connect(mongoUrl, { dbName: "stayandaman", serverSelectionTimeoutMS: 5000 })
-    .then(() => console.log("Connected to MongoDB"))
+    .then(async () => {
+      console.log("✅ Successfully connected to MongoDB Atlas (Database: stayandaman)");
+      await dbService.syncLocalUsersToMongo();
+    })
     .catch((err) => {
-      console.error("MongoDB connection error:", err.message);
+      console.error("❌ MongoDB Atlas connection error:", err.message);
       dbService.setFallbackActive();
     });
 } else {
-  console.log("Skipping MongoDB connection: using JSON database fallback.");
+  console.log("⚠️ MongoDB URL contains placeholder 'xxxxx' or is missing. Please provide your real MongoDB Atlas connection string in .env to store users directly in Atlas.");
   dbService.setFallbackActive();
 }
+
+// ===== Session Configuration (MongoDB Atlas Store) =====
+const sessionOptions = {
+  secret: process.env.SESSION_SECRET || "stayandaman-session-secret-key-2026",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 24 * 60 * 60 * 1000 }, // 24 hours
+};
+
+if (isMongoConfigured) {
+  sessionOptions.store = MongoStore.create({
+    mongoUrl: mongoUrl,
+    dbName: "stayandaman",
+    collectionName: "sessions",
+    ttl: 24 * 60 * 60, // 1 day
+    autoRemove: "native",
+  });
+}
+
+app.use(session(sessionOptions));
 
 // ===== Auth Middleware =====
 const requireAdmin = isAdminLoggedIn;
@@ -136,25 +151,38 @@ app.get("/", (req, res) => {
 
 // User Login GET
 app.get("/user/login", (req, res) => {
+  if (req.query.redirect) {
+    req.session.redirectTo = req.query.redirect;
+  }
   if (req.session && req.session.userId) {
-    return res.redirect("/home/hotel");
+    const dest = req.session.redirectTo || "/home/hotel";
+    delete req.session.redirectTo;
+    return res.redirect(dest);
   }
   let successMsg = null;
   if (req.query.signupSuccess === "true") {
     successMsg = "Account created! You can now log in using your first name and email.";
   }
-  res.render("userLogin", { error: null, success: successMsg, oldValues: {} });
+  res.render("userLogin", {
+    error: null,
+    success: successMsg,
+    oldValues: {},
+    redirect: req.query.redirect || (req.session && req.session.redirectTo) || ""
+  });
 });
 
 // User Login POST (Passwordless: first name + email match)
 app.post("/user/login", async (req, res) => {
-  const { firstName, email, rememberMe } = req.body;
+  const { firstName, email, rememberMe, redirect: redirectParam } = req.body;
+  const redirectTarget = redirectParam || (req.session && req.session.redirectTo) || "/home/hotel";
+
   try {
     if (!firstName || !email) {
       return res.render("userLogin", {
         error: "Please enter both first name and email.",
         success: null,
-        oldValues: { firstName, email }
+        oldValues: { firstName, email },
+        redirect: redirectTarget
       });
     }
 
@@ -167,7 +195,8 @@ app.post("/user/login", async (req, res) => {
       return res.render("userLogin", {
         error: "Email address not found. Please sign up first.",
         success: null,
-        oldValues: { firstName, email }
+        oldValues: { firstName, email },
+        redirect: redirectTarget
       });
     }
 
@@ -177,7 +206,8 @@ app.post("/user/login", async (req, res) => {
       return res.render("userLogin", {
         error: "First name does not match this email address",
         success: null,
-        oldValues: { firstName, email }
+        oldValues: { firstName, email },
+        redirect: redirectTarget
       });
     }
 
@@ -186,7 +216,8 @@ app.post("/user/login", async (req, res) => {
       return res.render("userLogin", {
         error: "Account deactivated, contact admin",
         success: null,
-        oldValues: { firstName, email }
+        oldValues: { firstName, email },
+        redirect: redirectTarget
       });
     }
 
@@ -206,36 +237,48 @@ app.post("/user/login", async (req, res) => {
       req.session.cookie.maxAge = 24 * 60 * 60 * 1000; // 24 hours
     }
 
-    const redirectTo = req.session.redirectTo || "/home/hotel";
     delete req.session.redirectTo;
-    res.redirect(redirectTo);
+    res.redirect(redirectTarget);
   } catch (err) {
     console.error("User login error:", err);
     res.render("userLogin", {
       error: "An error occurred during login.",
       success: null,
-      oldValues: { firstName, email }
+      oldValues: { firstName, email },
+      redirect: redirectTarget
     });
   }
 });
 
 // User Signup GET
 app.get("/user/signup", (req, res) => {
-  if (req.session && req.session.userId) {
-    return res.redirect("/home/hotel");
+  if (req.query.redirect) {
+    req.session.redirectTo = req.query.redirect;
   }
-  res.render("userSignup", { error: null, oldValues: {} });
+  if (req.session && req.session.userId) {
+    const dest = req.session.redirectTo || "/home/hotel";
+    delete req.session.redirectTo;
+    return res.redirect(dest);
+  }
+  res.render("userSignup", {
+    error: null,
+    oldValues: {},
+    redirect: req.query.redirect || (req.session && req.session.redirectTo) || ""
+  });
 });
 
 // User Signup POST
 app.post("/user/signup", async (req, res) => {
   console.log("Signup req.body:", req.body);
-  const { firstName, lastName, email, phone, gender, dateOfBirth, city, avatar } = req.body;
+  const { firstName, lastName, email, phone, gender, dateOfBirth, city, avatar, redirect: redirectParam } = req.body;
+  const redirectTarget = redirectParam || (req.session && req.session.redirectTo) || "/home/hotel";
+
   try {
     if (!firstName || !lastName || !email || !phone || !gender) {
       return res.render("userSignup", {
         error: "Please fill in all required fields.",
-        oldValues: req.body
+        oldValues: req.body,
+        redirect: redirectTarget
       });
     }
 
@@ -246,7 +289,8 @@ app.post("/user/signup", async (req, res) => {
     if (existingEmail) {
       return res.render("userSignup", {
         error: "Email is already registered.",
-        oldValues: req.body
+        oldValues: req.body,
+        redirect: redirectTarget
       });
     }
 
@@ -287,12 +331,14 @@ app.post("/user/signup", async (req, res) => {
     req.session.userAvatar = newUser.avatar || "";
     req.session.userUsername = newUser.username;
 
-    res.redirect("/home/hotel");
+    delete req.session.redirectTo;
+    res.redirect(redirectTarget);
   } catch (err) {
     console.error("User signup error:", err);
     res.render("userSignup", {
       error: "An error occurred during sign up.",
-      oldValues: req.body
+      oldValues: req.body,
+      redirect: redirectTarget
     });
   }
 });

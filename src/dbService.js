@@ -82,6 +82,35 @@ export const dbService = {
     return useJsonDb;
   },
 
+  async syncLocalUsersToMongo() {
+    try {
+      const db = readJsonDb();
+      if (db.users && db.users.length > 0) {
+        for (const u of db.users) {
+          if (!u.email) continue;
+          const exists = await User.findOne({ email: u.email.toLowerCase().trim() });
+          if (!exists) {
+            const { _id, id, ...userData } = u;
+            await User.create(userData);
+            console.log(`[MongoDB Atlas] Synced user: ${u.email}`);
+          }
+        }
+      }
+      if (db.listings && db.listings.length > 0) {
+        const count = await Listing.countDocuments();
+        if (count === 0) {
+          for (const l of db.listings) {
+            const { _id, id, ...listingData } = l;
+            await Listing.create(listingData);
+          }
+          console.log(`[MongoDB Atlas] Synced ${db.listings.length} listings`);
+        }
+      }
+    } catch (err) {
+      console.error("MongoDB sync error:", err.message);
+    }
+  },
+
   // ===== Listings operations =====
   async getListings(filter = {}) {
     if (!useJsonDb) {

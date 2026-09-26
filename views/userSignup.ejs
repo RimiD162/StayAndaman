@@ -61,6 +61,9 @@
       <% } %>
 
       <form id="signup-form" class="auth-form" action="/user/signup" method="POST" style="gap: 12px;">
+        <% if (typeof redirect !== 'undefined' && redirect) { %>
+          <input type="hidden" name="redirect" value="<%= redirect %>">
+        <% } %>
         <input type="hidden" name="avatar" id="avatar-data" value="">
 
           <!-- Row 1: First Name + Last Name -->

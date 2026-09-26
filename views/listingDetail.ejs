@@ -866,14 +866,27 @@
 
         const response = await fetch('/booking/create', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
           body: JSON.stringify(bodyData)
         });
 
-        const result = await response.json();
+        let result;
+        try {
+          result = await response.json();
+        } catch (parseErr) {
+          result = { success: false, error: "Unexpected response. Please log in and try again." };
+        }
         
         if (response.ok && result.success) {
           renderSuccessScreen(result.booking);
+        } else if (response.status === 401) {
+          showToastNotification(result.error || "Please log in to complete your booking.");
+          setTimeout(() => {
+            window.location.href = result.redirect || `/user/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+          }, 1200);
         } else {
           showToastNotification(result.error || "Booking failed. Try again.");
           btn.disabled = false;
