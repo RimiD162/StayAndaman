@@ -703,10 +703,16 @@ export const dbService = {
     return [...db.bookings].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   },
 
-  async getBookingsByUser(userId) {
+  async getBookingsByUser(userId, email) {
     if (!useJsonDb) {
       try {
-        return await Booking.find({ userId }).sort({ createdAt: -1 });
+        const query = [];
+        if (userId) query.push({ userId });
+        if (email) query.push({ guestEmail: new RegExp(`^${email.trim()}$`, "i") });
+        if (query.length > 0) {
+          return await Booking.find({ $or: query }).sort({ createdAt: -1 });
+        }
+        return [];
       } catch (err) {
         console.error("Mongoose getBookingsByUser failed, falling back:", err.message);
         dbService.setFallbackActive();
@@ -715,8 +721,17 @@ export const dbService = {
 
     const db = readJsonDb();
     if (!db.bookings) db.bookings = [];
+    const normalizedUserId = userId ? userId.toString() : null;
+    const normalizedEmail = email ? email.toLowerCase().trim() : null;
+
     return db.bookings
-      .filter(b => b.userId === userId)
+      .filter(b => {
+        const bUser = b.userId ? b.userId.toString() : null;
+        const bEmail = b.guestEmail ? b.guestEmail.toLowerCase().trim() : null;
+        const matchUser = normalizedUserId && bUser && bUser === normalizedUserId;
+        const matchEmail = normalizedEmail && bEmail && bEmail === normalizedEmail;
+        return matchUser || matchEmail;
+      })
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   },
 

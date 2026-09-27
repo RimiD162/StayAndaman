@@ -161,7 +161,7 @@ app.get("/user/login", (req, res) => {
   }
   let successMsg = null;
   if (req.query.signupSuccess === "true") {
-    successMsg = "Account created! You can now log in using your first name and email.";
+    successMsg = "Account created! Welcome to StayAndaman — just enter your email to sign in."
   }
   res.render("userLogin", {
     error: null,
@@ -171,52 +171,42 @@ app.get("/user/login", (req, res) => {
   });
 });
 
-// User Login POST (Passwordless: first name + email match)
+// User Login POST (Passwordless: email-only sign-in for returning users)
 app.post("/user/login", async (req, res) => {
-  const { firstName, email, rememberMe, redirect: redirectParam } = req.body;
+  const { email, rememberMe, redirect: redirectParam } = req.body;
   const redirectTarget = redirectParam || (req.session && req.session.redirectTo) || "/home/hotel";
 
   try {
-    if (!firstName || !email) {
+    if (!email) {
       return res.render("userLogin", {
-        error: "Please enter both first name and email.",
+        error: "Please enter your email address.",
         success: null,
-        oldValues: { firstName, email },
+        oldValues: { email },
         redirect: redirectTarget
       });
     }
 
-    const trimmedFirstName = firstName.trim();
     const trimmedEmail = email.toLowerCase().trim();
 
     // 1. Check if user exists by email
     const matchedUser = await dbService.findUserByEmail(trimmedEmail);
     if (!matchedUser) {
       return res.render("userLogin", {
-        error: "Email address not found. Please sign up first.",
+        error: `No account found for "${trimmedEmail}". Please sign up first.`,
+        notFoundEmail: trimmedEmail,
         success: null,
-        oldValues: { firstName, email },
+        oldValues: { email },
         redirect: redirectTarget
       });
     }
 
-    // 2. Check if first name matches the first part of the stored full name
-    const storedFirstName = matchedUser.fullName ? matchedUser.fullName.split(' ')[0].toLowerCase().trim() : "";
-    if (storedFirstName !== trimmedFirstName.toLowerCase().trim()) {
-      return res.render("userLogin", {
-        error: "First name does not match this email address",
-        success: null,
-        oldValues: { firstName, email },
-        redirect: redirectTarget
-      });
-    }
-
-    // 3. Check if account is active
+    // 2. Check if account is active
     if (matchedUser.isActive === false) {
       return res.render("userLogin", {
-        error: "Account deactivated, contact admin",
+        error: "Your account has been deactivated. Please contact admin.",
+        notFoundEmail: null,
         success: null,
-        oldValues: { firstName, email },
+        oldValues: { email },
         redirect: redirectTarget
       });
     }
@@ -242,9 +232,10 @@ app.post("/user/login", async (req, res) => {
   } catch (err) {
     console.error("User login error:", err);
     res.render("userLogin", {
-      error: "An error occurred during login.",
+      error: "An error occurred during login. Please try again.",
+      notFoundEmail: null,
       success: null,
-      oldValues: { firstName, email },
+      oldValues: { email },
       redirect: redirectTarget
     });
   }
@@ -262,7 +253,7 @@ app.get("/user/signup", (req, res) => {
   }
   res.render("userSignup", {
     error: null,
-    oldValues: {},
+    oldValues: { email: req.query.email || "" },
     redirect: req.query.redirect || (req.session && req.session.redirectTo) || ""
   });
 });
@@ -494,8 +485,8 @@ app.get("/listing/:id", async (req, res) => {
   }
 });
 
-// POST /booking/create - Submit booking
-app.post("/booking/create", isUserLoggedIn, async (req, res) => {
+// POST /booking/create - Submit booking directly without forced sign-in redirect
+app.post("/booking/create", async (req, res) => {
   try {
     const {
       listingId, listingName, category, location, listingImage,
@@ -509,18 +500,57 @@ app.post("/booking/create", isUserLoggedIn, async (req, res) => {
       return res.status(400).json({ success: false, error: "Please fill in all required fields." });
     }
 
-    const phoneRegex = /^[6-9]\d{9}$/;
-    if (!phoneRegex.test(guestPhone)) {
-      return res.status(400).json({ success: false, error: "Enter a valid 10-digit mobile number." });
+    const cleanPhone = (guestPhone || "").replace(/\D/g, "").slice(-10);
+    if (cleanPhone.length !== 10 || !/^[6-9]/.test(cleanPhone)) {
+      return res.status(400).json({ success: false, error: "Enter a valid 10-digit mobile number starting with 6, 7, 8, or 9." });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(guestEmail)) {
+    if (!emailRegex.test(guestEmail.trim())) {
       return res.status(400).json({ success: false, error: "Enter a valid email address." });
     }
 
     if (new Date(checkOut) <= new Date(checkIn)) {
       return res.status(400).json({ success: false, error: "Check-out date must be after check-in." });
+    }
+
+    const parsedTotal = parseFloat(totalAmount) || 0;
+    const isPartial = paymentMethod === "Pay Partial" || paymentMethod === "Pay Partial (20% Advance)";
+    const isOnline = paymentMethod.includes("UPI") || isPartial;
+
+    const trimmedEmail = guestEmail.toLowerCase().trim();
+    let assignedUserId = req.session && req.session.userId ? req.session.userId : null;
+
+    // If not logged in in session, link to existing user by email or create user
+    if (!assignedUserId) {
+      let matchedUser = await dbService.findUserByEmail(trimmedEmail);
+      if (!matchedUser) {
+        let baseUsername = guestName.toLowerCase().replace(/[^a-z0-9]/g, "") || "user";
+        let finalUsername = baseUsername;
+        let counter = 1;
+        while (await dbService.findUserByUsername(finalUsername)) {
+          finalUsername = `${baseUsername}${counter}`;
+          counter++;
+        }
+        matchedUser = await dbService.createUserRecord({
+          fullName: guestName.trim(),
+          username: finalUsername,
+          email: trimmedEmail,
+          phone: cleanPhone,
+          gender: "Not Specified",
+          city: location ? location.split(",")[0] : "Andaman",
+          isActive: true,
+          createdAt: new Date()
+        });
+      }
+      assignedUserId = matchedUser._id || matchedUser.id;
+
+      // Automatically sign them in so they have an active session
+      req.session.userId = assignedUserId;
+      req.session.userFullName = matchedUser.fullName;
+      req.session.userEmail = matchedUser.email;
+      req.session.userAvatar = matchedUser.avatar || "";
+      req.session.userUsername = matchedUser.username;
     }
 
     const bookingData = {
@@ -529,10 +559,10 @@ app.post("/booking/create", isUserLoggedIn, async (req, res) => {
       category,
       location,
       listingImage: listingImage || "",
-      guestName,
-      guestEmail,
-      guestPhone,
-      userId: req.session.userId,
+      guestName: guestName.trim(),
+      guestEmail: trimmedEmail,
+      guestPhone: cleanPhone,
+      userId: assignedUserId,
       checkIn: new Date(checkIn),
       checkOut: new Date(checkOut),
       nights: parseInt(nights) || 1,
@@ -540,9 +570,13 @@ app.post("/booking/create", isUserLoggedIn, async (req, res) => {
       roomType,
       pricePerNight: parseFloat(pricePerNight),
       subtotal: parseFloat(subtotal),
-      tax: parseFloat(tax),
-      totalAmount: parseFloat(totalAmount),
+      tax: parseFloat(tax) || 0,
+      totalAmount: parsedTotal,
       paymentMethod,
+      paymentStatus: isOnline ? "Paid Online" : "Pending (Pay at Property)",
+      transactionId: isOnline ? (req.body.utr && req.body.utr.trim().length >= 4 ? `UTR-${req.body.utr.trim().toUpperCase()}` : `TXN-${Date.now().toString(36).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`) : null,
+      advancePaid: isPartial ? Math.round(parsedTotal * 0.20) : (isOnline ? parsedTotal : 0),
+      balanceDue: isPartial ? Math.round(parsedTotal * 0.80) : (isOnline ? 0 : parsedTotal),
       specialRequests: specialRequests || "",
       status: "Confirmed"
     };
@@ -556,28 +590,46 @@ app.post("/booking/create", isUserLoggedIn, async (req, res) => {
 });
 
 // GET /my-bookings - User bookings dashboard
-app.get("/my-bookings", isUserLoggedIn, async (req, res) => {
+app.get("/my-bookings", async (req, res) => {
   try {
-    const bookings = await dbService.getBookingsByUser(req.session.userId);
-    res.render("myBookings", { bookings });
+    const queryEmail = (req.query.email || "").toLowerCase().trim();
+    let sessionUserId = req.session ? req.session.userId : null;
+    let sessionEmail = req.session ? req.session.userEmail : null;
+    let effectiveEmail = queryEmail || sessionEmail;
+
+    // If query email provided and user not logged in, auto-login if user exists
+    if (queryEmail && !sessionUserId) {
+      const matchedUser = await dbService.findUserByEmail(queryEmail);
+      if (matchedUser) {
+        req.session.userId = matchedUser._id || matchedUser.id;
+        req.session.userFullName = matchedUser.fullName;
+        req.session.userEmail = matchedUser.email;
+        req.session.userAvatar = matchedUser.avatar || "";
+        req.session.userUsername = matchedUser.username;
+        sessionUserId = req.session.userId;
+        sessionEmail = req.session.userEmail;
+      }
+    }
+
+    let bookings = [];
+    if (sessionUserId || effectiveEmail) {
+      bookings = await dbService.getBookingsByUser(sessionUserId, effectiveEmail);
+    }
+
+    res.render("myBookings", { 
+      bookings,
+      searchEmail: effectiveEmail || ""
+    });
   } catch (err) {
-    console.error(err);
-    res.redirect("/home/hotel");
+    console.error("Fetch my-bookings error:", err);
+    res.render("myBookings", { bookings: [], searchEmail: "" });
   }
 });
 
 // POST /booking/cancel/:id - Cancel stay booking
-app.post("/booking/cancel/:id", isUserLoggedIn, async (req, res) => {
+app.post("/booking/cancel/:id", async (req, res) => {
   try {
     const bookingId = req.params.id;
-    // Check if the booking belongs to this user
-    const bookings = await dbService.getBookingsByUser(req.session.userId);
-    const hasBooking = bookings.some(b => (b._id || b.id).toString() === bookingId.toString());
-
-    if (!hasBooking) {
-      return res.status(403).json({ success: false, error: "Unauthorized access to booking." });
-    }
-
     await dbService.updateBookingStatus(bookingId, "Cancelled");
     res.json({ success: true });
   } catch (err) {

@@ -181,10 +181,10 @@
     © 2025 Stayandaman. All rights reserved.
   </footer>
 
-  <!-- Auth Suggestion Modal -->
+  <!-- Auth Prompt Modal -->
   <div id="auth-suggestion-modal" class="auth-modal-overlay">
     <div class="auth-modal-container">
-      <button class="auth-modal-close" onclick="closeSignInModal(true)" aria-label="Close modal">&times;</button>
+      <button class="auth-modal-close" onclick="closeSignInModal()" aria-label="Close modal">&times;</button>
       <div class="auth-modal-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
@@ -193,10 +193,18 @@
         </svg>
       </div>
       <h2 class="auth-modal-title">Welcome to Stay<span>Andaman</span></h2>
-      <p class="auth-modal-text">Sign in to unlock bookings, manage your profile, and see your customized bookings in one place.</p>
+      <p class="auth-modal-text">To explore and book verified stays across the islands, please create an account or sign in with your email.</p>
       <div class="auth-modal-actions">
-        <a href="/user/login" class="auth-modal-btn-signin">Sign In / Register</a>
-        <button class="auth-modal-btn-guest" onclick="continueAsGuest()">Continue as Guest</button>
+        <!-- New visitor: Sign Up -->
+        <a id="modal-signup-link" href="/user/signup" class="auth-modal-btn-signup">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+          New Here? Create Free Account
+        </a>
+        <!-- Returning visitor: Sign In -->
+        <a id="modal-signin-link" href="/user/login" class="auth-modal-btn-signin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px;height:18px;"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Returning User? Sign In with Email
+        </a>
       </div>
     </div>
   </div>
@@ -204,7 +212,7 @@
   </div>
 
   <script>
-    let targetCategoryUrl = '';
+    let targetCategoryUrl = '/home/hotel';
 
     function handleCategorySelect(url, event) {
       if (event) {
@@ -214,10 +222,14 @@
       
       const isLoggedIn = <%= locals.user ? 'true' : 'false' %>;
       const isAdmin = <%= locals.admin ? 'true' : 'false' %>;
-      const promptShown = sessionStorage.getItem('stayEase_signInPromptShown');
 
-      if (!isLoggedIn && !isAdmin && promptShown !== 'true') {
+      if (!isLoggedIn && !isAdmin) {
         targetCategoryUrl = url;
+        // Update modal links to include redirect target
+        const signupLink = document.getElementById('modal-signup-link');
+        const signinLink = document.getElementById('modal-signin-link');
+        if (signupLink) signupLink.href = `/user/signup?redirect=${encodeURIComponent(url)}`;
+        if (signinLink) signinLink.href = `/user/login?redirect=${encodeURIComponent(url)}`;
         showSignInModal();
       } else {
         navigateTo(url);
@@ -231,20 +243,10 @@
       }
     }
 
-    function closeSignInModal(setFlag) {
+    function closeSignInModal() {
       const modal = document.getElementById('auth-suggestion-modal');
       if (modal) {
         modal.classList.remove('active');
-      }
-      if (setFlag) {
-        sessionStorage.setItem('stayEase_signInPromptShown', 'true');
-      }
-    }
-
-    function continueAsGuest() {
-      closeSignInModal(true);
-      if (targetCategoryUrl) {
-        navigateTo(targetCategoryUrl);
       }
     }
 

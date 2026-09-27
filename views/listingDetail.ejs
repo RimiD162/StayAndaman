@@ -236,7 +236,7 @@
             </div>
 
             <!-- Action Button -->
-            <button id="btn-open-booking" class="btn-book-now" onclick="openBookingModal()" disabled>
+            <button id="btn-open-booking" class="btn-book-now" onclick="openBookingModal()">
               Book Now
             </button>
 
@@ -445,44 +445,101 @@
               <div class="payment-methods-grid">
                 
                 <!-- Option 1: Pay at property -->
-                <label class="payment-radio-card">
+                <label class="payment-radio-card active" onclick="selectPaymentCard(this, 'Pay at Property')">
                   <div class="payment-radio-left">
                     <input type="radio" name="paymentMethod" value="Pay at Property" checked style="display:none;" onchange="updateRadioSelection(this)">
                     <div class="payment-radio-circle"></div>
                     <div class="payment-radio-text-wrap">
                       <span class="payment-radio-title">Pay at Property</span>
-                      <span class="payment-radio-desc">No payment needed today. Pay during check-in.</span>
+                      <span class="payment-radio-desc">No payment needed today. Pay full amount during check-in.</span>
                     </div>
                   </div>
                   <span class="payment-icon">🏢</span>
                 </label>
 
-                <!-- Option 2: UPI -->
-                <label class="payment-radio-card">
+                <!-- Option 2: UPI / Net Banking -->
+                <label class="payment-radio-card" onclick="selectPaymentCard(this, 'UPI / Net Banking')">
                   <div class="payment-radio-left">
                     <input type="radio" name="paymentMethod" value="UPI / Net Banking" style="display:none;" onchange="updateRadioSelection(this)">
                     <div class="payment-radio-circle"></div>
                     <div class="payment-radio-text-wrap">
-                      <span class="payment-radio-title">UPI / Net Banking</span>
-                      <span class="payment-radio-desc">Fast payment authorization via PhonePe, GPay, etc.</span>
+                      <span class="payment-radio-title">UPI / Net Banking (Instant Pay)</span>
+                      <span class="payment-radio-desc">Fast payment authorization via PhonePe, GPay, Paytm, etc.</span>
                     </div>
                   </div>
-                  <span class="payment-icon">🏦</span>
+                  <span class="payment-icon">⚡</span>
                 </label>
 
                 <!-- Option 3: Pay partial -->
-                <label class="payment-radio-card">
+                <label class="payment-radio-card" onclick="selectPaymentCard(this, 'Pay Partial')">
                   <div class="payment-radio-left">
                     <input type="radio" name="paymentMethod" value="Pay Partial" style="display:none;" onchange="updateRadioSelection(this)">
                     <div class="payment-radio-circle"></div>
                     <div class="payment-radio-text-wrap">
-                      <span class="payment-radio-title">Pay Partial (20% Advance)</span>
-                      <span class="payment-radio-desc">Pay remaining 80% directly at the listing.</span>
+                      <span class="payment-radio-title">Pay Partial (20% Advance Online)</span>
+                      <span class="payment-radio-desc" id="partial-desc-text">Pay 20% now to reserve & rest at check-in.</span>
                     </div>
                   </div>
                   <span class="payment-icon">💰</span>
                 </label>
 
+              </div>
+
+              <!-- Interactive Online Payment Box -->
+              <div id="online-payment-details-box" style="margin-top: 14px; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px; display: none;">
+                
+                <!-- Partial Advance Breakdown Alert if selected -->
+                <div id="partial-method-content" style="display:none; margin-bottom: 12px; padding: 10px 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;">
+                  <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                    <span style="color: #166534; font-weight: 500;">Pay Now (20% Advance):</span>
+                    <strong id="partial-advance-val" style="color: #15803d; font-family: var(--font-mono); font-size: 14px;">₹0</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 4px;">
+                    <span style="color: #64748b;">Due at Check-in (80% Balance):</span>
+                    <strong id="partial-balance-val" style="color: #334155; font-family: var(--font-mono);">₹0</strong>
+                  </div>
+                  <div style="font-size: 11px; color: #0284c7; margin-top: 4px;">
+                    💡 Advance is 100% refundable if cancelled up to 24 hours before check-in.
+                  </div>
+                </div>
+
+                <!-- UPI Payment Card with Real QR -->
+                <div id="upi-method-content">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="font-size: 13px; font-weight: 700; color: #1e293b;">⚡ UPI Instant Payment</span>
+                    <span id="upi-pay-amount-badge" style="font-size: 13.5px; font-weight: 700; color: #15803d; font-family: var(--font-mono); background: #dcfce7; border: 1px solid #86efac; padding: 3px 10px; border-radius: 6px;">₹0</span>
+                  </div>
+
+                  <!-- QR Code Card Box -->
+                  <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 14px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.04); margin-bottom: 12px;">
+                    <div style="font-size: 12px; color: #475569; margin-bottom: 8px; font-weight: 600;">
+                      Scan to Pay with Any UPI App (GPay, PhonePe, Paytm, BHIM)
+                    </div>
+                    
+                    <div style="display: inline-block; background: #fff; padding: 8px; border-radius: 12px; border: 2px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
+                      <img src="/images/upi-qr.jpg" alt="Rimi Dutta UPI QR Code" style="width: 175px; height: 175px; object-fit: contain; border-radius: 8px; display: block;">
+                    </div>
+
+                    <div style="margin-top: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">
+                      Beneficiary: <span style="color: #2563eb;">Rimi Dutta</span>
+                    </div>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                      Verified Merchant Account &bull; Instant Confirmation
+                    </div>
+                  </div>
+
+                  <!-- Optional UTR / Reference ID Field -->
+                  <div style="margin-top: 10px;">
+                    <label style="display: block; font-size: 11.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">
+                      UPI Reference / UTR No. (Optional after scan)
+                    </label>
+                    <div style="display: flex; gap: 8px;">
+                      <input type="text" id="upi-utr-input" placeholder="Enter 12-digit UTR or leave for auto-verify" style="flex:1; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; font-family: var(--font-mono);" maxlength="16">
+                      <span style="font-size: 11px; color: #16a34a; font-weight: 600; display: flex; align-items: center; white-space: nowrap;">✓ Auto-Verified</span>
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </div>
 
@@ -591,47 +648,72 @@
       container.appendChild(toast);
       setTimeout(() => toast.remove(), 3000);
     }
+
+    // Redirect to login/signup when not logged in and trying to book
+    function requireLoginToBook() {
+      const currentUrl = window.location.pathname;
+      window.location.href = `/user/login?redirect=${encodeURIComponent(currentUrl)}`;
+    }
   </script>
 
   <!-- ===== LIVE PRICING CALCULATION JS ===== -->
   <script>
     const pricePerNight = parseFloat(document.getElementById('price-per-night').textContent);
     
-    // Set check-in date limits to prevent choosing past dates
-    document.addEventListener('DOMContentLoaded', () => {
-      const todayStr = new Date().toISOString().split('T')[0];
-      const checkinEl = document.getElementById('check-in-date');
-      const checkoutEl = document.getElementById('check-out-date');
-      if (checkinEl) checkinEl.min = todayStr;
-      if (checkoutEl) checkoutEl.min = todayStr;
-    });
-
     let stayDetails = {
       checkIn: null,
       checkOut: null,
-      nights: 0,
+      nights: 1,
       guests: 1,
-      subtotal: 0,
+      subtotal: pricePerNight,
       tax: 0,
-      total: 0
+      total: pricePerNight
     };
 
-    function onDatesChanged() {
-      const checkinStr = document.getElementById('check-in-date').value;
-      const checkoutStr = document.getElementById('check-out-date').value;
+    // Set check-in date limits and initialize default dates (Tomorrow -> Day After)
+    document.addEventListener('DOMContentLoaded', () => {
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
       
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+      
+      const dayAfter = new Date(today);
+      dayAfter.setDate(today.getDate() + 2);
+      const dayAfterStr = dayAfter.toISOString().split('T')[0];
+
+      const checkinEl = document.getElementById('check-in-date');
+      const checkoutEl = document.getElementById('check-out-date');
+      
+      if (checkinEl) {
+        checkinEl.min = todayStr;
+        if (!checkinEl.value) checkinEl.value = tomorrowStr;
+      }
+      if (checkoutEl) {
+        checkoutEl.min = tomorrowStr;
+        if (!checkoutEl.value) checkoutEl.value = dayAfterStr;
+      }
+      
+      onDatesChanged();
+    });
+
+    function onDatesChanged() {
       const checkinEl = document.getElementById('check-in-date');
       const checkoutEl = document.getElementById('check-out-date');
       const openBtn = document.getElementById('btn-open-booking');
       
+      if (!checkinEl || !checkoutEl) return;
+
+      const checkinStr = checkinEl.value;
+      const checkoutStr = checkoutEl.value;
+      
       if (!checkinStr) return;
       
       // Update check-out min date constraint
-      if (checkinEl && checkoutEl) {
-        const checkinDate = new Date(checkinStr);
-        checkinDate.setDate(checkinDate.getDate() + 1); // Checkout must be at least 1 day after
-        checkoutEl.min = checkinDate.toISOString().split('T')[0];
-      }
+      const checkinDate = new Date(checkinStr);
+      checkinDate.setDate(checkinDate.getDate() + 1); // Checkout must be at least 1 day after
+      checkoutEl.min = checkinDate.toISOString().split('T')[0];
 
       if (!checkoutStr) return;
 
@@ -644,13 +726,13 @@
         document.getElementById('select-dates-hint').style.display = 'block';
         document.getElementById('select-dates-hint').innerText = "Check-out date must be after check-in date!";
         document.getElementById('select-dates-hint').style.color = 'var(--danger)';
-        openBtn.disabled = true;
+        if (openBtn) openBtn.disabled = true;
         return;
       }
 
       // Valid range - calculate stay duration
       const diffTime = Math.abs(date2 - date1);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
       
       stayDetails.checkIn = checkinStr;
       stayDetails.checkOut = checkoutStr;
@@ -665,52 +747,63 @@
       document.getElementById('total-amount-val').innerText = `₹${stayDetails.total.toLocaleString('en-IN')}`;
       
       // Update Button label
-      openBtn.innerText = `🔒 Book Now — ₹${stayDetails.total.toLocaleString('en-IN')}`;
+      if (openBtn) {
+        openBtn.innerText = `🔒 Book Now — ₹${stayDetails.total.toLocaleString('en-IN')}`;
+        openBtn.disabled = false;
+      }
       
       document.getElementById('breakdown-area').style.display = 'block';
       document.getElementById('select-dates-hint').style.display = 'none';
-      openBtn.disabled = false;
       
       // Update Modal Form pre-fill values
-      document.getElementById('modal-checkin-field').value = checkinStr;
-      document.getElementById('modal-checkout-field').value = checkoutStr;
-      
-      // Update Modal limits
-      const nextDay = new Date(checkinStr);
-      nextDay.setDate(nextDay.getDate() + 1);
-      document.getElementById('modal-checkout-field').min = nextDay.toISOString().split('T')[0];
+      const modalIn = document.getElementById('modal-checkin-field');
+      const modalOut = document.getElementById('modal-checkout-field');
+      if (modalIn) modalIn.value = checkinStr;
+      if (modalOut) {
+        modalOut.value = checkoutStr;
+        const nextDay = new Date(checkinStr);
+        nextDay.setDate(nextDay.getDate() + 1);
+        modalOut.min = nextDay.toISOString().split('T')[0];
+      }
     }
 
     function onGuestsChanged() {
       const select = document.getElementById('guest-count');
-      stayDetails.guests = parseInt(select.value);
+      stayDetails.guests = parseInt(select.value) || 1;
       
       // Update Modal dropdown
-      document.getElementById('modal-guests-field').value = select.value;
+      const modalGuests = document.getElementById('modal-guests-field');
+      if (modalGuests) modalGuests.value = select.value;
     }
   </script>
 
   <!-- ===== MODAL HANDLERS & VALIDATIONS ===== -->
   <script>
     function openBookingModal() {
-      // Confirm user is logged in
-      const userLoggedIn = !!document.getElementById('navbar-user');
-      if (!userLoggedIn) {
-        // Save redirect URL in session and prompt login
-        showToastNotification("Redirecting to login first...");
-        setTimeout(() => {
-          window.location.href = `/user/login?redirect=${encodeURIComponent(window.location.pathname)}`;
-        }, 1200);
-        return;
+      // Ensure valid dates are populated
+      const checkinEl = document.getElementById('check-in-date');
+      const checkoutEl = document.getElementById('check-out-date');
+      if (!checkinEl.value || !checkoutEl.value || stayDetails.nights <= 0) {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const dayAfter = new Date(today);
+        dayAfter.setDate(today.getDate() + 2);
+        checkinEl.value = tomorrow.toISOString().split('T')[0];
+        checkoutEl.value = dayAfter.toISOString().split('T')[0];
+        onDatesChanged();
       }
-      
-      // Populate and open modal
+
+      // Populate and open modal freely
       document.getElementById('modal-summary-checkin').innerText = formatDateStr(stayDetails.checkIn);
       document.getElementById('modal-summary-checkout').innerText = formatDateStr(stayDetails.checkOut);
       document.getElementById('modal-summary-nights').innerText = stayDetails.nights;
       document.getElementById('modal-summary-guests').innerText = stayDetails.guests;
       document.getElementById('modal-summary-total').innerText = `₹${stayDetails.total.toLocaleString('en-IN')}`;
       
+      // Update Payment Advance / Total Displays
+      updatePaymentCalculations();
+
       // Trigger modal active class
       document.getElementById('booking-modal').classList.add('active');
       
@@ -746,6 +839,7 @@
       document.getElementById('modal-summary-nights').innerText = stayDetails.nights;
       document.getElementById('modal-summary-total').innerText = `₹${stayDetails.total.toLocaleString('en-IN')}`;
       
+      updatePaymentCalculations();
       validateFormState();
     }
 
@@ -757,11 +851,75 @@
       validateFormState();
     }
 
+    // Payment calculations for Advance & Full
+    function updatePaymentCalculations() {
+      const total = stayDetails.total || 0;
+      const advance = Math.round(total * 0.20);
+      const balance = Math.round(total * 0.80);
+
+      const upiBadge = document.getElementById('upi-pay-amount-badge');
+      if (upiBadge) upiBadge.innerText = `₹${total.toLocaleString('en-IN')}`;
+
+      const advEl = document.getElementById('partial-advance-val');
+      if (advEl) advEl.innerText = `₹${advance.toLocaleString('en-IN')}`;
+
+      const balEl = document.getElementById('partial-balance-val');
+      if (balEl) balEl.innerText = `₹${balance.toLocaleString('en-IN')}`;
+
+      const partialDesc = document.getElementById('partial-desc-text');
+      if (partialDesc) partialDesc.innerText = `Pay 20% (₹${advance.toLocaleString('en-IN')}) now & rest ₹${balance.toLocaleString('en-IN')} at check-in.`;
+    }
+
     // Custom Radio buttons style selection triggers
+    function selectPaymentCard(cardEl, method) {
+      document.querySelectorAll('.payment-radio-card').forEach(c => c.classList.remove('active'));
+      cardEl.classList.add('active');
+      const radio = cardEl.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+
+      const onlineBox = document.getElementById('online-payment-details-box');
+      const upiContent = document.getElementById('upi-method-content');
+      const partialContent = document.getElementById('partial-method-content');
+
+      if (method === 'UPI / Net Banking') {
+        onlineBox.style.display = 'block';
+        upiContent.style.display = 'block';
+        partialContent.style.display = 'none';
+      } else if (method === 'Pay Partial') {
+        onlineBox.style.display = 'block';
+        upiContent.style.display = 'block';
+        partialContent.style.display = 'block';
+      } else {
+        onlineBox.style.display = 'none';
+      }
+
+      validateFormState();
+    }
+
     function updateRadioSelection(radioInput) {
-      document.querySelectorAll('.payment-radio-card').forEach(card => card.classList.remove('active'));
       const card = radioInput.closest('.payment-radio-card');
-      if (card) card.classList.add('active');
+      if (card) selectPaymentCard(card, radioInput.value);
+    }
+
+    function chooseUpiApp(btnEl, appName) {
+      document.querySelectorAll('.upi-app-btn').forEach(b => {
+        b.classList.remove('active');
+        b.style.border = '1.5px solid #cbd5e1';
+        b.style.background = '#fff';
+        b.style.color = '#475569';
+      });
+      btnEl.classList.add('active');
+      btnEl.style.border = '1.5px solid #2563eb';
+      btnEl.style.background = '#eff6ff';
+      btnEl.style.color = '#1e40af';
+
+      const vpa = document.getElementById('upi-vpa-input');
+      if (vpa) {
+        if (appName === 'GPay') vpa.value = 'user@okaxis';
+        else if (appName === 'PhonePe') vpa.value = 'user@ybl';
+        else if (appName === 'Paytm') vpa.value = 'user@paytm';
+        else vpa.value = 'user@upi';
+      }
     }
 
     // Form validations
@@ -780,9 +938,8 @@
       }
       
       if (input.id === 'booking-guest-phone' && input.value.trim()) {
-        // Indian phone number regex
-        const regex = /^[6-9]\d{9}$/;
-        if (!regex.test(input.value.trim())) isValid = false;
+        const digits = input.value.replace(/\D/g, '').slice(-10);
+        if (digits.length !== 10 || !/^[6-9]/.test(digits)) isValid = false;
       }
 
       if (isValid) {
@@ -795,26 +952,43 @@
     }
 
     function validateFormState() {
-      const name = document.getElementById('booking-guest-name').value.trim();
-      const email = document.getElementById('booking-guest-email').value.trim();
-      const phone = document.getElementById('booking-guest-phone').value.trim();
-      const terms = document.getElementById('booking-terms').checked;
+      const name = (document.getElementById('booking-guest-name')?.value || '').trim();
+      const email = (document.getElementById('booking-guest-email')?.value || '').trim();
+      const phone = (document.getElementById('booking-guest-phone')?.value || '').trim();
+      const terms = document.getElementById('booking-terms')?.checked;
       
-      const checkin = document.getElementById('modal-checkin-field').value;
-      const checkout = document.getElementById('modal-checkout-field').value;
+      const checkin = document.getElementById('modal-checkin-field')?.value;
+      const checkout = document.getElementById('modal-checkout-field')?.value;
       
-      const phoneRegex = /^[6-9]\d{9}$/;
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const cleanPhone = phone.replace(/\D/g, '').slice(-10);
       
       let isValid = true;
       
       if (!name) isValid = false;
       if (!email || !emailRegex.test(email)) isValid = false;
-      if (!phone || !phoneRegex.test(phone)) isValid = false;
+      if (!phone || cleanPhone.length !== 10 || !/^[6-9]/.test(cleanPhone)) isValid = false;
       if (!checkin || !checkout || new Date(checkout) <= new Date(checkin)) isValid = false;
       if (!terms) isValid = false;
       
-      document.getElementById('btn-modal-confirm').disabled = !isValid;
+      const btn = document.getElementById('btn-modal-confirm');
+      if (btn) {
+        btn.disabled = !isValid;
+        
+        // Update Button Text depending on Payment Method
+        const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
+        const method = selectedRadio ? selectedRadio.value : 'Pay at Property';
+        const total = stayDetails.total || 0;
+        const advance = Math.round(total * 0.20);
+
+        if (method === 'UPI / Net Banking') {
+          btn.innerText = `🔒 Pay ₹${total.toLocaleString('en-IN')} via UPI & Confirm`;
+        } else if (method === 'Pay Partial') {
+          btn.innerText = `🔒 Pay 20% (₹${advance.toLocaleString('en-IN')}) & Confirm`;
+        } else {
+          btn.innerText = `✓ Confirm Booking (Pay at Property)`;
+        }
+      }
     }
 
     function triggerFormSubmit() {
@@ -835,11 +1009,22 @@
       const guests = parseInt(document.getElementById('modal-guests-field').value);
       const roomType = document.getElementById('modal-room-type').value;
       
-      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+      const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
+      const paymentMethod = selectedRadio ? selectedRadio.value : 'Pay at Property';
+      
+      const utrEl = document.getElementById('upi-utr-input');
+      const utrVal = utrEl ? utrEl.value.trim() : '';
       
       const btn = document.getElementById('btn-modal-confirm');
       btn.disabled = true;
-      btn.innerText = "Processing...";
+
+      const isOnline = paymentMethod !== 'Pay at Property';
+      if (isOnline) {
+        btn.innerText = "🔒 Authorizing Secure Payment...";
+        await new Promise(r => setTimeout(r, 600)); // Smooth payment UX feel
+      } else {
+        btn.innerText = "Processing...";
+      }
 
       try {
         const bodyData = {
@@ -861,6 +1046,7 @@
           tax: stayDetails.tax,
           totalAmount: stayDetails.total,
           paymentMethod: paymentMethod,
+          utr: utrVal,
           specialRequests: requests
         };
 
@@ -885,18 +1071,18 @@
         } else if (response.status === 401) {
           showToastNotification(result.error || "Please log in to complete your booking.");
           setTimeout(() => {
-            window.location.href = result.redirect || `/user/login?redirect=${encodeURIComponent(window.location.pathname)}`;
+            window.location.href = result.redirect || `/user/login?redirect=${encodeURIComponent(window.location.pathname + '?resumeBooking=1')}`;
           }, 1200);
         } else {
           showToastNotification(result.error || "Booking failed. Try again.");
           btn.disabled = false;
-          btn.innerText = "✓ Confirm Booking";
+          validateFormState();
         }
       } catch (err) {
         console.error(err);
         showToastNotification("Network error. Please try again.");
         btn.disabled = false;
-        btn.innerText = "✓ Confirm Booking";
+        validateFormState();
       }
     }
 
@@ -920,6 +1106,11 @@
               <span class="success-detail-label">Booking ID:</span>
               <strong class="success-detail-value" style="color:var(--primary); font-family:var(--font-mono); font-size:14px;">#${booking.bookingId}</strong>
             </div>
+            ${booking.transactionId ? `
+            <div class="success-detail-row">
+              <span class="success-detail-label">Transaction ID:</span>
+              <span class="success-detail-value" style="font-family:var(--font-mono); font-size:12px; color:#16a34a;">${booking.transactionId}</span>
+            </div>` : ''}
             <div class="success-detail-row">
               <span class="success-detail-label">Listing:</span>
               <span class="success-detail-value">${escapeHtml(booking.listingName)} (${booking.category})</span>
@@ -934,10 +1125,20 @@
             </div>
             <div class="success-detail-row">
               <span class="success-detail-label">Payment Method:</span>
-              <span class="success-detail-value">${booking.paymentMethod}</span>
+              <span class="success-detail-value" style="color:#0284c7; font-weight:600;">${booking.paymentMethod}</span>
             </div>
+            ${booking.advancePaid ? `
+            <div class="success-detail-row">
+              <span class="success-detail-label">Paid Online:</span>
+              <span class="success-detail-value" style="color:#16a34a; font-weight:700;">₹${booking.advancePaid.toLocaleString('en-IN')}</span>
+            </div>` : ''}
+            ${booking.balanceDue ? `
+            <div class="success-detail-row">
+              <span class="success-detail-label">Due at Check-in:</span>
+              <span class="success-detail-value" style="color:#e11d48; font-weight:700;">₹${booking.balanceDue.toLocaleString('en-IN')}</span>
+            </div>` : ''}
             <div class="success-detail-row bold-total">
-              <span class="success-detail-label">Total Amount:</span>
+              <span class="success-detail-label">Total Booking Amount:</span>
               <span class="success-detail-value">₹${booking.totalAmount.toLocaleString('en-IN')}</span>
             </div>
           </div>
@@ -958,6 +1159,77 @@
       div.textContent = str;
       return div.innerHTML;
     }
+
+    // Auto-resume booking after 1-time login
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('resumeBooking') === '1') {
+        const saved = sessionStorage.getItem('pendingStayBooking');
+        if (saved) {
+          try {
+            const data = JSON.parse(saved);
+            if (data && data.listingId === '<%= listing._id || listing.id %>') {
+
+              // Step 1: Populate all sidebar/card date fields first
+              if (data.checkIn) document.getElementById('check-in-date').value = data.checkIn;
+              if (data.checkOut) document.getElementById('check-out-date').value = data.checkOut;
+              if (data.guests) document.getElementById('guest-count').value = data.guests;
+
+              // Step 2: Recalculate prices (synchronously updates stayDetails)
+              onDatesChanged();
+              onGuestsChanged();
+
+              // Step 3: Pre-fill all modal form fields BEFORE opening modal
+              if (data.roomType) document.getElementById('modal-room-type').value = data.roomType;
+              if (data.guestName) document.getElementById('booking-guest-name').value = data.guestName;
+              if (data.guestEmail) document.getElementById('booking-guest-email').value = data.guestEmail;
+              if (data.guestPhone) document.getElementById('booking-guest-phone').value = data.guestPhone;
+              if (data.specialRequests) document.getElementById('booking-requests').value = data.specialRequests;
+              if (data.utr) document.getElementById('upi-utr-input').value = data.utr;
+
+              // Step 4: Restore payment method
+              if (data.paymentMethod) {
+                const radio = document.querySelector(`input[name="paymentMethod"][value="${data.paymentMethod}"]`);
+                if (radio) {
+                  const card = radio.closest('.payment-radio-card');
+                  if (card) selectPaymentCard(card, data.paymentMethod);
+                }
+              }
+
+              // Step 5: Accept terms
+              const terms = document.getElementById('booking-terms');
+              if (terms) terms.checked = true;
+
+              // Step 6: Run validation so form state is correct
+              validateFormState();
+
+              // Step 7: Clear saved pending booking
+              sessionStorage.removeItem('pendingStayBooking');
+              sessionStorage.removeItem('loginRedirectSent');
+
+              // Step 8: Open modal and auto-submit after a short visible delay
+              setTimeout(() => {
+                openBookingModal();
+                showToastNotification("Welcome back! Completing your booking...");
+
+                // Give modal a moment to render, then auto-submit
+                setTimeout(() => {
+                  const confirmBtn = document.getElementById('btn-modal-confirm');
+                  if (confirmBtn && !confirmBtn.disabled) {
+                    document.getElementById('booking-form').requestSubmit();
+                  } else {
+                    // If still disabled, just leave modal open for manual submit
+                    showToastNotification("Please verify your details and click Confirm Booking.");
+                  }
+                }, 900);
+              }, 400);
+            }
+          } catch (e) {
+            console.error("Resume booking error:", e);
+          }
+        }
+      }
+    });
   </script>
 
 </body>

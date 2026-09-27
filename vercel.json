@@ -13,7 +13,7 @@
  }
  ],
  "env": {
- "DATABASE_URL": "@database_url",
+ "DATABASE_URL": "mongodb+srv://duttaRimi:rimi9999@cluster0.xxxxx.mongodb.net/ ",
  "API_KEY": "@api_key"
  }
 }
