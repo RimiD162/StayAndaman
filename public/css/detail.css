@@ -183,30 +183,46 @@
 .amenity-pill {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  background: #f7f9fc;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #ffffff;
   border-radius: 12px;
-  border: 1px solid var(--border);
+  border: 1.5px solid #e2e8f0;
   font-size: 14px;
-  color: var(--text-dark);
-  font-weight: 500;
-  transition: all 0.2s ease;
+  color: #1e293b;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 .amenity-pill.available {
-  background: #fff;
-  border-color: rgba(10, 191, 138, 0.2);
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
 }
 
 .amenity-pill.available:hover {
-  border-color: var(--accent);
-  box-shadow: 0 4px 8px rgba(10, 191, 138, 0.08);
+  border-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
 }
 
 .amenity-pill.muted {
-  opacity: 0.55;
-  background: #fafafa;
+  opacity: 0.5;
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #94a3b8;
+}
+
+.amenity-check-badge {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 700;
+  color: #16a34a;
+  background: #dcfce7;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid #bbf7d0;
 }
 
 .amenity-pill-icon {

@@ -24,6 +24,7 @@
       <a href="/home/rentals" class="navbar-link <%= listing.category === 'Rental' ? 'active' : '' %>">Rentals</a>
     </div>
 
+    <div id="navbar-auth-container" style="display:inline-flex; align-items:center;">
     <% if (user) { %>
     <div class="navbar-user" id="navbar-user" onclick="toggleDropdown()">
       <div class="navbar-avatar">
@@ -57,6 +58,7 @@
     <% } else { %>
     <a href="/user/login" class="btn btn-gold btn-sm">Sign In</a>
     <% } %>
+    </div>
 
     <button class="navbar-toggle" id="navbar-toggle" onclick="document.getElementById('navbar-links').classList.toggle('show-mobile')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -134,35 +136,6 @@
 
         <hr class="divider">
 
-        <!-- Amenities Section -->
-        <section class="amenities-section">
-          <h2 class="section-subtitle-detail">What's Included</h2>
-          <div class="amenities-detail-grid">
-            <% 
-            const allPossibleAmenities = [
-              { name: "WiFi", label: "📶 WiFi" },
-              { name: "AC", label: "❄️ AC" },
-              { name: "Pool", label: "🏊 Pool" },
-              { name: "Parking", label: "🅿️ Parking" },
-              { name: "Breakfast", label: "🍳 Breakfast" }
-            ];
-            %>
-            <% allPossibleAmenities.forEach(function(item) { %>
-              <% const isIncluded = listing.amenities && listing.amenities.some(a => a.toLowerCase() === item.name.toLowerCase()); %>
-              <div class="amenity-pill <%= isIncluded ? 'available' : 'muted' %>">
-                <span class="amenity-pill-icon">
-                  <%= item.label.split(' ')[0] %>
-                </span>
-                <span>
-                  <%= item.label.substring(item.label.indexOf(' ') + 1) %>
-                </span>
-              </div>
-            <% }); %>
-          </div>
-        </section>
-
-        <hr class="divider">
-
         <!-- Location Box -->
         <section class="location-section">
           <h2 class="section-subtitle-detail">Location</h2>
@@ -186,7 +159,7 @@
             <div class="booking-card-price-row">
               <div class="booking-card-price">
                 ₹<span id="price-per-night"><%= listing.price %></span>
-                <span>/ night</span>
+                <span>/ person / night</span>
               </div>
             </div>
 
@@ -470,61 +443,49 @@
                   <span class="payment-icon">⚡</span>
                 </label>
 
-                <!-- Option 3: Pay partial -->
-                <label class="payment-radio-card" onclick="selectPaymentCard(this, 'Pay Partial')">
-                  <div class="payment-radio-left">
-                    <input type="radio" name="paymentMethod" value="Pay Partial" style="display:none;" onchange="updateRadioSelection(this)">
-                    <div class="payment-radio-circle"></div>
-                    <div class="payment-radio-text-wrap">
-                      <span class="payment-radio-title">Pay Partial (20% Advance Online)</span>
-                      <span class="payment-radio-desc" id="partial-desc-text">Pay 20% now to reserve & rest at check-in.</span>
-                    </div>
-                  </div>
-                  <span class="payment-icon">💰</span>
-                </label>
-
               </div>
 
               <!-- Interactive Online Payment Box -->
-              <div id="online-payment-details-box" style="margin-top: 14px; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px; display: none;">
-                
-                <!-- Partial Advance Breakdown Alert if selected -->
-                <div id="partial-method-content" style="display:none; margin-bottom: 12px; padding: 10px 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;">
-                  <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
-                    <span style="color: #166534; font-weight: 500;">Pay Now (20% Advance):</span>
-                    <strong id="partial-advance-val" style="color: #15803d; font-family: var(--font-mono); font-size: 14px;">₹0</strong>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 4px;">
-                    <span style="color: #64748b;">Due at Check-in (80% Balance):</span>
-                    <strong id="partial-balance-val" style="color: #334155; font-family: var(--font-mono);">₹0</strong>
-                  </div>
-                  <div style="font-size: 11px; color: #0284c7; margin-top: 4px;">
-                    💡 Advance is 100% refundable if cancelled up to 24 hours before check-in.
-                  </div>
-                </div>
+              <div id="online-payment-details-box" style="margin-top: 14px; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 16px; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
 
                 <!-- UPI Payment Card with Real QR -->
                 <div id="upi-method-content">
-                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                    <span style="font-size: 13px; font-weight: 700; color: #1e293b;">⚡ UPI Instant Payment</span>
-                    <span id="upi-pay-amount-badge" style="font-size: 13.5px; font-weight: 700; color: #15803d; font-family: var(--font-mono); background: #dcfce7; border: 1px solid #86efac; padding: 3px 10px; border-radius: 6px;">₹0</span>
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px;">
+                    <span style="font-size: 13.5px; font-weight: 700; color: #0f172a;">⚡ UPI Instant QR Payment</span>
+                    <span id="upi-pay-amount-badge" style="font-size: 14px; font-weight: 700; color: #15803d; font-family: var(--font-mono); background: #dcfce7; border: 1px solid #86efac; padding: 4px 12px; border-radius: 6px;">₹0</span>
                   </div>
 
                   <!-- QR Code Card Box -->
-                  <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 14px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.04); margin-bottom: 12px;">
-                    <div style="font-size: 12px; color: #475569; margin-bottom: 8px; font-weight: 600;">
-                      Scan to Pay with Any UPI App (GPay, PhonePe, Paytm, BHIM)
+                  <div style="background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 12px;">
+                    <div style="font-size: 12.5px; color: #334155; margin-bottom: 10px; font-weight: 600;">
+                      Scan with GPay, PhonePe, Paytm, or any UPI App
                     </div>
                     
-                    <div style="display: inline-block; background: #fff; padding: 8px; border-radius: 12px; border: 2px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
-                      <img src="/images/upi-qr.jpg" alt="Rimi Dutta UPI QR Code" style="width: 175px; height: 175px; object-fit: contain; border-radius: 8px; display: block;">
+                    <div style="display: inline-block; background: #18181b; padding: 12px; border-radius: 16px; border: 2px solid #2563eb; box-shadow: 0 8px 24px rgba(37,99,235,0.2);">
+                      <img id="upi-qr-image" 
+                           src="/images/upi-qr.jpg" 
+                           onerror="this.onerror=null; this.src='/api/upi-qr';"
+                           alt="Rimi Dutta UPI QR Code" 
+                           style="width: 220px; max-width: 100%; height: auto; display: block; margin: 0 auto; object-fit: contain; border-radius: 10px;">
                     </div>
 
-                    <div style="margin-top: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">
+                    <div style="margin-top: 10px; font-size: 13.5px; font-weight: 700; color: #0f172a;">
                       Beneficiary: <span style="color: #2563eb;">Rimi Dutta</span>
                     </div>
-                    <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
-                      Verified Merchant Account &bull; Instant Confirmation
+
+                    <!-- Copy UPI ID Box -->
+                    <div style="margin-top: 8px; display: inline-flex; align-items: center; gap: 8px; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 12px;">
+                      <span style="color: #475569; font-weight: 500;">UPI ID:</span>
+                      <strong id="upi-id-text" style="color: #0f172a; font-family: var(--font-mono);">rimidutta@okaxis</strong>
+                      <button type="button" onclick="copyUpiId()" id="btn-copy-upi" style="background: #2563eb; color: #fff; border: none; border-radius: 4px; padding: 3px 8px; font-size: 11px; cursor: pointer; font-weight: 600;">
+                        📋 Copy
+                      </button>
+                    </div>
+
+                    <div style="margin-top: 8px;">
+                      <a id="upi-direct-link" href="upi://pay?pa=rimidutta@okaxis&pn=Rimi%20Dutta&cu=INR" style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #2563eb; font-weight: 600; text-decoration: none; padding: 6px 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px;">
+                        📱 Tap to Pay on Mobile UPI App
+                      </a>
                     </div>
                   </div>
 
@@ -600,6 +561,51 @@
     // User dropdown toggle
     function toggleDropdown(){const u=document.getElementById('navbar-user'),d=document.getElementById('navbar-dropdown');if(u&&d){u.classList.toggle('open');d.classList.toggle('show');}}
     document.addEventListener('click',(e)=>{const u=document.getElementById('navbar-user');if(u&&!u.contains(e.target)){u.classList.remove('open');const d=document.getElementById('navbar-dropdown');if(d)d.classList.remove('show');}});
+
+    // Sync active user navbar state dynamically
+    function syncUserNavbarState() {
+      fetch('/api/auth/current-user')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.authenticated && data.user) {
+            const authWrap = document.getElementById('navbar-auth-container');
+            if (authWrap) {
+              const u = data.user;
+              const firstName = (u.fullName || 'User').split(' ')[0];
+              const avatarContent = u.avatar 
+                ? `<img class="loaded" src="${u.avatar}" alt="${u.fullName}">` 
+                : `${(u.fullName ? u.fullName.charAt(0).toUpperCase() : 'U')}`;
+              
+              authWrap.innerHTML = `
+                <div class="navbar-user" id="navbar-user" onclick="toggleDropdown()">
+                  <div class="navbar-avatar">${avatarContent}</div>
+                  <span class="navbar-username">${firstName}</span>
+                  <svg class="navbar-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                  <div class="navbar-dropdown" id="navbar-dropdown">
+                    <a href="/profile" class="navbar-dropdown-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                      My Profile
+                    </a>
+                    <a href="/my-bookings" class="navbar-dropdown-item">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                      My Bookings
+                    </a>
+                    <div class="navbar-dropdown-divider"></div>
+                    <form action="/user/logout" method="POST" style="margin:0;">
+                      <button type="submit" class="navbar-dropdown-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        Logout
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              `;
+            }
+          }
+        })
+        .catch(() => {});
+    }
+    document.addEventListener('DOMContentLoaded', syncUserNavbarState);
 
     // Swap main gallery image
     function swapGalleryImage(imgUrl, el) {
@@ -733,16 +739,17 @@
       // Valid range - calculate stay duration
       const diffTime = Math.abs(date2 - date1);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+      const guestCount = stayDetails.guests || 1;
       
       stayDetails.checkIn = checkinStr;
       stayDetails.checkOut = checkoutStr;
       stayDetails.nights = diffDays;
-      stayDetails.subtotal = diffDays * pricePerNight;
+      stayDetails.subtotal = diffDays * pricePerNight * guestCount;
       stayDetails.tax = 0;
       stayDetails.total = stayDetails.subtotal;
 
       // Update Card Breakdown UI
-      document.getElementById('subtotal-calc-label').innerText = `${diffDays} night${diffDays > 1 ? 's' : ''} = ₹${pricePerNight.toLocaleString('en-IN')}/night`;
+      document.getElementById('subtotal-calc-label').innerText = `${guestCount} guest${guestCount > 1 ? 's' : ''} × ${diffDays} night${diffDays > 1 ? 's' : ''} (₹${pricePerNight.toLocaleString('en-IN')}/person)`;
       document.getElementById('subtotal-calc-val').innerText = `₹${stayDetails.subtotal.toLocaleString('en-IN')}`;
       document.getElementById('total-amount-val').innerText = `₹${stayDetails.total.toLocaleString('en-IN')}`;
       
@@ -774,6 +781,9 @@
       // Update Modal dropdown
       const modalGuests = document.getElementById('modal-guests-field');
       if (modalGuests) modalGuests.value = select.value;
+
+      // Recalculate with new guest count
+      onDatesChanged();
     }
   </script>
 
@@ -791,8 +801,9 @@
         dayAfter.setDate(today.getDate() + 2);
         checkinEl.value = tomorrow.toISOString().split('T')[0];
         checkoutEl.value = dayAfter.toISOString().split('T')[0];
-        onDatesChanged();
       }
+      
+      onDatesChanged();
 
       // Populate and open modal freely
       document.getElementById('modal-summary-checkin').innerText = formatDateStr(stayDetails.checkIn);
@@ -807,6 +818,13 @@
       // Trigger modal active class
       document.getElementById('booking-modal').classList.add('active');
       
+      // Sync payment method display state
+      const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
+      if (selectedRadio) {
+        const card = selectedRadio.closest('.payment-radio-card');
+        if (card) selectPaymentCard(card, selectedRadio.value);
+      }
+
       // Perform initial form validation check
       validateFormState();
     }
@@ -846,32 +864,48 @@
     function syncGuestsFromModal() {
       const val = document.getElementById('modal-guests-field').value;
       document.getElementById('guest-count').value = val;
-      stayDetails.guests = parseInt(val);
+      stayDetails.guests = parseInt(val) || 1;
       document.getElementById('modal-summary-guests').innerText = val;
+      onDatesChanged();
+      document.getElementById('modal-summary-total').innerText = `₹${stayDetails.total.toLocaleString('en-IN')}`;
+      updatePaymentCalculations();
       validateFormState();
     }
 
-    // Payment calculations for Advance & Full
+    // Payment calculations for display
     function updatePaymentCalculations() {
       const total = stayDetails.total || 0;
-      const advance = Math.round(total * 0.20);
-      const balance = Math.round(total * 0.80);
-
       const upiBadge = document.getElementById('upi-pay-amount-badge');
       if (upiBadge) upiBadge.innerText = `₹${total.toLocaleString('en-IN')}`;
 
-      const advEl = document.getElementById('partial-advance-val');
-      if (advEl) advEl.innerText = `₹${advance.toLocaleString('en-IN')}`;
+      // Update dynamic UPI intent links
+      const directLink = document.getElementById('upi-direct-link');
+      if (directLink) {
+        directLink.href = `upi://pay?pa=rimidutta@okaxis&pn=Rimi%20Dutta&am=${total}&cu=INR`;
+      }
+    }
 
-      const balEl = document.getElementById('partial-balance-val');
-      if (balEl) balEl.innerText = `₹${balance.toLocaleString('en-IN')}`;
-
-      const partialDesc = document.getElementById('partial-desc-text');
-      if (partialDesc) partialDesc.innerText = `Pay 20% (₹${advance.toLocaleString('en-IN')}) now & rest ₹${balance.toLocaleString('en-IN')} at check-in.`;
+    function copyUpiId() {
+      const idText = document.getElementById('upi-id-text')?.innerText || 'rimidutta@okaxis';
+      navigator.clipboard.writeText(idText).then(() => {
+        const btn = document.getElementById('btn-copy-upi');
+        if (btn) {
+          const orig = btn.innerText;
+          btn.innerText = '✓ Copied!';
+          btn.style.background = '#16a34a';
+          setTimeout(() => {
+            btn.innerText = orig;
+            btn.style.background = '#2563eb';
+          }, 2000);
+        }
+      }).catch(() => {
+        alert('UPI ID: ' + idText);
+      });
     }
 
     // Custom Radio buttons style selection triggers
     function selectPaymentCard(cardEl, method) {
+      if (!cardEl) return;
       document.querySelectorAll('.payment-radio-card').forEach(c => c.classList.remove('active'));
       cardEl.classList.add('active');
       const radio = cardEl.querySelector('input[type="radio"]');
@@ -879,27 +913,35 @@
 
       const onlineBox = document.getElementById('online-payment-details-box');
       const upiContent = document.getElementById('upi-method-content');
-      const partialContent = document.getElementById('partial-method-content');
 
-      if (method === 'UPI / Net Banking') {
-        onlineBox.style.display = 'block';
-        upiContent.style.display = 'block';
-        partialContent.style.display = 'none';
-      } else if (method === 'Pay Partial') {
-        onlineBox.style.display = 'block';
-        upiContent.style.display = 'block';
-        partialContent.style.display = 'block';
+      const isUpi = method === 'UPI / Net Banking' || (radio && radio.value === 'UPI / Net Banking');
+      if (isUpi) {
+        if (onlineBox) onlineBox.style.display = 'block';
+        if (upiContent) upiContent.style.display = 'block';
+        updatePaymentCalculations();
       } else {
-        onlineBox.style.display = 'none';
+        if (onlineBox) onlineBox.style.display = 'none';
       }
 
       validateFormState();
     }
 
     function updateRadioSelection(radioInput) {
+      if (!radioInput) return;
       const card = radioInput.closest('.payment-radio-card');
       if (card) selectPaymentCard(card, radioInput.value);
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.payment-radio-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+          const radio = this.querySelector('input[name="paymentMethod"]');
+          if (radio) {
+            selectPaymentCard(this, radio.value);
+          }
+        });
+      });
+    });
 
     function chooseUpiApp(btnEl, appName) {
       document.querySelectorAll('.upi-app-btn').forEach(b => {
@@ -979,12 +1021,9 @@
         const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
         const method = selectedRadio ? selectedRadio.value : 'Pay at Property';
         const total = stayDetails.total || 0;
-        const advance = Math.round(total * 0.20);
 
         if (method === 'UPI / Net Banking') {
           btn.innerText = `🔒 Pay ₹${total.toLocaleString('en-IN')} via UPI & Confirm`;
-        } else if (method === 'Pay Partial') {
-          btn.innerText = `🔒 Pay 20% (₹${advance.toLocaleString('en-IN')}) & Confirm`;
         } else {
           btn.innerText = `✓ Confirm Booking (Pay at Property)`;
         }

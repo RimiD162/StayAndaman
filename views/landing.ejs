@@ -34,9 +34,10 @@
       </svg>
       Stay<span>Andaman</span>
     </a>
-    <div class="landing-nav-actions">
+    <div class="landing-nav-actions" id="landing-nav-actions">
       <% if (locals.user) { %>
         <span style="color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; margin-right: 8px;">Hello, <%= user.fullName.split(' ')[0] %></span>
+        <a href="/my-bookings" class="btn-nav-signin" style="margin-right: 8px;">My Bookings</a>
         <a href="/home/hotel" class="btn-nav-signup">Browse Listings</a>
       <% } else if (locals.admin) { %>
         <span style="color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; margin-right: 8px;">Hello, Admin <%= admin.fullName.split(' ')[0] %></span>
@@ -255,6 +256,25 @@
       document.body.style.transition = 'opacity 0.4s ease';
       setTimeout(() => { window.location.href = url; }, 400);
     }
+
+    // Dynamic sync on landing
+    fetch('/api/auth/current-user')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.authenticated && data.user) {
+          window.isUserLoggedIn = true;
+          const acts = document.getElementById('landing-nav-actions');
+          if (acts && !acts.querySelector('.btn-nav-signin[href="/my-bookings"]')) {
+            const firstName = (data.user.fullName || 'User').split(' ')[0];
+            acts.innerHTML = `
+              <span style="color: rgba(255,255,255,0.75); font-size: 14px; font-weight: 500; margin-right: 8px;">Hello, ${firstName}</span>
+              <a href="/my-bookings" class="btn-nav-signin" style="margin-right: 8px;">My Bookings</a>
+              <a href="/home/hotel" class="btn-nav-signup">Browse Listings</a>
+            `;
+          }
+        }
+      })
+      .catch(() => {});
   </script>
   
   <script>
