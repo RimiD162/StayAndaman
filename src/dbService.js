@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import mongoose from "mongoose";
 import Listing from "../models/Listing.js";
 import Admin from "../models/Admin.js";
 import User from "../models/User.js";
@@ -133,7 +134,10 @@ export const dbService = {
   async getListingById(id) {
     if (!useJsonDb) {
       try {
-        return await Listing.findById(id);
+        if (mongoose.isValidObjectId(id)) {
+          const item = await Listing.findById(id);
+          if (item) return item;
+        }
       } catch (err) {
         console.error("Mongoose getListingById failed, falling back:", err.message);
         dbService.setFallbackActive();
@@ -141,7 +145,12 @@ export const dbService = {
     }
 
     const db = readJsonDb();
-    return db.listings.find(item => item._id === id || item.id === id) || null;
+    const cleanId = String(id).trim();
+    return db.listings.find(item => 
+      String(item._id || item.id).trim() === cleanId || 
+      item._id === id || 
+      item.id === id
+    ) || null;
   },
 
   async createListing(data) {
@@ -169,7 +178,10 @@ export const dbService = {
   async updateListing(id, data) {
     if (!useJsonDb) {
       try {
-        return await Listing.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+        if (mongoose.isValidObjectId(id)) {
+          const updated = await Listing.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+          if (updated) return updated;
+        }
       } catch (err) {
         console.error("Mongoose updateListing failed, falling back:", err.message);
         dbService.setFallbackActive();
@@ -177,12 +189,18 @@ export const dbService = {
     }
 
     const db = readJsonDb();
-    const idx = db.listings.findIndex(item => item._id === id || item.id === id);
+    const cleanId = String(id).trim();
+    const idx = db.listings.findIndex(item => 
+      String(item._id || item.id).trim() === cleanId || 
+      item._id === id || 
+      item.id === id
+    );
     if (idx === -1) return null;
     
     db.listings[idx] = {
       ...db.listings[idx],
-      ...data
+      ...data,
+      _id: db.listings[idx]._id || db.listings[idx].id || cleanId
     };
     writeJsonDb(db);
     return db.listings[idx];
@@ -191,7 +209,10 @@ export const dbService = {
   async deleteListing(id) {
     if (!useJsonDb) {
       try {
-        return await Listing.findByIdAndDelete(id);
+        if (mongoose.isValidObjectId(id)) {
+          const deleted = await Listing.findByIdAndDelete(id);
+          if (deleted) return deleted;
+        }
       } catch (err) {
         console.error("Mongoose deleteListing failed, falling back:", err.message);
         dbService.setFallbackActive();
@@ -199,7 +220,12 @@ export const dbService = {
     }
 
     const db = readJsonDb();
-    const idx = db.listings.findIndex(item => item._id === id || item.id === id);
+    const cleanId = String(id).trim();
+    const idx = db.listings.findIndex(item => 
+      String(item._id || item.id).trim() === cleanId || 
+      item._id === id || 
+      item.id === id
+    );
     if (idx === -1) return null;
     const deleted = db.listings.splice(idx, 1)[0];
     writeJsonDb(db);

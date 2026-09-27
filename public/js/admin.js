@@ -583,30 +583,69 @@ function setupAvailabilityToggle() {
     }
 }
 
-// ===== Image Upload =====
+// ===== Image Upload with Auto-Optimization =====
 function previewImageSlot(slot, event) {
     const file = event.target.files[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-        showToast('Image must be under 5MB', 'error');
+    if (file.size > 10 * 1024 * 1024) {
+        showToast('Image must be under 10MB', 'error');
         return;
     }
 
     const reader = new FileReader();
     reader.onload = (e) => {
-        const base64 = e.target.result;
-        if (slot === 1) currentImageBase64_1 = base64;
-        else if (slot === 2) currentImageBase64_2 = base64;
-        else if (slot === 3) currentImageBase64_3 = base64;
-        else if (slot === 4) currentImageBase64_4 = base64;
+        const rawBase64 = e.target.result;
+        const img = new Image();
+        img.onload = () => {
+            const maxWidth = 1200;
+            const maxHeight = 900;
+            let width = img.width;
+            let height = img.height;
 
-        const preview = document.getElementById(`image-preview-${slot}`);
-        const area = document.getElementById(`image-upload-area-${slot}`);
-        if (preview && area) {
-            preview.src = base64;
-            area.classList.add('has-image');
-        }
+            if (width > maxWidth || height > maxHeight) {
+                if (width / height > maxWidth / maxHeight) {
+                    height = Math.round((height * maxWidth) / width);
+                    width = maxWidth;
+                } else {
+                    width = Math.round((width * maxHeight) / height);
+                    height = maxHeight;
+                }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            const optimizedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+            if (slot === 1) currentImageBase64_1 = optimizedBase64;
+            else if (slot === 2) currentImageBase64_2 = optimizedBase64;
+            else if (slot === 3) currentImageBase64_3 = optimizedBase64;
+            else if (slot === 4) currentImageBase64_4 = optimizedBase64;
+
+            const preview = document.getElementById(`image-preview-${slot}`);
+            const area = document.getElementById(`image-upload-area-${slot}`);
+            if (preview && area) {
+                preview.src = optimizedBase64;
+                area.classList.add('has-image');
+            }
+        };
+        img.onerror = () => {
+            if (slot === 1) currentImageBase64_1 = rawBase64;
+            else if (slot === 2) currentImageBase64_2 = rawBase64;
+            else if (slot === 3) currentImageBase64_3 = rawBase64;
+            else if (slot === 4) currentImageBase64_4 = rawBase64;
+
+            const preview = document.getElementById(`image-preview-${slot}`);
+            const area = document.getElementById(`image-upload-area-${slot}`);
+            if (preview && area) {
+                preview.src = rawBase64;
+                area.classList.add('has-image');
+            }
+        };
+        img.src = rawBase64;
     };
     reader.readAsDataURL(file);
 }
@@ -656,21 +695,26 @@ function openForm(category) {
 
 // ===== Open Edit Form =====
 function openEditForm(id) {
-    const listing = allListings.find(l => l._id === id);
+    const cleanId = String(id).trim();
+    const listing = allListings.find(l => 
+        String(l._id || l.id).trim() === cleanId || 
+        l._id === id || 
+        l.id === id
+    );
     if (!listing) return;
 
-    editingId = id;
-    document.getElementById('form-modal-title').textContent = `Edit ${listing.category}`;
+    editingId = listing._id || listing.id || id;
+    document.getElementById('form-modal-title').textContent = `Edit ${listing.category || 'Listing'}`;
     document.getElementById('form-submit-btn').textContent = 'Update Listing';
-    document.getElementById('listing-id').value = id;
-    document.getElementById('listing-name').value = listing.name;
-    document.getElementById('listing-category').value = listing.category;
-    document.getElementById('listing-location').value = listing.location;
-    document.getElementById('listing-price').value = listing.price;
+    document.getElementById('listing-id').value = editingId;
+    document.getElementById('listing-name').value = listing.name || '';
+    document.getElementById('listing-category').value = listing.category || 'Hotel';
+    document.getElementById('listing-location').value = listing.location || '';
+    document.getElementById('listing-price').value = listing.price != null ? listing.price : '';
     document.getElementById('listing-description').value = listing.description || '';
     document.getElementById('listing-contact').value = listing.contact || '';
-    document.getElementById('listing-available').checked = listing.available;
-    document.getElementById('toggle-label-text').textContent = listing.available ? 'Available' : 'Not Available';
+    document.getElementById('listing-available').checked = listing.available !== false;
+    document.getElementById('toggle-label-text').textContent = listing.available !== false ? 'Available' : 'Not Available';
 
     setStarRating(listing.rating || 3);
     setAmenities(listing.amenities || []);
@@ -718,21 +762,38 @@ async function handleFormSubmit(event) {
         amenitiesChecked.push(cb.value);
     });
 
+    const priceVal = parseFloat(document.getElementById('listing-price').value);
+    const ratingVal = parseInt(document.getElementById('listing-rating').value);
+
     const data = {
         name: document.getElementById('listing-name').value.trim(),
         category: document.getElementById('listing-category').value,
         location: document.getElementById('listing-location').value.trim(),
-        price: parseFloat(document.getElementById('listing-price').value),
+        price: isNaN(priceVal) ? 0 : priceVal,
         description: document.getElementById('listing-description').value.trim(),
         contact: document.getElementById('listing-contact').value.trim(),
-        rating: parseInt(document.getElementById('listing-rating').value),
+        rating: isNaN(ratingVal) ? 3 : ratingVal,
         amenities: amenitiesChecked,
         available: document.getElementById('listing-available').checked,
-        image: currentImageBase64_1,
-        image2: currentImageBase64_2,
-        image3: currentImageBase64_3,
-        image4: currentImageBase64_4
+        image: currentImageBase64_1 || '',
+        image2: currentImageBase64_2 || '',
+        image3: currentImageBase64_3 || '',
+        image4: currentImageBase64_4 || ''
     };
+
+    if (!data.name) {
+        showToast('Please enter a listing name', 'error');
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = editingId ? 'Update Listing' : 'Save Listing';
+        return;
+    }
+
+    if (!data.location) {
+        showToast('Please enter a location / address', 'error');
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = editingId ? 'Update Listing' : 'Save Listing';
+        return;
+    }
 
     try {
         let res;
@@ -750,15 +811,18 @@ async function handleFormSubmit(event) {
             });
         }
 
-        if (!res.ok) throw new Error('Failed to save');
+        const result = await res.json().catch(() => ({}));
 
-        const result = await res.json();
+        if (!res.ok) {
+            throw new Error(result.error || result.message || 'Failed to save listing');
+        }
+
         showToast(editingId ? 'Listing updated successfully!' : 'Listing added successfully!', 'success');
         closeForm();
         await fetchListings();
     } catch (err) {
-        console.error(err);
-        showToast('Failed to save listing. Please try again.', 'error');
+        console.error("Save listing error:", err);
+        showToast(err.message || 'Failed to save listing. Please try again.', 'error');
     } finally {
         submitBtn.classList.remove('loading');
         submitBtn.textContent = editingId ? 'Update Listing' : 'Save Listing';

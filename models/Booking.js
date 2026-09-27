@@ -72,7 +72,7 @@ const bookingSchema = new mongoose.Schema({
     enum: ["Standard", "Deluxe", "Suite"],
   },
 
-  // Payment Breakdown
+  // Payment Breakdown & Transaction Details
   pricePerNight: {
     type: Number,
     required: true,
@@ -96,6 +96,46 @@ const bookingSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     required: true,
+  },
+  paymentStatus: {
+    type: String,
+    default: "Pending",
+  },
+  transactionId: {
+    type: String,
+    default: "",
+  },
+  senderUpi: {
+    type: String,
+    default: "",
+  },
+  senderBank: {
+    type: String,
+    default: "",
+  },
+  beneficiaryName: {
+    type: String,
+    default: "Gourab Das",
+  },
+  beneficiaryBank: {
+    type: String,
+    default: "Slice",
+  },
+  beneficiaryAccount: {
+    type: String,
+    default: "033325222636602",
+  },
+  beneficiaryIfsc: {
+    type: String,
+    default: "NESF0000333",
+  },
+  beneficiaryUpi: {
+    type: String,
+    default: "9531820286@slc",
+  },
+  amountPaid: {
+    type: Number,
+    default: 0,
   },
   specialRequests: {
     type: String,

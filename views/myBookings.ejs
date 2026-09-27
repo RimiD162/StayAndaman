@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="/css/global.css">
   <link rel="stylesheet" href="/css/home.css">
   <link rel="stylesheet" href="/css/listings.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <title>My Bookings — Stayandaman</title>
   <style>
     .my-bookings-container {
@@ -521,7 +523,7 @@
                   <span class="booking-id-tag">Booking ID: #<%= booking.bookingId %></span>
                   <div class="booking-footer-price">
                     ₹<%= booking.totalAmount.toLocaleString('en-IN') %>
-                    <span>Total Paid</span>
+                    <span><%= (booking.paymentMethod && booking.paymentMethod.includes('UPI')) || (booking.paymentStatus && booking.paymentStatus.includes('Paid')) ? 'Total Paid Online' : 'Pay at Property' %></span>
                   </div>
                 </div>
                 <div class="booking-actions">
@@ -559,7 +561,7 @@
     <div class="booking-modal-container" style="max-width: 500px;">
       <button class="booking-modal-close" onclick="closeDetailsPopup()">✕</button>
       <div class="booking-modal-header" style="background:#fff; border-top-left-radius: 16px; border-top-right-radius: 16px;">
-        <h2 class="booking-modal-title">📄 Booking Invoice Summary</h2>
+        <h2 class="booking-modal-title" id="modal-popup-header-title">📄 Booking Details</h2>
       </div>
       <div class="booking-modal-body" id="detail-modal-body" style="padding: 24px;">
         <!-- Dynamic loading details -->
@@ -636,95 +638,361 @@
 
     // Modal Details view
     function openDetailsPopup(booking) {
+      window.currentModalBooking = booking;
       const body = document.getElementById('detail-modal-body');
       const checkin = new Date(booking.checkIn).toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
       const checkout = new Date(booking.checkOut).toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'});
       const created = new Date(booking.createdAt).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
+      const isOnlinePay = (booking.paymentMethod && booking.paymentMethod.includes('UPI')) || 
+                          (booking.paymentStatus && booking.paymentStatus.includes('Paid'));
       
-      body.innerHTML = `
-        <div style="display:flex; flex-direction:column; gap:16px;">
-          <div style="text-align:center; padding-bottom:12px; border-bottom:1.5px dashed var(--border);">
-            <strong style="font-size:18px; color:var(--primary); font-family:var(--font-mono);">#${booking.bookingId}</strong>
-            <div style="font-size:12px; color:var(--text-soft); margin-top:4px;">Booked on ${created}</div>
-          </div>
-          
-          <div>
-            <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:4px;">Property Info</div>
-            <strong>${escapeHtml(booking.listingName)}</strong>
-            <div style="font-size:13px; color:var(--text-soft); margin-top:2px;">📍 ${escapeHtml(booking.location)} (${booking.category})</div>
-          </div>
-          
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div>
-              <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Check In</div>
-              <div style="font-size:13.5px; font-weight:600; color:var(--text-dark);">📅 ${checkin}</div>
-            </div>
-            <div>
-              <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Check Out</div>
-              <div style="font-size:13.5px; font-weight:600; color:var(--text-dark);">📅 ${checkout}</div>
-            </div>
-          </div>
+      const headerTitle = document.getElementById('modal-popup-header-title');
+      if (headerTitle) {
+        headerTitle.innerText = isOnlinePay ? '📄 Official Payment Receipt' : '📄 Booking Reservation Details';
+      }
 
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div>
-              <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Guests</div>
-              <div style="font-size:13.5px; font-weight:600; color:var(--text-dark);">👥 ${booking.guests} Guest${booking.guests > 1 ? 's' : ''}</div>
-            </div>
-            <div>
-              <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Room Preference</div>
-              <div style="font-size:13.5px; font-weight:600; color:var(--text-dark);">🔑 ${booking.roomType} Suite</div>
-            </div>
-          </div>
-
-          <hr style="border:0; height:1px; background:var(--border);">
-
-          <div>
-            <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:4px;">Guest Details</div>
-            <div style="font-size:13.5px; color:var(--text-mid);">
-              <strong>Name:</strong> ${escapeHtml(booking.guestName)} <br>
-              <strong>Email:</strong> ${escapeHtml(booking.guestEmail)} <br>
-              <strong>Phone:</strong> ${escapeHtml(booking.guestPhone)}
-            </div>
-          </div>
-
-          ${booking.specialRequests ? `
-          <div>
-            <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:4px;">Special Demands</div>
-            <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:10px; font-size:13px; color:var(--text-mid); line-height:1.4;">
-              ${escapeHtml(booking.specialRequests)}
-            </div>
-          </div>
-          ` : ''}
-
-          <hr style="border:0; height:1px; background:var(--border);">
-
-          <div>
-            <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:6px;">Payment Breakdown</div>
-            <div style="display:flex; flex-direction:column; gap:4px; font-size:13px; color:var(--text-mid);">
-              <div style="display:flex; justify-content:space-between;">
-                <span>Subtotal (${booking.nights} night${booking.nights > 1 ? 's' : ''} &times; ₹${booking.pricePerNight.toLocaleString('en-IN')})</span>
-                <span>₹${booking.subtotal.toLocaleString('en-IN')}</span>
+      if (isOnlinePay) {
+        // Render Official Payment Receipt with PDF Download
+        body.innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            
+            <!-- Official Receipt Header Box -->
+            <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 14px; text-align: center;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 16px; font-weight: 800; color: #0f172a;">Stay<span style="color: #2563eb;">Andaman</span></span>
+                <span style="background: #dcfce7; color: #15803d; border: 1px solid #86efac; font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;">✓ PAID ONLINE & VERIFIED</span>
               </div>
-              ${booking.tax && booking.tax > 0 ? `
-              <div style="display:flex; justify-content:space-between;">
-                <span>GST Taxes (18%)</span>
-                <span>₹${booking.tax.toLocaleString('en-IN')}</span>
+              <strong style="font-size: 16px; color: #0f172a; font-family: var(--font-mono);">#${booking.bookingId}</strong>
+              <div style="font-size: 11.5px; color: var(--text-soft); margin-top: 2px;">Booked on ${created}</div>
+              ${booking.transactionId ? `<div style="font-size: 11px; color: #16a34a; font-family: var(--font-mono); margin-top: 4px; word-break: break-all;">UTR / Ref: ${escapeHtml(booking.transactionId)}</div>` : ''}
+            </div>
+            
+            <div>
+              <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:4px;">Property Info</div>
+              <strong style="font-size: 15px; color: #0f172a;">${escapeHtml(booking.listingName)}</strong>
+              <div style="font-size:13px; color:var(--text-soft); margin-top:2px;">📍 ${escapeHtml(booking.location)} (${booking.category})</div>
+            </div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+              <div>
+                <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Check In</div>
+                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">📅 ${checkin}</div>
               </div>
-              ` : ''}
-              <div style="display:flex; justify-content:space-between; font-weight:700; color:var(--primary); font-size:15px; border-top:1px dashed var(--border); padding-top:6px; margin-top:4px;">
-                <span>Total Amount paid (${booking.paymentMethod})</span>
-                <span>₹${booking.totalAmount.toLocaleString('en-IN')}</span>
+              <div>
+                <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Check Out</div>
+                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">📅 ${checkout}</div>
               </div>
             </div>
-          </div>
 
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;">
-            <span style="font-size:12px; color:var(--text-soft);">Status:</span>
-            <span class="status-pill ${booking.status.toLowerCase()}">${booking.status}</span>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div>
+                <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Guests</div>
+                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">👥 ${booking.guests} Guest${booking.guests > 1 ? 's' : ''}</div>
+              </div>
+              <div>
+                <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Room Preference</div>
+                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">🔑 ${booking.roomType}</div>
+              </div>
+            </div>
+
+            <hr style="border:0; height:1px; background:var(--border); margin: 0;">
+
+            <div>
+              <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:4px;">Guest Details</div>
+              <div style="font-size:12.5px; color:var(--text-mid); line-height: 1.5;">
+                <strong>Name:</strong> ${escapeHtml(booking.guestName)} <br>
+                <strong>Email:</strong> ${escapeHtml(booking.guestEmail)} <br>
+                <strong>Phone:</strong> ${escapeHtml(booking.guestPhone)}
+              </div>
+            </div>
+
+            ${booking.specialRequests ? `
+            <div>
+              <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:4px;">Special Requests</div>
+              <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-size:12px; color:var(--text-mid); line-height:1.4;">
+                ${escapeHtml(booking.specialRequests)}
+              </div>
+            </div>
+            ` : ''}
+
+            <!-- Beneficiary Details -->
+            <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 8px 10px; font-size: 11px;">
+              <div style="font-weight: 700; color: #1e40af; margin-bottom: 2px;">🏦 Beneficiary Credited:</div>
+              <div style="color: #1e3a8a;">Gourab Das &bull; Slice Bank &bull; A/C: <strong>033325222636602</strong> &bull; IFSC: <strong>NESF0000333</strong> &bull; UPI: <strong>9531820286@slc</strong></div>
+            </div>
+
+            <!-- Total Amount Paid Box -->
+            <div style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="color: #166534; font-size: 10.5px; font-weight: 700; text-transform: uppercase; display: block;">Total Amount Paid Online (${booking.paymentMethod})</span>
+                <span style="color: #15803d; font-size: 10.5px;">✓ Settlement Completed & Verified</span>
+              </div>
+              <div style="font-size: 18px; font-weight: 800; color: #15803d; font-family: var(--font-mono);">
+                ₹${booking.totalAmount.toLocaleString('en-IN')}
+              </div>
+            </div>
+
+            <!-- Download PDF Button (ONLY FOR VERIFIED PAID ONLINE BOOKINGS) -->
+            <div style="margin-top: 6px;">
+              <button type="button" onclick="downloadBookingReceiptAsPDF('${booking.bookingId}')" id="btn-download-booking-pdf" style="width: 100%; padding: 11px 16px; background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: #ffffff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download Receipt as PDF</span>
+              </button>
+            </div>
+
           </div>
-        </div>
-      `;
+        `;
+      } else {
+        // Render Pay at Property Voucher (NO PAYMENT RECEIPT)
+        body.innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            
+            <!-- Reservation Header Box -->
+            <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 14px; text-align: center;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 16px; font-weight: 800; color: #0f172a;">Stay<span style="color: #2563eb;">Andaman</span></span>
+                <span style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a; font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 999px;">⏳ PAY AT HOTEL</span>
+              </div>
+              <strong style="font-size: 16px; color: #0f172a; font-family: var(--font-mono);">#${booking.bookingId}</strong>
+              <div style="font-size: 11.5px; color: var(--text-soft); margin-top: 2px;">Reserved on ${created}</div>
+            </div>
+
+            <!-- Offline Notice -->
+            <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #92400e; line-height: 1.4;">
+              <strong>ℹ️ Payment Notice:</strong> No online payment was made for this reservation. The total amount of <strong>₹${booking.totalAmount.toLocaleString('en-IN')}</strong> is due at hotel check-in.
+            </div>
+            
+            <div>
+              <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:4px;">Property Info</div>
+              <strong style="font-size: 15px; color: #0f172a;">${escapeHtml(booking.listingName)}</strong>
+              <div style="font-size:13px; color:var(--text-soft); margin-top:2px;">📍 ${escapeHtml(booking.location)} (${booking.category})</div>
+            </div>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid var(--border);">
+              <div>
+                <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Check In</div>
+                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">📅 ${checkin}</div>
+              </div>
+              <div>
+                <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Check Out</div>
+                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">📅 ${checkout}</div>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div>
+                <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Guests</div>
+                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">👥 ${booking.guests} Guest${booking.guests > 1 ? 's' : ''}</div>
+              </div>
+              <div>
+                <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:2px;">Room Preference</div>
+                <div style="font-size:13px; font-weight:600; color:var(--text-dark);">🔑 ${booking.roomType}</div>
+              </div>
+            </div>
+
+            <hr style="border:0; height:1px; background:var(--border); margin: 0;">
+
+            <div>
+              <div style="font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; margin-bottom:4px;">Guest Details</div>
+              <div style="font-size:12.5px; color:var(--text-mid); line-height: 1.5;">
+                <strong>Name:</strong> ${escapeHtml(booking.guestName)} <br>
+                <strong>Email:</strong> ${escapeHtml(booking.guestEmail)} <br>
+                <strong>Phone:</strong> ${escapeHtml(booking.guestPhone)}
+              </div>
+            </div>
+
+            <!-- Total Amount Due Box -->
+            <div style="background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="color: #475569; font-size: 10.5px; font-weight: 700; text-transform: uppercase; display: block;">Total Amount Due at Check-In</span>
+                <span style="color: #64748b; font-size: 10.5px;">Payment Pending &bull; Pay at Hotel</span>
+              </div>
+              <div style="font-size: 18px; font-weight: 800; color: #0f172a; font-family: var(--font-mono);">
+                ₹${booking.totalAmount.toLocaleString('en-IN')}
+              </div>
+            </div>
+
+          </div>
+        `;
+      }
       document.getElementById('detail-modal').classList.add('active');
+    }
+
+    function downloadBookingReceiptAsPDF(bookingId) {
+      const btn = document.getElementById('btn-download-booking-pdf');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Generating PDF...';
+      }
+
+      try {
+        const booking = window.currentModalBooking || {};
+        const JSPDFClass = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : window.jsPDF;
+
+        if (!JSPDFClass) {
+          window.print();
+          if (btn) { btn.disabled = false; btn.innerHTML = '<span>Download Receipt as PDF</span>'; }
+          return;
+        }
+
+        const doc = new JSPDFClass({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
+
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const margin = 15;
+        let y = 18;
+
+        // Header
+        doc.setTextColor(37, 99, 235);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(22);
+        doc.text("StayAndaman", margin, y);
+
+        // Status Badge
+        doc.setFillColor(220, 252, 231);
+        doc.roundedRect(pageWidth - margin - 52, y - 7, 52, 9, 3, 3, 'F');
+        doc.setDrawColor(134, 239, 172);
+        doc.roundedRect(pageWidth - margin - 52, y - 7, 52, 9, 3, 3, 'D');
+        doc.setTextColor(21, 128, 61);
+        doc.setFontSize(8.5);
+        doc.setFont("helvetica", "bold");
+        doc.text(String(booking.status || 'CONFIRMED').toUpperCase(), pageWidth - margin - 26, y - 1, { align: "center" });
+
+        y += 6;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(100, 116, 139);
+        doc.text("OFFICIAL BOOKING INVOICE & RECEIPT", margin, y);
+
+        const dateStr = booking.createdAt ? new Date(booking.createdAt).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleString('en-IN');
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.text(dateStr, pageWidth - margin, y, { align: "right" });
+
+        // Line
+        y += 5;
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.5);
+        doc.line(margin, y, pageWidth - margin, y);
+
+        // Booking ID Box
+        y += 5;
+        doc.setFillColor(248, 250, 252);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 22, 3, 3, 'F');
+        doc.setDrawColor(226, 232, 240);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 22, 3, 3, 'D');
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.setTextColor(100, 116, 139);
+        doc.text("Booking ID:", margin + 5, y + 6);
+        doc.text("Payment Method:", margin + 95, y + 6);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(15, 23, 42);
+        doc.text(`#${booking.bookingId || bookingId || 'SE-BOOKING'}`, margin + 5, y + 12);
+        doc.setTextColor(37, 99, 235);
+        doc.text(booking.paymentMethod || 'UPI / Net Banking', margin + 95, y + 12);
+
+        if (booking.transactionId) {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8);
+          doc.setTextColor(100, 116, 139);
+          doc.text("Transaction Ref / UTR:", margin + 5, y + 18);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(22, 163, 74);
+          doc.text(String(booking.transactionId), margin + 38, y + 18);
+        }
+
+        // Reservation Details
+        y += 27;
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 52, 3, 3, 'F');
+        doc.setDrawColor(226, 232, 240);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 52, 3, 3, 'D');
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9);
+        doc.setTextColor(71, 85, 105);
+        doc.text("RESERVATION & GUEST DETAILS", margin + 5, y + 6);
+
+        const checkInStr = booking.checkIn ? new Date(booking.checkIn).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+        const checkOutStr = booking.checkOut ? new Date(booking.checkOut).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+
+        const details = [
+          ["Property:", `${booking.listingName || 'Stay'} (${booking.category || 'Hotel'})`],
+          ["Primary Guest:", `${booking.guestName || ''}`],
+          ["Contact Details:", `${booking.guestPhone || ''}  |  ${booking.guestEmail || ''}`],
+          ["Stay Duration:", `${checkInStr}  to  ${checkOutStr} (${booking.nights || 1} night${(booking.nights || 1) > 1 ? 's' : ''})`],
+          ["Guests & Room:", `${booking.guests || 1} Guest${(booking.guests || 1) > 1 ? 's' : ''}  |  ${booking.roomType || 'Standard'} Room`],
+          ["Beneficiary:", "Gourab Das | Slice Bank (A/C: 033325222636602, UPI: 9531820286@slc)"]
+        ];
+
+        let rowY = y + 13;
+        details.forEach(([label, value]) => {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text(label, margin + 5, rowY);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(15, 23, 42);
+          doc.text(String(value), margin + 45, rowY);
+          rowY += 6.5;
+        });
+
+        // Total Amount Box
+        y += 57;
+        doc.setFillColor(240, 253, 244);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 18, 3, 3, 'F');
+        doc.setDrawColor(134, 239, 172);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 18, 3, 3, 'D');
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9.5);
+        doc.setTextColor(22, 101, 52);
+        doc.text("TOTAL AMOUNT PAID", margin + 6, y + 7.5);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(21, 128, 61);
+        doc.text("✓ Payment Verified & Received", margin + 6, y + 13);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(15);
+        doc.setTextColor(21, 128, 61);
+        const amountStr = `INR ${Number(booking.totalAmount || 0).toLocaleString('en-IN')}`;
+        doc.text(amountStr, pageWidth - margin - 6, y + 11.5, { align: "right" });
+
+        // Footer Notice
+        y += 24;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(148, 163, 184);
+        doc.text("StayAndaman Booking Receipt - Valid proof of payment and stay reservation.", pageWidth / 2, y, { align: "center" });
+        doc.text("Support Email: gourabsuper999@gmail.com  |  Phone: +91 9531820286", pageWidth / 2, y + 4.5, { align: "center" });
+
+        // Save directly to file!
+        const fileName = `StayAndaman-Receipt-${booking.bookingId || bookingId || 'Booking'}.pdf`;
+        doc.save(fileName);
+
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '✓ PDF Downloaded!';
+          setTimeout(() => {
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:16px;height:16px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span>Download Receipt as PDF</span>';
+          }, 2500);
+        }
+      } catch (err) {
+        console.error("jsPDF generation error:", err);
+        window.print();
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = 'Download Receipt as PDF';
+        }
+      }
     }
 
     function closeDetailsPopup() {

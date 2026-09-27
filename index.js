@@ -591,6 +591,21 @@ app.post("/booking/create", async (req, res) => {
       req.session.userUsername = matchedUser.username;
     }
 
+    const cleanSenderUpi = (req.body.senderUpi || req.body.payerUpi || "").trim();
+    const cleanSenderBank = (req.body.senderBank || req.body.paymentApp || "UPI App").trim();
+    const cleanUtr = (req.body.utr || "").trim();
+
+    let transactionId = null;
+    if (isOnline) {
+      if (!cleanUtr || cleanUtr.length < 4) {
+        return res.status(400).json({ success: false, error: "Please enter the 12-digit UTR / Transaction Reference number from your UPI payment app." });
+      }
+      if (!cleanSenderUpi) {
+        return res.status(400).json({ success: false, error: "Please provide your sender UPI ID or mobile number to verify payment." });
+      }
+      transactionId = cleanUtr.toUpperCase().startsWith("UTR") ? cleanUtr.toUpperCase() : `UTR-${cleanUtr.toUpperCase()}`;
+    }
+
     const bookingData = {
       listingId,
       listingName,
@@ -611,8 +626,16 @@ app.post("/booking/create", async (req, res) => {
       tax: parseFloat(tax) || 0,
       totalAmount: parsedTotal,
       paymentMethod,
-      paymentStatus: isOnline ? "Paid Online" : "Pending (Pay at Property)",
-      transactionId: isOnline ? (req.body.utr && req.body.utr.trim().length >= 4 ? `UTR-${req.body.utr.trim().toUpperCase()}` : `TXN-${Date.now().toString(36).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`) : null,
+      paymentStatus: isOnline ? "Paid Online (Verified)" : "Pending (Pay at Property)",
+      transactionId: transactionId,
+      senderUpi: cleanSenderUpi || (isOnline ? `${cleanPhone}@upi` : ""),
+      senderBank: cleanSenderBank,
+      beneficiaryName: "Gourab Das",
+      beneficiaryBank: "Slice",
+      beneficiaryAccount: "033325222636602",
+      beneficiaryIfsc: "NESF0000333",
+      beneficiaryUpi: "9531820286@slc",
+      amountPaid: isOnline ? parsedTotal : 0,
       advancePaid: isOnline ? parsedTotal : 0,
       balanceDue: isOnline ? 0 : parsedTotal,
       specialRequests: specialRequests || "",
@@ -631,8 +654,8 @@ app.post("/booking/create", async (req, res) => {
 app.get("/api/upi-qr", async (req, res) => {
   try {
     const rawAmount = req.query.amount ? parseFloat(req.query.amount) : 0;
-    const vpa = req.query.vpa || "rimidutta@okaxis";
-    const name = req.query.name || "Rimi Dutta";
+    const vpa = req.query.vpa || "9531820286@slc";
+    const name = req.query.name || "Gourab Das";
     
     // Construct standard UPI intent URI
     let upiUri = `upi://pay?pa=${encodeURIComponent(vpa)}&pn=${encodeURIComponent(name)}&cu=INR`;

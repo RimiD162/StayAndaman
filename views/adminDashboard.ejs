@@ -615,16 +615,22 @@
                         <!-- Location -->
                         <div class="form-group">
                             <label class="form-label" for="listing-location">Location / Address *</label>
-                            <select class="form-select" id="listing-location" name="location" required>
-                                <option value="">Select Location</option>
-                                <option value="Aberdeen bazar">Aberdeen bazar</option>
-                                <option value="Dairy farm">Dairy farm</option>
-                                <option value="Bhatubasti">Bhatubasti</option>
-                                <option value="Garacharma">Garacharma</option>
-                                <option value="Rangat">Rangat</option>
-                                <option value="Middle Andaman">Middle Andaman</option>
-                                <option value="Diglipur">Diglipur</option>
-                            </select>
+                            <input class="form-input" list="location-options-list" type="text" id="listing-location" name="location" required placeholder="e.g. Aberdeen Bazar, Port Blair">
+                            <datalist id="location-options-list">
+                                <option value="Aberdeen Bazar">
+                                <option value="Dairy Farm">
+                                <option value="Bhatubasti">
+                                <option value="Garacharma">
+                                <option value="Port Blair">
+                                <option value="Havelock Island">
+                                <option value="Neil Island">
+                                <option value="Rangat">
+                                <option value="Middle Andaman">
+                                <option value="Diglipur">
+                                <option value="Baratang">
+                                <option value="Mayabunder">
+                                <option value="South Andaman">
+                            </datalist>
                         </div>
 
                         <!-- Price -->
@@ -832,7 +838,7 @@
     <script>
         window.ADMIN_ACTIVE_PAGE = "<%= typeof activePage !== 'undefined' ? activePage : 'overview' %>";
     </script>
-    <script src="/js/admin.js"></script>
+    <script src="/js/admin.js?v=<%= Date.now() %>"></script>
     
     <script>
       // Lazy load fade-in

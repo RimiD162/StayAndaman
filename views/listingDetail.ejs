@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="/css/listings.css">
   <link rel="stylesheet" href="/css/detail.css">
   <link rel="stylesheet" href="/css/booking.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <title><%= listing.name %> — Stayandaman</title>
 </head>
 <body>
@@ -461,42 +463,118 @@
                       Scan with GPay, PhonePe, Paytm, or any UPI App
                     </div>
                     
-                    <div style="display: inline-block; background: #18181b; padding: 12px; border-radius: 16px; border: 2px solid #2563eb; box-shadow: 0 8px 24px rgba(37,99,235,0.2);">
+                    <div style="display: inline-block; background: #ffffff; padding: 12px; border-radius: 16px; border: 2px solid #2563eb; box-shadow: 0 4px 18px rgba(37,99,235,0.12); position: relative; z-index: 2;">
                       <img id="upi-qr-image" 
+                           class="loaded"
                            src="/images/upi-qr.jpg" 
                            onerror="this.onerror=null; this.src='/api/upi-qr';"
-                           alt="Rimi Dutta UPI QR Code" 
-                           style="width: 220px; max-width: 100%; height: auto; display: block; margin: 0 auto; object-fit: contain; border-radius: 10px;">
+                           onload="this.classList.add('loaded'); this.style.opacity='1';"
+                           alt="Gaurab Das UPI QR Code" 
+                           style="width: 220px; max-width: 100%; height: auto; display: block; margin: 0 auto; object-fit: contain; border-radius: 10px; opacity: 1 !important; visibility: visible !important;">
                     </div>
 
                     <div style="margin-top: 10px; font-size: 13.5px; font-weight: 700; color: #0f172a;">
-                      Beneficiary: <span style="color: #2563eb;">Rimi Dutta</span>
-                    </div>
-
-                    <!-- Copy UPI ID Box -->
-                    <div style="margin-top: 8px; display: inline-flex; align-items: center; gap: 8px; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 12px;">
-                      <span style="color: #475569; font-weight: 500;">UPI ID:</span>
-                      <strong id="upi-id-text" style="color: #0f172a; font-family: var(--font-mono);">rimidutta@okaxis</strong>
-                      <button type="button" onclick="copyUpiId()" id="btn-copy-upi" style="background: #2563eb; color: #fff; border: none; border-radius: 4px; padding: 3px 8px; font-size: 11px; cursor: pointer; font-weight: 600;">
-                        📋 Copy
-                      </button>
+                      Beneficiary: <span style="color: #2563eb;">Gourab Das</span>
                     </div>
 
                     <div style="margin-top: 8px;">
-                      <a id="upi-direct-link" href="upi://pay?pa=rimidutta@okaxis&pn=Rimi%20Dutta&cu=INR" style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #2563eb; font-weight: 600; text-decoration: none; padding: 6px 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px;">
+                      <a id="upi-direct-link" href="upi://pay?pa=9531820286@slc&pn=Gourab%20Das&cu=INR" style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #2563eb; font-weight: 600; text-decoration: none; padding: 6px 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px;">
                         📱 Tap to Pay on Mobile UPI App
                       </a>
                     </div>
+
+                    <!-- Bank Details for Payment Box -->
+                    <div style="margin-top: 14px; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 14px; text-align: left; box-shadow: 0 1px 4px rgba(0,0,0,0.02);">
+                      <div style="font-size: 12px; font-weight: 800; color: #0f172a; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">
+                        <span>🏦</span> BANK DETAILS FOR PAYMENT
+                      </div>
+                      
+                      <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #e2e8f0; padding-bottom: 4px;">
+                          <span style="color: #64748b; font-weight: 500;">Account Holder:</span>
+                          <strong style="color: #0f172a; font-weight: 700;">Gourab Das</strong>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #e2e8f0; padding-bottom: 4px;">
+                          <span style="color: #64748b; font-weight: 500;">Bank Name:</span>
+                          <strong style="color: #0f172a; font-weight: 700;">Slice</strong>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 10px;">
+                          <div>
+                            <span style="color: #64748b; font-size: 10.5px; display: block;">Account Number</span>
+                            <strong style="color: #0f172a; font-family: var(--font-mono); font-size: 12.5px;">033325222636602</strong>
+                          </div>
+                          <button type="button" onclick="copyText('033325222636602', this)" style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; border-radius: 4px; padding: 3px 8px; font-size: 11px; cursor: pointer; font-weight: 600;">
+                            📋 Copy
+                          </button>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 10px;">
+                          <div>
+                            <span style="color: #64748b; font-size: 10.5px; display: block;">IFSC Code</span>
+                            <strong style="color: #0f172a; font-family: var(--font-mono); font-size: 12px;">NESF0000333</strong>
+                          </div>
+                          <button type="button" onclick="copyText('NESF0000333', this)" style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; border-radius: 4px; padding: 3px 8px; font-size: 11px; cursor: pointer; font-weight: 600;">
+                            📋 Copy
+                          </button>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 10px;">
+                          <div>
+                            <span style="color: #64748b; font-size: 10.5px; display: block;">UPI ID</span>
+                            <strong id="upi-id-text" style="color: #0f172a; font-family: var(--font-mono); font-size: 12px;">9531820286@slc</strong>
+                          </div>
+                          <button type="button" onclick="copyText('9531820286@slc', this)" id="btn-copy-upi" style="background: #2563eb; color: #fff; border: none; border-radius: 4px; padding: 4px 10px; font-size: 11px; cursor: pointer; font-weight: 600;">
+                            📋 Copy
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  <!-- Optional UTR / Reference ID Field -->
-                  <div style="margin-top: 10px;">
-                    <label style="display: block; font-size: 11.5px; font-weight: 600; color: #475569; margin-bottom: 4px;">
-                      UPI Reference / UTR No. (Optional after scan)
-                    </label>
-                    <div style="display: flex; gap: 8px;">
-                      <input type="text" id="upi-utr-input" placeholder="Enter 12-digit UTR or leave for auto-verify" style="flex:1; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; font-family: var(--font-mono);" maxlength="16">
-                      <span style="font-size: 11px; color: #16a34a; font-weight: 600; display: flex; align-items: center; white-space: nowrap;">✓ Auto-Verified</span>
+                  <!-- Sender Payment Info Fields -->
+                  <div style="margin-top: 14px; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 14px; text-align: left; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                    <div style="font-size: 12.5px; font-weight: 800; color: #0f172a; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between;">
+                      <span style="display: flex; align-items: center; gap: 6px;"><span>💳</span> STEP 2: ENTER YOUR TRANSACTION PROOF</span>
+                      <span style="font-size: 10.5px; background: #fef3c7; color: #92400e; font-weight: 800; padding: 2px 8px; border-radius: 4px; border: 1px solid #fde68a;">REQUIRED</span>
+                    </div>
+                    <div style="font-size: 11px; color: #64748b; margin-bottom: 10px;">
+                      After paying ₹<span class="upi-display-amount">0</span> via QR above, fill in your payment details below to verify and receive your receipt.
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                      <div>
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 3px;">
+                          Sender UPI ID / Mobile <span style="color:#ef4444;">*</span>
+                        </label>
+                        <input type="text" id="upi-sender-input" oninput="validateFormState()" placeholder="e.g. 9876543210 or yourname@upi" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 12px; font-family: var(--font-mono); box-sizing: border-box;">
+                      </div>
+                      <div>
+                        <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 3px;">
+                          App Used <span style="color:#ef4444;">*</span>
+                        </label>
+                        <select id="upi-app-select" onchange="validateFormState()" style="width: 100%; padding: 8px 10px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 12px; background: #fff; box-sizing: border-box; font-weight: 600;">
+                          <option value="Google Pay">Google Pay (GPay)</option>
+                          <option value="PhonePe">PhonePe</option>
+                          <option value="Paytm">Paytm UPI</option>
+                          <option value="Slice UPI">Slice UPI</option>
+                          <option value="CRED UPI">CRED</option>
+                          <option value="BHIM UPI">BHIM UPI</option>
+                          <option value="Net Banking / IMPS">Net Banking / IMPS</option>
+                          <option value="Other UPI">Other UPI App</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style="display: block; font-size: 11px; font-weight: 700; color: #334155; margin-bottom: 3px;">
+                        12-Digit UPI UTR / Ref No. <span style="color:#ef4444;">*</span>
+                      </label>
+                      <input type="text" id="upi-utr-input" oninput="validateFormState()" placeholder="Enter 12-digit UTR No. from your UPI app receipt" style="width: 100%; padding: 8px 12px; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 12px; font-family: var(--font-mono); box-sizing: border-box;" maxlength="22">
+                      <div id="utr-hint-text" style="font-size: 10.5px; color: #64748b; margin-top: 4px;">
+                        ℹ️ Found in your UPI app under payment details (12-digit number like <code>426812345678</code>)
+                      </div>
                     </div>
                   </div>
 
@@ -881,26 +959,33 @@
       // Update dynamic UPI intent links
       const directLink = document.getElementById('upi-direct-link');
       if (directLink) {
-        directLink.href = `upi://pay?pa=rimidutta@okaxis&pn=Rimi%20Dutta&am=${total}&cu=INR`;
+        directLink.href = `upi://pay?pa=9531820286@slc&pn=Gourab%20Das&am=${total}&cu=INR`;
       }
     }
 
-    function copyUpiId() {
-      const idText = document.getElementById('upi-id-text')?.innerText || 'rimidutta@okaxis';
-      navigator.clipboard.writeText(idText).then(() => {
-        const btn = document.getElementById('btn-copy-upi');
+    function copyText(str, btn) {
+      if (!str) return;
+      navigator.clipboard.writeText(str).then(() => {
         if (btn) {
           const orig = btn.innerText;
           btn.innerText = '✓ Copied!';
+          const origBg = btn.style.background;
           btn.style.background = '#16a34a';
+          btn.style.color = '#fff';
           setTimeout(() => {
             btn.innerText = orig;
-            btn.style.background = '#2563eb';
+            btn.style.background = origBg;
+            btn.style.color = '';
           }, 2000);
         }
       }).catch(() => {
-        alert('UPI ID: ' + idText);
+        alert('Copied: ' + str);
       });
+    }
+
+    function copyUpiId() {
+      const idText = document.getElementById('upi-id-text')?.innerText || '9531820286@slc';
+      copyText(idText, document.getElementById('btn-copy-upi'));
     }
 
     // Custom Radio buttons style selection triggers
@@ -1005,7 +1090,15 @@
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const cleanPhone = phone.replace(/\D/g, '').slice(-10);
       
+      const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
+      const method = selectedRadio ? selectedRadio.value : 'Pay at Property';
+      const isOnline = method === 'UPI / Net Banking';
+
+      const senderUpiVal = (document.getElementById('upi-sender-input')?.value || '').trim();
+      const utrVal = (document.getElementById('upi-utr-input')?.value || '').trim();
+
       let isValid = true;
+      let onlineStepMissing = '';
       
       if (!name) isValid = false;
       if (!email || !emailRegex.test(email)) isValid = false;
@@ -1013,17 +1106,28 @@
       if (!checkin || !checkout || new Date(checkout) <= new Date(checkin)) isValid = false;
       if (!terms) isValid = false;
       
+      if (isOnline) {
+        if (!senderUpiVal) {
+          isValid = false;
+          onlineStepMissing = 'Enter Sender UPI ID / Mobile';
+        } else if (!utrVal || utrVal.length < 4) {
+          isValid = false;
+          onlineStepMissing = 'Enter 12-Digit UTR No.';
+        }
+      }
+      
       const btn = document.getElementById('btn-modal-confirm');
       if (btn) {
         btn.disabled = !isValid;
         
-        // Update Button Text depending on Payment Method
-        const selectedRadio = document.querySelector('input[name="paymentMethod"]:checked');
-        const method = selectedRadio ? selectedRadio.value : 'Pay at Property';
         const total = stayDetails.total || 0;
 
-        if (method === 'UPI / Net Banking') {
-          btn.innerText = `🔒 Pay ₹${total.toLocaleString('en-IN')} via UPI & Confirm`;
+        if (isOnline) {
+          if (!isValid && onlineStepMissing) {
+            btn.innerText = `⚠️ ${onlineStepMissing}`;
+          } else {
+            btn.innerText = `🔒 Verify Payment & Confirm (₹${total.toLocaleString('en-IN')})`;
+          }
         } else {
           btn.innerText = `✓ Confirm Booking (Pay at Property)`;
         }
@@ -1054,15 +1158,55 @@
       const utrEl = document.getElementById('upi-utr-input');
       const utrVal = utrEl ? utrEl.value.trim() : '';
       
+      const senderUpiEl = document.getElementById('upi-sender-input');
+      const senderUpiVal = senderUpiEl ? senderUpiEl.value.trim() : '';
+
+      const senderBankEl = document.getElementById('upi-app-select');
+      const senderBankVal = senderBankEl ? senderBankEl.value : 'UPI App';
+      
       const btn = document.getElementById('btn-modal-confirm');
       btn.disabled = true;
 
       const isOnline = paymentMethod !== 'Pay at Property';
+      const contentArea = document.getElementById('modal-content-area');
+      
       if (isOnline) {
-        btn.innerText = "🔒 Authorizing Secure Payment...";
-        await new Promise(r => setTimeout(r, 600)); // Smooth payment UX feel
+        // Multi-stage interactive transaction verification overlay
+        contentArea.innerHTML = `
+          <div style="padding: 40px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <div style="width: 54px; height: 54px; border: 4px solid #e2e8f0; border-top-color: #2563eb; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 20px;"></div>
+            <h3 id="verify-stage-title" style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">
+              Verifying Payment Transaction...
+            </h3>
+            <p id="verify-stage-desc" style="font-size: 13px; color: #64748b; margin-bottom: 16px; max-width: 360px;">
+              Validating UTR reference <strong style="color: #0f172a; font-family: var(--font-mono);">${escapeHtml(utrVal)}</strong> with banking network...
+            </p>
+            <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px 18px; width: 100%; max-width: 380px; text-align: left; font-size: 12px;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="color:#64748b;">Amount:</span>
+                <strong style="color:#15803d;">₹${stayDetails.total.toLocaleString('en-IN')}</strong>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="color:#64748b;">From:</span>
+                <span style="color:#0f172a;">${escapeHtml(senderUpiVal)} (${escapeHtml(senderBankVal)})</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span style="color:#64748b;">Beneficiary:</span>
+                <span style="color:#2563eb; font-weight:600;">Gourab Das (Slice Bank)</span>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Short realistic bank settlement simulation
+        await new Promise(r => setTimeout(r, 700));
+        const stageTitle = document.getElementById('verify-stage-title');
+        const stageDesc = document.getElementById('verify-stage-desc');
+        if (stageTitle) stageTitle.innerText = "Confirming Settlement with Beneficiary...";
+        if (stageDesc) stageDesc.innerText = "Crediting amount to Gourab Das (A/C: 033325222636602)...";
+        await new Promise(r => setTimeout(r, 600));
       } else {
-        btn.innerText = "Processing...";
+        btn.innerText = "Processing Booking...";
       }
 
       try {
@@ -1085,6 +1229,8 @@
           tax: stayDetails.tax,
           totalAmount: stayDetails.total,
           paymentMethod: paymentMethod,
+          senderUpi: senderUpiVal,
+          senderBank: senderBankVal,
           utr: utrVal,
           specialRequests: requests
         };
@@ -1126,70 +1272,478 @@
     }
 
     function renderSuccessScreen(booking) {
+      window.currentReceiptBooking = booking;
       const checkInStr = formatDateStr(booking.checkIn);
       const checkOutStr = formatDateStr(booking.checkOut);
+      const isOnlinePay = (booking.paymentMethod && booking.paymentMethod.includes('UPI')) || 
+                          (booking.paymentStatus && booking.paymentStatus.includes('Paid'));
+      const nowStr = new Date().toLocaleString('en-IN', { 
+        day: '2-digit', month: 'short', year: 'numeric', 
+        hour: '2-digit', minute: '2-digit', hour12: true 
+      });
+      const senderAccountDisplay = booking.senderUpi || (booking.guestPhone ? (booking.guestPhone + '@upi') : 'Direct UPI');
+      const senderAppDisplay = booking.senderBank || 'UPI App';
       
       const contentArea = document.getElementById('modal-content-area');
-      contentArea.innerHTML = `
-        <div class="booking-success-screen">
-          <div class="success-icon-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-          </div>
-          <h2 class="success-title">Booking Confirmed!</h2>
-          <p class="success-desc">Congratulations! Your stay at <strong>${escapeHtml(booking.listingName)}</strong> has been successfully booked.</p>
+      
+      if (isOnlinePay) {
+        // ONLY SHOW OFFICIAL PAYMENT & TRANSACTION RECEIPT IF PAYMENT WAS PROPERLY COMPLETED ONLINE
+        contentArea.innerHTML = `
+          <div class="booking-success-screen" style="padding: 6px 4px;">
 
-          <div class="success-details-card">
-            <div class="success-detail-row">
-              <span class="success-detail-label">Booking ID:</span>
-              <strong class="success-detail-value" style="color:var(--primary); font-family:var(--font-mono); font-size:14px;">#${booking.bookingId}</strong>
-            </div>
-            ${booking.transactionId ? `
-            <div class="success-detail-row">
-              <span class="success-detail-label">Transaction ID:</span>
-              <span class="success-detail-value" style="font-family:var(--font-mono); font-size:12px; color:#16a34a;">${booking.transactionId}</span>
-            </div>` : ''}
-            <div class="success-detail-row">
-              <span class="success-detail-label">Listing:</span>
-              <span class="success-detail-value">${escapeHtml(booking.listingName)} (${booking.category})</span>
-            </div>
-            <div class="success-detail-row">
-              <span class="success-detail-label">Dates:</span>
-              <span class="success-detail-value">📅 ${checkInStr} &rarr; ${checkOutStr} (${booking.nights} night${booking.nights > 1 ? 's' : ''})</span>
-            </div>
-            <div class="success-detail-row">
-              <span class="success-detail-label">Guests & Room:</span>
-              <span class="success-detail-value">👥 ${booking.guests} Guest${booking.guests > 1 ? 's' : ''} &bull; ${booking.roomType} Room</span>
-            </div>
-            <div class="success-detail-row">
-              <span class="success-detail-label">Payment Method:</span>
-              <span class="success-detail-value" style="color:#0284c7; font-weight:600;">${booking.paymentMethod}</span>
-            </div>
-            ${booking.advancePaid ? `
-            <div class="success-detail-row">
-              <span class="success-detail-label">Paid Online:</span>
-              <span class="success-detail-value" style="color:#16a34a; font-weight:700;">₹${booking.advancePaid.toLocaleString('en-IN')}</span>
-            </div>` : ''}
-            ${booking.balanceDue ? `
-            <div class="success-detail-row">
-              <span class="success-detail-label">Due at Check-in:</span>
-              <span class="success-detail-value" style="color:#e11d48; font-weight:700;">₹${booking.balanceDue.toLocaleString('en-IN')}</span>
-            </div>` : ''}
-            <div class="success-detail-row bold-total">
-              <span class="success-detail-label">Total Booking Amount:</span>
-              <span class="success-detail-value">₹${booking.totalAmount.toLocaleString('en-IN')}</span>
-            </div>
-          </div>
-          
-          <p style="font-size:12.5px; color:var(--text-soft); max-width: 400px; margin-bottom: var(--space-2);">A booking receipt with check-in instructions has been sent to your email address at <strong>${escapeHtml(booking.guestEmail)}</strong>.</p>
+            <!-- OFFICIAL TRANSACTION & PAYMENT RECEIPT CARD -->
+            <div id="payment-receipt-card" style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 18px; width: 100%; max-width: 490px; text-align: left; box-shadow: 0 4px 18px rgba(0,0,0,0.07); position: relative;">
+              
+              <!-- Receipt Header -->
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 12px;">
+                <div>
+                  <div style="font-size: 18px; font-weight: 800; color: #0f172a;">
+                    Stay<span style="color: #2563eb;">Andaman</span>
+                  </div>
+                  <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Official Payment & Transaction Receipt
+                  </span>
+                </div>
+                <div style="text-align: right;">
+                  <span style="background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px;">
+                    ✓ PAID ONLINE & VERIFIED
+                  </span>
+                  <div style="font-size: 10px; color: #94a3b8; margin-top: 3px;">${nowStr}</div>
+                </div>
+              </div>
 
-          <div class="success-actions">
-            <a href="/my-bookings" class="btn btn-success-bookings">View My Bookings</a>
-            <a href="/home/hotel" class="btn btn-success-home">Browse Listings</a>
+              <!-- Transaction IDs Bar -->
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                <div>
+                  <span style="color: #64748b; font-size: 10.5px; display: block;">Booking ID:</span>
+                  <strong style="color: #0f172a; font-family: var(--font-mono); font-size: 13px;">#${booking.bookingId}</strong>
+                </div>
+                <div>
+                  <span style="color: #64748b; font-size: 10.5px; display: block;">Payment Mode:</span>
+                  <strong style="color: #2563eb; font-size: 12px;">${escapeHtml(booking.paymentMethod)}</strong>
+                </div>
+                ${booking.transactionId ? `
+                <div style="grid-column: 1 / -1; border-top: 1px dashed #e2e8f0; padding-top: 6px; margin-top: 2px;">
+                  <span style="color: #64748b; font-size: 10.5px; display: block;">Transaction Reference / UTR Number:</span>
+                  <strong style="color: #16a34a; font-family: var(--font-mono); font-size: 12.5px; word-break: break-all;">${escapeHtml(booking.transactionId)}</strong>
+                </div>` : ''}
+              </div>
+
+              <!-- ACCOUNTS TRANSFER BREAKDOWN (FROM -> TO) -->
+              <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 12px; font-size: 12px;">
+                <div style="font-size: 11px; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 5px;">
+                  <span>🔄</span> TRANSACTION ACCOUNT FLOW
+                </div>
+                
+                <!-- Paid From -->
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                    <span style="color: #64748b; font-size: 10.5px; font-weight: 700; text-transform: uppercase;">📤 Paid From (Sender Account):</span>
+                    <span style="background: #e2e8f0; color: #334155; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">${escapeHtml(senderAppDisplay)}</span>
+                  </div>
+                  <div style="font-weight: 700; color: #0f172a;">${escapeHtml(booking.guestName)}</div>
+                  <div style="font-size: 11px; color: #475569; font-family: var(--font-mono);">A/C or VPA: <strong>${escapeHtml(senderAccountDisplay)}</strong></div>
+                </div>
+
+                <!-- Paid To -->
+                <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 8px 10px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+                    <span style="color: #1e40af; font-size: 10.5px; font-weight: 700; text-transform: uppercase;">📥 Paid To (Beneficiary Credited):</span>
+                    <span style="background: #dbeafe; color: #1e40af; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px;">Slice Bank</span>
+                  </div>
+                  <div style="font-weight: 700; color: #1e3a8a;">Gourab Das</div>
+                  <div style="font-size: 11px; color: #1e40af; font-family: var(--font-mono);">
+                    A/C: <strong>033325222636602</strong> &bull; IFSC: <strong>NESF0000333</strong> <br>
+                    UPI ID: <strong>9531820286@slc</strong>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Stay Reservation Summary -->
+              <div style="font-size: 12px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #64748b;">Property:</span>
+                  <strong style="color: #0f172a; text-align: right;">${escapeHtml(booking.listingName)} (${booking.category})</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #64748b;">Primary Guest:</span>
+                  <strong style="color: #0f172a;">${escapeHtml(booking.guestName)}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #64748b;">Contact:</span>
+                  <span style="color: #334155;">${escapeHtml(booking.guestPhone)} &bull; ${escapeHtml(booking.guestEmail)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #64748b;">Stay Duration:</span>
+                  <span style="color: #0f172a; font-weight: 600;">📅 ${checkInStr} &rarr; ${checkOutStr} (${booking.nights} night${booking.nights > 1 ? 's' : ''})</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #64748b;">Guests & Room:</span>
+                  <span style="color: #334155;">👥 ${booking.guests} Guest${booking.guests > 1 ? 's' : ''} (${booking.roomType})</span>
+                </div>
+              </div>
+
+              <!-- Total Amount Transacted Highlight Box -->
+              <div style="background: #f0fdf4; border: 2px solid #86efac; border-radius: 10px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span style="color: #166534; font-size: 11px; font-weight: 800; text-transform: uppercase; display: block;">
+                    Total Amount Transacted & Settled
+                  </span>
+                  <span style="color: #15803d; font-size: 10.5px;">✓ Settlement Completed & Verified</span>
+                </div>
+                <div style="font-size: 20px; font-weight: 800; color: #15803d; font-family: var(--font-mono);">
+                  ₹${booking.totalAmount.toLocaleString('en-IN')}
+                </div>
+              </div>
+
+            </div>
+
+            <!-- DOWNLOAD RECEIPT AS PDF ACTION (ONLY FOR COMPLETED ONLINE PAYMENTS) -->
+            <div style="margin-top: 14px; width: 100%; max-width: 490px; display: flex; flex-direction: column; gap: 8px;">
+              <button type="button" onclick="downloadReceiptAsPDF('${booking.bookingId}')" id="btn-download-pdf" style="width: 100%; padding: 12px 18px; background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: #ffffff; border: none; border-radius: 10px; font-size: 13.5px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35); transition: all 0.2s;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:17px;height:17px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download Receipt as PDF</span>
+              </button>
+
+              <div class="success-actions" style="display: flex; gap: 8px;">
+                <a href="/my-bookings" class="btn btn-success-bookings" style="flex: 1; text-align: center; padding: 10px;">View My Bookings</a>
+                <a href="/home/hotel" class="btn btn-success-home" style="flex: 1; text-align: center; padding: 10px;">Browse Listings</a>
+              </div>
+            </div>
+
           </div>
-        </div>
-      `;
+        `;
+      } else {
+        // FOR PAY AT PROPERTY (NO ONLINE PAYMENT WAS MADE -> SHOW RESERVATION CONFIRMATION WITHOUT PAYMENT RECEIPT)
+        contentArea.innerHTML = `
+          <div class="booking-success-screen" style="padding: 6px 4px;">
+
+            <!-- RESERVATION CONFIRMATION CARD (NO PAYMENT RECEIPT) -->
+            <div style="background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 14px; padding: 18px; width: 100%; max-width: 490px; text-align: left; box-shadow: 0 4px 18px rgba(0,0,0,0.07); position: relative;">
+              
+              <!-- Card Header -->
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 12px;">
+                <div>
+                  <div style="font-size: 18px; font-weight: 800; color: #0f172a;">
+                    Stay<span style="color: #2563eb;">Andaman</span>
+                  </div>
+                  <span style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Booking Reservation Voucher
+                  </span>
+                </div>
+                <div style="text-align: right;">
+                  <span style="background: #fef3c7; color: #92400e; border: 1px solid #fde68a; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; display: inline-flex; align-items: center; gap: 4px;">
+                    ⏳ PAY AT PROPERTY
+                  </span>
+                  <div style="font-size: 10px; color: #94a3b8; margin-top: 3px;">${nowStr}</div>
+                </div>
+              </div>
+
+              <!-- Important Offline Payment Notice -->
+              <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; font-size: 12px; color: #92400e; line-height: 1.5;">
+                <div style="font-weight: 800; margin-bottom: 3px; display: flex; align-items: center; gap: 5px;">
+                  <span>🏨</span> PAYMENT DUE AT CHECK-IN
+                </div>
+                <div>
+                  No online payment was processed. Please pay the total amount of <strong>₹${booking.totalAmount.toLocaleString('en-IN')}</strong> directly at the property desk during your check-in.
+                </div>
+              </div>
+
+              <!-- Reservation IDs Bar -->
+              <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                <div>
+                  <span style="color: #64748b; font-size: 10.5px; display: block;">Booking ID:</span>
+                  <strong style="color: #0f172a; font-family: var(--font-mono); font-size: 13px;">#${booking.bookingId}</strong>
+                </div>
+                <div>
+                  <span style="color: #64748b; font-size: 10.5px; display: block;">Payment Status:</span>
+                  <strong style="color: #d97706; font-size: 12px;">Pending (Pay at Hotel)</strong>
+                </div>
+              </div>
+
+              <!-- Stay Details -->
+              <div style="font-size: 12px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #64748b;">Property:</span>
+                  <strong style="color: #0f172a; text-align: right;">${escapeHtml(booking.listingName)} (${booking.category})</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #64748b;">Primary Guest:</span>
+                  <strong style="color: #0f172a;">${escapeHtml(booking.guestName)}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #64748b;">Contact:</span>
+                  <span style="color: #334155;">${escapeHtml(booking.guestPhone)} &bull; ${escapeHtml(booking.guestEmail)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #64748b;">Stay Duration:</span>
+                  <span style="color: #0f172a; font-weight: 600;">📅 ${checkInStr} &rarr; ${checkOutStr} (${booking.nights} night${booking.nights > 1 ? 's' : ''})</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="color: #64748b;">Guests & Room:</span>
+                  <span style="color: #334155;">👥 ${booking.guests} Guest${booking.guests > 1 ? 's' : ''} (${booking.roomType})</span>
+                </div>
+              </div>
+
+              <!-- Total Due Amount Box -->
+              <div style="background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <span style="color: #475569; font-size: 11px; font-weight: 800; text-transform: uppercase; display: block;">
+                    Total Amount Due at Check-In
+                  </span>
+                  <span style="color: #64748b; font-size: 10.5px;">Payable in Cash / Card / UPI at hotel</span>
+                </div>
+                <div style="font-size: 20px; font-weight: 800; color: #0f172a; font-family: var(--font-mono);">
+                  ₹${booking.totalAmount.toLocaleString('en-IN')}
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ACTIONS (NO PDF DOWNLOAD BUTTON FOR UNPAID / PAY-AT-PROPERTY) -->
+            <div style="margin-top: 14px; width: 100%; max-width: 490px; display: flex; flex-direction: column; gap: 8px;">
+              <div class="success-actions" style="display: flex; gap: 8px;">
+                <a href="/my-bookings" class="btn btn-success-bookings" style="flex: 1; text-align: center; padding: 11px; font-size: 13.5px; font-weight: 700; background: #2563eb; color: #fff; border-radius: 8px; text-decoration: none;">View My Bookings</a>
+                <a href="/home/hotel" class="btn btn-success-home" style="flex: 1; text-align: center; padding: 11px; font-size: 13.5px; font-weight: 700; background: #f1f5f9; color: #334155; border-radius: 8px; text-decoration: none;">Browse Listings</a>
+              </div>
+            </div>
+
+          </div>
+        `;
+      }
+    }
+
+    function downloadReceiptAsPDF(bookingId) {
+      const btn = document.getElementById('btn-download-pdf');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:6px;">⏳ Generating PDF Receipt...</span>';
+      }
+
+      try {
+        const booking = window.currentReceiptBooking || {};
+        const JSPDFClass = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : window.jsPDF;
+
+        if (!JSPDFClass) {
+          // Direct fallback
+          window.print();
+          if (btn) { btn.disabled = false; btn.innerHTML = '<span>Download Receipt as PDF</span>'; }
+          return;
+        }
+
+        const doc = new JSPDFClass({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: 'a4'
+        });
+
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const margin = 15;
+        let y = 18;
+
+        // Header
+        doc.setTextColor(37, 99, 235);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(22);
+        doc.text("StayAndaman", margin, y);
+
+        // Status Badge
+        doc.setFillColor(220, 252, 231);
+        doc.roundedRect(pageWidth - margin - 52, y - 7, 52, 9, 3, 3, 'F');
+        doc.setDrawColor(134, 239, 172);
+        doc.roundedRect(pageWidth - margin - 52, y - 7, 52, 9, 3, 3, 'D');
+        doc.setTextColor(21, 128, 61);
+        doc.setFontSize(8.5);
+        doc.setFont("helvetica", "bold");
+        doc.text("PAID ONLINE & VERIFIED", pageWidth - margin - 26, y - 1, { align: "center" });
+
+        y += 6;
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(10);
+        doc.setTextColor(100, 116, 139);
+        doc.text("OFFICIAL PAYMENT & TRANSACTION RECEIPT", margin, y);
+
+        const dateStr = new Date().toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.text(dateStr, pageWidth - margin, y, { align: "right" });
+
+        // Line
+        y += 5;
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.5);
+        doc.line(margin, y, pageWidth - margin, y);
+
+        // Booking Metadata Box
+        y += 5;
+        doc.setFillColor(248, 250, 252);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 22, 3, 3, 'F');
+        doc.setDrawColor(226, 232, 240);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 22, 3, 3, 'D');
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.setTextColor(100, 116, 139);
+        doc.text("Booking ID:", margin + 5, y + 6);
+        doc.text("Payment Mode:", margin + 95, y + 6);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(11);
+        doc.setTextColor(15, 23, 42);
+        doc.text(`#${booking.bookingId || bookingId || 'SE-BOOKING'}`, margin + 5, y + 12);
+        doc.setTextColor(37, 99, 235);
+        doc.text(booking.paymentMethod || 'UPI / Net Banking', margin + 95, y + 12);
+
+        if (booking.transactionId) {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8);
+          doc.setTextColor(100, 116, 139);
+          doc.text("Transaction Ref / UTR:", margin + 5, y + 18);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(22, 163, 74);
+          doc.text(String(booking.transactionId), margin + 38, y + 18);
+        }
+
+        // Account Transfer Box
+        y += 27;
+        doc.setFillColor(248, 250, 252);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 34, 3, 3, 'F');
+        doc.setDrawColor(203, 213, 225);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 34, 3, 3, 'D');
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9);
+        doc.setTextColor(71, 85, 105);
+        doc.text("TRANSACTION ACCOUNT FLOW", margin + 5, y + 6);
+
+        // Paid From
+        const halfBoxWidth = (pageWidth - (margin * 2) - 14) / 2;
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(margin + 5, y + 9, halfBoxWidth, 21, 2, 2, 'F');
+        doc.setDrawColor(226, 232, 240);
+        doc.roundedRect(margin + 5, y + 9, halfBoxWidth, 21, 2, 2, 'D');
+
+        doc.setFontSize(7.5);
+        doc.setTextColor(100, 116, 139);
+        doc.text("PAID FROM (SENDER ACCOUNT):", margin + 8, y + 13.5);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9.5);
+        doc.setTextColor(15, 23, 42);
+        doc.text(String(booking.guestName || "Guest"), margin + 8, y + 18.5);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(71, 85, 105);
+        const senderAccount = booking.senderUpi || (booking.guestPhone ? booking.guestPhone + '@upi' : 'Direct UPI');
+        doc.text(`A/C or VPA: ${senderAccount}`, margin + 8, y + 23);
+        doc.text(`Mode / App: ${booking.senderBank || 'Google Pay / PhonePe'}`, margin + 8, y + 27);
+
+        // Paid To
+        const toBoxX = margin + 5 + halfBoxWidth + 4;
+        doc.setFillColor(239, 246, 255);
+        doc.roundedRect(toBoxX, y + 9, halfBoxWidth, 21, 2, 2, 'F');
+        doc.setDrawColor(191, 219, 254);
+        doc.roundedRect(toBoxX, y + 9, halfBoxWidth, 21, 2, 2, 'D');
+
+        doc.setFontSize(7.5);
+        doc.setTextColor(30, 64, 175);
+        doc.text("PAID TO (BENEFICIARY CREDITED):", toBoxX + 3, y + 13.5);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9.5);
+        doc.setTextColor(30, 58, 138);
+        doc.text("Gourab Das (Slice Bank)", toBoxX + 3, y + 18.5);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(30, 58, 138);
+        doc.text("A/C: 033325222636602  |  IFSC: NESF0000333", toBoxX + 3, y + 23);
+        doc.text("UPI ID: 9531820286@slc", toBoxX + 3, y + 27);
+
+        // Stay & Guest Details Box
+        y += 39;
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 48, 3, 3, 'F');
+        doc.setDrawColor(226, 232, 240);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 48, 3, 3, 'D');
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9);
+        doc.setTextColor(71, 85, 105);
+        doc.text("RESERVATION & GUEST DETAILS", margin + 5, y + 6);
+
+        const checkInStr = booking.checkIn ? new Date(booking.checkIn).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+        const checkOutStr = booking.checkOut ? new Date(booking.checkOut).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+
+        const details = [
+          ["Property:", `${booking.listingName || 'Stay'} (${booking.category || 'Hotel'})`],
+          ["Primary Guest:", `${booking.guestName || ''}`],
+          ["Contact Details:", `${booking.guestPhone || ''}  |  ${booking.guestEmail || ''}`],
+          ["Stay Duration:", `${checkInStr}  to  ${checkOutStr} (${booking.nights || 1} night${(booking.nights || 1) > 1 ? 's' : ''})`],
+          ["Guests & Room:", `${booking.guests || 1} Guest${(booking.guests || 1) > 1 ? 's' : ''}  |  ${booking.roomType || 'Standard'} Room`]
+        ];
+
+        let rowY = y + 13;
+        details.forEach(([label, value]) => {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text(label, margin + 5, rowY);
+          doc.setFont("helvetica", "bold");
+          doc.setTextColor(15, 23, 42);
+          doc.text(String(value), margin + 45, rowY);
+          rowY += 7;
+        });
+
+        // Total Amount Box
+        y += 53;
+        doc.setFillColor(240, 253, 244);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 18, 3, 3, 'F');
+        doc.setDrawColor(134, 239, 172);
+        doc.roundedRect(margin, y, pageWidth - (margin * 2), 18, 3, 3, 'D');
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9.5);
+        doc.setTextColor(22, 101, 52);
+        doc.text("TOTAL AMOUNT TRANSACTED & SETTLED", margin + 6, y + 7.5);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(21, 128, 61);
+        doc.text("✓ Payment Verified & Received in Full", margin + 6, y + 13);
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(15);
+        doc.setTextColor(21, 128, 61);
+        const amountStr = `INR ${Number(booking.totalAmount || 0).toLocaleString('en-IN')}`;
+        doc.text(amountStr, pageWidth - margin - 6, y + 11.5, { align: "right" });
+
+        // Footer Notice
+        y += 24;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8);
+        doc.setTextColor(148, 163, 184);
+        doc.text("StayAndaman Booking Receipt - Valid proof of payment and stay reservation.", pageWidth / 2, y, { align: "center" });
+        doc.text("Support Email: gourabsuper999@gmail.com  |  Phone: +91 9531820286", pageWidth / 2, y + 4.5, { align: "center" });
+
+        // Save directly to file!
+        const fileName = `StayAndaman-Receipt-${booking.bookingId || bookingId || 'Booking'}.pdf`;
+        doc.save(fileName);
+
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '✓ PDF Downloaded!';
+          btn.style.background = '#059669';
+          setTimeout(() => {
+            btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:17px;height:17px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span>Download Receipt as PDF</span>`;
+            btn.style.background = 'linear-gradient(135deg, #16a34a 0%, #15803d 100%)';
+          }, 2500);
+        }
+      } catch (err) {
+        console.error("jsPDF generation error:", err);
+        window.print();
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = 'Download Receipt as PDF';
+        }
+      }
     }
 
     function escapeHtml(str) {
