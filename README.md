@@ -1,648 +1,345 @@
 <div align="center">
 
-<!-- Animated SVG Banner -->
-<svg width="900" height="200" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1a1f36">
-        <animate attributeName="stop-color" values="#1a1f36;#242b4d;#0e1222;#1a1f36" dur="10s" repeatCount="indefinite"/>
-      </stop>
-      <stop offset="50%" style="stop-color:#2d3561">
-        <animate attributeName="stop-color" values="#2d3561;#3c467a;#1b213b;#2d3561" dur="10s" repeatCount="indefinite"/>
-      </stop>
-      <stop offset="100%" style="stop-color:#0abf8a">
-        <animate attributeName="stop-color" values="#0abf8a;#06d6a0;#059669;#0abf8a" dur="10s" repeatCount="indefinite"/>
-      </stop>
-    </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="4" result="blur"/>
-      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-    </filter>
-  </defs>
-  <!-- Background -->
-  <rect width="900" height="200" rx="18" fill="url(#bg)"/>
-  
-  <!-- Animated floating circles (decorative) -->
-  <circle cx="820" cy="40" r="60" fill="#f5a623" opacity="0.06">
-    <animate attributeName="r" values="60;75;60" dur="4s" repeatCount="indefinite"/>
-    <animate attributeName="cy" values="40;55;40" dur="8s" repeatCount="indefinite"/>
-  </circle>
-  <circle cx="100" cy="170" r="50" fill="#0abf8a" opacity="0.08">
-    <animate attributeName="r" values="50;65;50" dur="3s" repeatCount="indefinite"/>
-    <animate attributeName="cx" values="100;120;100" dur="6s" repeatCount="indefinite"/>
-  </circle>
-  <circle cx="500" cy="180" r="40" fill="#2d3561" opacity="0.3">
-    <animate attributeName="r" values="40;55;40" dur="5s" repeatCount="indefinite"/>
-  </circle>
-  
-  <!-- Hotel icon (SVG path) on the left -->
-  <g transform="translate(60, 50)" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 36h32M8 36V12a3 3 0 0 1 3-3h18a3 3 0 0 1 3 3v24" stroke="#0abf8a">
-      <animate attributeName="stroke" values="#0abf8a;#f5a623;#0abf8a" dur="6s" repeatCount="indefinite"/>
-    </path>
-    <path d="M16 36V26a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v10" stroke="#f5a623">
-      <animate attributeName="stroke" values="#f5a623;#0abf8a;#f5a623" dur="6s" repeatCount="indefinite"/>
-    </path>
-    <rect x="12" y="14" width="4" height="4" rx="1" fill="#fff" opacity="0.8">
-      <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite"/>
-    </rect>
-    <rect x="24" y="14" width="4" height="4" rx="1" fill="#fff" opacity="0.8">
-      <animate attributeName="opacity" values="1;0.3;1" dur="3s" repeatCount="indefinite"/>
-    </rect>
-    <rect x="12" y="20" width="4" height="4" rx="1" fill="#fff" opacity="0.8">
-      <animate attributeName="opacity" values="0.5;1;0.5" dur="2.5s" repeatCount="indefinite"/>
-    </rect>
-    <rect x="24" y="20" width="4" height="4" rx="1" fill="#fff" opacity="0.8">
-      <animate attributeName="opacity" values="1;0.5;1" dur="2.5s" repeatCount="indefinite"/>
-    </rect>
-    <path d="M20 3l1 2h2l-1.5 1.5 0.5 2-2-1.2-2 1.2 0.5-2L17 5h2z" fill="#f5a623">
-      <animate attributeName="opacity" values="0.2;1;0.2" dur="2s" repeatCount="indefinite"/>
-    </path>
-  </g>
-  
-  <!-- Resort palm tree icon on the right -->
-  <g transform="translate(800, 50)" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M2 36c10-2 20-2 28 0" stroke="#0abf8a">
-      <animate attributeName="stroke" values="#0abf8a;#f5a623;#0abf8a" dur="6s" repeatCount="indefinite"/>
-    </path>
-    <path d="M16 36c-2-6-1-14 3-20" stroke="#f5a623">
-      <animate attributeName="stroke" values="#f5a623;#0abf8a;#f5a623" dur="6s" repeatCount="indefinite"/>
-    </path>
-    <path d="M19 16c2-4 7-6 10-4M19 16c-3-3-7-4-10-1M19 16c3 1 7 4 8 8M19 16c-1 3-3 7-6 9" stroke="#fff" opacity="0.9">
-      <animate attributeName="opacity" values="0.6;1;0.6" dur="4s" repeatCount="indefinite"/>
-    </path>
-  </g>
-  
-  <!-- Main Title: Stayandaman -->
-  <text x="450" y="95" 
-        font-family="Georgia,serif" 
-        font-size="52" 
-        font-weight="bold" 
-        fill="white" 
-        text-anchor="middle"
-        letter-spacing="3"
-        filter="url(#glow)">
-    Stayandaman
-    <animate attributeName="opacity" values="0;1" dur="1.5s" fill="freeze"/>
-  </text>
-  
-  <!-- Tagline -->
-  <text x="450" y="140" 
-        font-family="Arial,sans-serif" 
-        font-size="18" 
-        fill="#f5a623" 
-        text-anchor="middle"
-        letter-spacing="1">
-    Your Perfect Stay, Simplified
-    <animate attributeName="opacity" values="0;1" dur="2s" fill="freeze"/>
-  </text>
-  
-  <!-- Animated underline -->
-  <line x1="300" y1="155" x2="600" y2="155" 
-        stroke="#0abf8a" stroke-width="2" opacity="0.7">
-    <animate attributeName="x1" values="450;300" dur="1s" fill="freeze"/>
-    <animate attributeName="x2" values="450;600" dur="1s" fill="freeze"/>
-  </line>
-</svg>
+# 🏨 StayAndaman — Hotel & Vacation Rental Platform
 
-<!-- Typing SVG Badge -->
-![Typing SVG](https://readme-typing-svg.demolab.com?font=Playfair+Display&size=22&duration=3000&pause=1000&color=F5A623&center=true&vCenter=true&width=600&lines=Discover+Premium+Hotels;Explore+Cozy+Lodges;Find+Perfect+Rentals;Your+Andaman+Journey+Starts+Here)
+[![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express.js-5.x-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas%20%7C%20Mongoose-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![EJS](https://img.shields.io/badge/Templates-EJS-B4CA65?style=for-the-badge&logo=ejs&logoColor=black)](https://ejs.co/)
+[![CSS3](https://img.shields.io/badge/Styling-Vanilla%20CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
+[![License](https://img.shields.io/badge/License-MIT-0abf8a?style=for-the-badge)](LICENSE)
+
+<p align="center">
+  <strong>A full-featured, mobile-responsive accommodation booking & administration web application built with Node.js, Express, EJS, and dual MongoDB/JSON persistence.</strong>
+</p>
+
+[Key Features](#-key-features) •
+[Architecture](#-system-architecture) •
+[Quick Start](#-quick-start) •
+[API Reference](#-api-routes-reference) •
+[Database Schemas](#-database-models) •
+[UI & Mobile Design](#-uiux--mobile-responsive-system)
+
+---
 
 </div>
 
-<br/>
+## 📌 Overview
 
-<div align="center">
+**StayAndaman** (StayEase) is a modern, production-ready hospitality booking platform designed to connect travelers with curated hotels, cozy lodges, and private vacation rentals. The application provides an intuitive booking flow, real-time price estimation (including adult and child calculations and GST), dynamic PDF receipt generation, and a powerful administrative control center.
 
-<!-- Tech Stack Badges -->
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![EJS](https://img.shields.io/badge/EJS-B4CA65?style=for-the-badge&logo=ejs&logoColor=black)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+### 🌟 Core Highlights
 
-<!-- Status Badges -->
-![Status](https://img.shields.io/badge/Status-Active-2ecc71?style=flat-square)
-![Version](https://img.shields.io/badge/Version-1.0.0-f5a623?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-0abf8a?style=flat-square)
-![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square)
-![Made with Love](https://img.shields.io/badge/Made%20with-Love-red?style=flat-square)
-
-</div>
+- **Dual-Mode Persistence:** Automatically connects to MongoDB Atlas in production or falls back seamlessly to a local JSON database (`src/db.json`) for zero-configuration local development.
+- **Role-Based Portals:** Dedicated experiences for Guests and Administrators with session-based route security.
+- **End-to-End Booking Lifecycle:** Property exploration, date pickers, price calculation, status tracking, PDF receipt generation, and self-service cancellations.
+- **Full Administrative Control:** Single-page dashboard for property CRUD, booking status workflows, user management, and one-click CSV financial exports.
+- **Mobile-First Responsive Design:** Fine-tuned breakpoints (`≤480px`, `≤576px`, `≤768px`) with slide-down drawer navigation, touch targets, and flexible grid layouts.
 
 ---
 
-<div align="center">
+## 🚀 Key Features
 
-### Application Preview
+### 👤 Guest Experience
+| Feature | Details |
+| :--- | :--- |
+| **Passwordless Authentication** | Fast, frictionless login and registration with credential matching. |
+| **Property Categories** | Browse and filter stays across **Hotels**, **Lodges**, and **Rentals**. |
+| **Search & Filtering** | Live filtering by keyword, location, pricing, rating, and amenities. |
+| **Interactive Detail View** | High-resolution image galleries, room specs, verified reviews, and contact options. |
+| **Smart Price Calculator** | Dynamic calculation of base rates, adult/child guest breakdown, 18% GST, and grand total. |
+| **Booking Management** | Review active/past trips, trigger instant cancellations, and track status (`Pending`, `Confirmed`, `Cancelled`). |
+| **PDF Receipt Generation** | Download branded, client-side PDF booking confirmations and payment receipts powered by jsPDF. |
+| **Profile Settings** | Edit user profile details (name, phone, birthdate, city) and upload custom avatars. |
 
-| Home Page | Hotel Listings |
-|:---:|:---:|
-| ![Home](https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&q=80&fit=crop) | ![Hotels](https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=80&fit=crop) |
-
-| Lodge Listings | Rental Properties |
-|:---:|:---:|
-| ![Lodges](https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=400&q=80&fit=crop) | ![Rentals](https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400&q=80&fit=crop) |
-
-</div>
-
----
-
-## Table of Contents
-
-| # | Section |
-|---|---------|
-| 1 | [Features](#features) |
-| 2 | [Application Preview](#application-preview) |
-| 3 | [Tech Stack](#tech-stack) |
-| 4 | [Logo & Brand Identity](#logo--brand-identity) |
-| 5 | [Project Structure](#project-structure) |
-| 6 | [Quick Start](#quick-start) |
-| 7 | [Authentication](#authentication) |
-| 8 | [Database](#database) |
-| 9 | [API Routes](#api-routes) |
-| 10 | [Project Stats](#project-stats) |
-| 11 | [Property Categories](#property-categories) |
-| 12 | [UI Highlights](#ui-highlights) |
-| 13 | [Contributing](#contributing) |
-| 14 | [License](#license) |
+### 🛠️ Administrator Experience
+| Feature | Details |
+| :--- | :--- |
+| **Metrics Dashboard** | Live overview of total revenue, active listings, user count, and booking statuses. |
+| **Property Inventory CRUD** | Create, view, edit, and delete accommodation listings with base64 image uploads. |
+| **Booking Controls** | Change booking statuses in real time, review guest details, or remove records. |
+| **CSV Export** | Export filtered booking lists to formatted CSV spreadsheets with a single click. |
+| **User Directory** | View all registered accounts, toggle active/suspended states, or delete profiles. |
+| **Security Gating** | Protected admin routes and hidden registration gated behind secure access keys. |
 
 ---
 
-## Features
+## 🏗️ System Architecture
 
-<div align="center">
-
-### What Makes Stayandaman Special
-
-</div>
-
-### User Features
-| Feature | Description |
-|---------|-------------|
-| **Passwordless Login** | Sign in securely and instantly with just username + email matching. |
-| **Browse Listings** | Explore properties under three rich categories: Hotels, Lodges & Rentals. |
-| **Smart Filters** | Search and filter listings by name, category, location, and rating. |
-| **View Details** | Detailed property view showing full galleries, amenities list, and description. |
-| **Book Now** | Complete bookings using an interactive modal form with date pickers. |
-| **Price Calculator** | Real-time calculations of subtotal, 18% GST tax, and net payable amount. |
-| **My Bookings** | Track, review, and cancel active reservations in real-time. |
-| **Profile Management** | Edit details (Avatar, Phone, Gender, Date of Birth, City) with live uploads. |
-
-### Admin Features
-| Feature | Description |
-|---------|-------------|
-| **Dashboard Stats** | Real-time totals, active inventory counts, and user/booking metrics on load. |
-| **Manage Listings** | Complete CRUD operations for properties with inline base64 image previews. |
-| **Manage Users** | Activate/deactivate accounts or delete user profiles directly. |
-| **Manage Bookings** | Live lifecycle controls: change status (Pending/Confirmed/Cancelled) or delete bookings. |
-| **Revenue Tracking** | Compute overall and monthly revenue totals dynamically. |
-| **Export CSV** | Download formatted booking lists as CSV spreadsheets with one click. |
-| **Image Upload** | Drag & drop file selector encoding uploads into base64 data URIs. |
-| **Search & Filter** | Advanced search filters across users, listings, and bookings. |
-
----
-
-## Tech Stack
-
-<div align="center">
-
-| Layer | Technology | Purpose |
-|:---:|:---:|:---:|
-| **Runtime** | ![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?logo=nodedotjs&logoColor=white) | Lightweight, fast asynchronous backend server |
-| **Framework** | ![Express](https://img.shields.io/badge/Express.js-4.x-000000?logo=express) | Web server routing and application logic |
-| **Templates** | ![EJS](https://img.shields.io/badge/EJS-3.x-B4CA65) | Server-side template rendering for dynamic HTML UI |
-| **Database** | ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white) | Persistent Cloud document database (Mongoose ODM) |
-| **Fallback DB** | ![JSON](https://img.shields.io/badge/JSON-File--based-orange) | Automatic file fallback storage (`db.json`) for configuration-free local execution |
-| **Auth** | ![Session](https://img.shields.io/badge/express--session-Auth-blue) | Secure cookie-based stateful authentication sessions |
-| **Styling** | ![CSS3](https://img.shields.io/badge/CSS3-Custom-1572B6?logo=css3) | Beautiful Glassmorphism stylesheet utilizing HSL variables and flex/grid |
-| **Images** | ![Unsplash](https://img.shields.io/badge/Unsplash-CDN-000000?logo=unsplash) | Modern high-definition property illustrations |
-
-</div>
-
----
-
-## Logo & Brand Identity
-
-Stayandaman includes a complete **SVG logo system** with 6 professionally designed variations stored in `public/images/`:
-
-| File | Dimensions | Use Case |
-|------|-----------|----------|
-| `logo-primary.svg` | 320×80 | Navbar, email headers, presentations (includes CSS float/shimmer animations) |
-| `logo-stacked.svg` | 200×180 | Landing page hero, splash screens, about pages |
-| `logo-icon.svg` | 100×100 | App icon, social media avatar, profile pictures |
-| `logo-dark.svg` | 320×80 | Admin sidebar, dark navbar, footer (white + gold on dark backgrounds) |
-| `logo-mono.svg` | 320×80 | Print, watermarks, documents (all-navy, no gradients) |
-| `logo-favicon.svg` | 32×32 | Browser tab favicon, PWA icon (pixel-perfect at 16px) |
-
-**Brand Colors:**
-- Primary Navy: `#1a1f36` — Trust, luxury, depth
-- Warm Gold: `#f5a623` — Premium, warmth, energy
-- Fresh Teal: `#0abf8a` — Modern, calm, nature
-
-**Icon Concept:** Roof + Location Pin fusion — a stylised hotel rooftop forming the top half of a location pin, combining travel and stay identity. Gold roof, navy pin body, teal windows.
-
-**Preview:** Start the app and visit `/images/logo-preview.html` to see all 6 logos on one page.
-
----
-
-## Project Structure
-
-A clean, modular directory structure containing models, middleware, controllers, public styles, and server logic:
-
-```text
-Stayandaman/
-│
-├── middleware/
-│   ├── isAdminLoggedIn.js  # Restricts routes to active admin sessions
-│   └── isUserLoggedIn.js   # Restricts routes to active user sessions
-│
-├── models/
-│   ├── Admin.js            # Admin profiles (FullName, Username, Email, Phone, Bio, etc.)
-│   ├── Booking.js          # Booking entries (BookingId, Stay duration, guest details, pricing)
-│   ├── Listing.js          # Accommodation entries (Name, Location, Category, Price, Amenities, Image)
-│   └── User.js             # User accounts (FullName, Username, Email, City, Status)
-│
-├── public/
-│   ├── css/
-│   │   ├── admin.css       # Layout styles for the administrative panel
-│   │   ├── auth.css        # Centered visual inputs for user & admin login/signup
-│   │   ├── booking.css     # Styling for booking form cards and details
-│   │   ├── detail.css      # Property overview gallery, descriptions, and rules
-│   │   ├── global.css      # Core HSL variable design system, buttons, & resets
-│   │   ├── home.css        # Search, hero category selectors, and listing grids
-│   │   ├── landing.css     # Clean visual gateway layout (Role Selector)
-│   │   ├── listings.css    # Grid views for listing cards (hover lift & shadows)
-│   │   └── profile.css     # Form layouts for profile editing and avatar cropping
-│   │
-│   ├── images/
-│   │   ├── logo-primary.svg   # Horizontal animated logo (navbar, headers)
-│   │   ├── logo-stacked.svg   # Vertical stacked logo (landing, splash)
-│   │   ├── logo-icon.svg      # Icon-only mark (app icon, social media)
-│   │   ├── logo-dark.svg      # Dark background variant (admin sidebar)
-│   │   ├── logo-mono.svg      # Monochrome print-ready version
-│   │   ├── logo-favicon.svg   # Ultra-simple 32×32 favicon
-│   │   └── logo-preview.html  # Preview page showing all logo variations
-│   │
-│   ├── js/
-│   │   └── admin.js        # Dynamic front-end logic for Single Page Admin Panel
-│   └── hotel_background.png # Premium background asset for authentication
-│
-├── src/
-│   ├── dbService.js         # Unified CRUD adapter matching MongoDB API / JSON fallback
-│   └── db.json            # Dynamic fallback database populated in absence of MongoDB URL
-│
-├── views/                  # Embedded Javascript (EJS) markup templates
-│   ├── adminDashboard.ejs  # Control dashboard (Single-page app for Listings, Users, Bookings)
-│   ├── adminLogin.ejs      # Login form layout for administrators
-│   ├── adminSignup.ejs     # Sign up form layout for administrators
-│   ├── home.ejs            # Main landing search page for authenticated users
-│   ├── hotels.ejs          # Grid listings filter targeting Hotels category
-│   ├── landing.ejs         # Application entry portal for selecting portals
-│   ├── listingDetail.ejs   # Individual accommodation view page with image gallery
-│   ├── lodges.ejs          # Grid listings filter targeting Lodges category
-│   ├── myBookings.ejs      # Active & cancelled bookings list of a logged-in user
-│   ├── rentals.ejs         # Grid listings filter targeting Rentals category
-│   ├── userLogin.ejs       # Passwordless portal entry for users
-│   ├── userProfile.ejs     # Profile management form layout
-│   └── userSignup.ejs      # User registration form layout
-│
-├── .env                     # App configuration parameters
-├── index.js                 # Unified entry point initializing routes & DB connections
-└── package.json             # Project dependencies and deployment runner
-```
-
----
-
-## Quick Start
-
-Follow these steps to set up and run Stayandaman locally on your computer:
-
-### Prerequisites
-
-![Node](https://img.shields.io/badge/Node.js-v16+-339933?logo=nodedotjs)
-![npm](https://img.shields.io/badge/npm-v8+-CB3837?logo=npm)
-![MongoDB](https://img.shields.io/badge/MongoDB-Optional-47A248?logo=mongodb)
-
-### 1 Clone the Repository
-
-```bash
-git clone https://github.com/RimiD162/StayEase.git
-cd StayEase
-```
-
-### 2 Install Dependencies
-
-```bash
-npm install
-```
-
-### 3 Configure Environment
-
-Create a `.env` file in the root directory:
-
-```env
-# MongoDB Connection URL (optional)
-# Leave blank or set to a placeholder containing "xxxxx" to use local file db
-mongodb_url = mongodb+srv://<username>:<password>@cluster0.mongodb.net/
-
-# Session Secret (Required)
-SESSION_SECRET = stayandaman-session-secret-key-2026
-
-# Port (Optional, defaults to 5050 if unset)
-PORT = 5050
-```
-
-> **Tip:** If `mongodb_url` is left blank, empty, or contains `xxxxx`, the app automatically switches to the local `src/db.json` database. No MongoDB setup is required for testing!
-
-### 4 Start the Application
-
-```bash
-node index.js
-```
-
-### 5 Open in Browser
-
-Depending on the configuration in `.env` (defaulting to Port `5050`), visit these URLs:
-
-| Portal | URL |
-|--------|-----|
-| Landing Page | [http://localhost:5050/](http://localhost:5050/) |
-| Home Page | [http://localhost:5050/home](http://localhost:5050/home) |
-| Hotels Grid | [http://localhost:5050/hotels](http://localhost:5050/hotels) |
-| Lodges Grid | [http://localhost:5050/lodges](http://localhost:5050/lodges) |
-| Rentals Grid | [http://localhost:5050/rentals](http://localhost:5050/rentals) |
-| Admin Login | [http://localhost:5050/admin/login](http://localhost:5050/admin/login) |
-| User Login | [http://localhost:5050/user/login](http://localhost:5050/user/login) |
-
----
-
-## Authentication
+StayAndaman is built on an Express MVC architecture with session-based state management and an abstraction layer for persistent storage:
 
 ```mermaid
 graph TD
-    A[Visit Stayandaman] --> B{Landing Page}
-    B --> C[User Portal]
-    B --> D[Admin Portal]
+    User([Client / Browser]) -->|HTTP Requests| Server[Express Server :5050]
     
-    C --> E[User Login\nUsername + Email]
-    C --> F[User Signup\nFill Registration Form]
-    E --> G{Credentials Match?}
-    G -->|Yes| H[Home Page]
-    G -->|No| E
-    F --> E
-    
-    D --> I[Admin Login\nUsername + Email]
-    I --> J{Admin Verified?}
-    J -->|Yes| K[Admin Dashboard]
-    J -->|No| I
-    
-    H --> L[Browse Listings]
-    L --> M[View Details]
-    M --> N[Book Now]
-    N --> O[Booking Confirmed]
+    subgraph Middleware
+        Server --> AuthGuard{Session Auth Check}
+        AuthGuard -->|Admin| AdminRoutes[Admin Handlers]
+        AuthGuard -->|User| UserRoutes[User Handlers]
+        AuthGuard -->|Public| PublicRoutes[Public Handlers]
+    end
+
+    subgraph Data Access Layer
+        AdminRoutes --> DBService[dbService Adapter]
+        UserRoutes --> DBService
+        PublicRoutes --> DBService
+        
+        DBService -->|MongoDB Connection Available| Mongo[(MongoDB Atlas)]
+        DBService -->|No Connection / Local Fallback| JSON[(src/db.json)]
+    end
+
+    subgraph View Engine
+        UserRoutes --> EJS[EJS Templates & Views]
+        AdminRoutes --> EJS
+        PublicRoutes --> EJS
+    end
 ```
+
 ---
 
-## API Routes
+## 📁 Project Structure
+
+```text
+StayEase/
+├── index.js                  # Application entry point, server setup, & route definitions
+├── middleware/
+│   ├── isAdminLoggedIn.js    # Guard middleware for admin-only routes
+│   └── isUserLoggedIn.js     # Guard middleware for authenticated user routes
+├── models/
+│   ├── Admin.js              # Admin schema & Mongoose model
+│   ├── Booking.js            # Booking reservation schema & Mongoose model
+│   ├── Listing.js            # Property accommodation schema & Mongoose model
+│   └── User.js               # User profile schema & Mongoose model
+├── public/
+│   ├── css/
+│   │   ├── admin.css         # Single-page admin panel layout & dark theme
+│   │   ├── auth.css          # Centered card layouts for login and signup
+│   │   ├── booking.css       # Booking modal, step indicators, and pricing summary
+│   │   ├── detail.css        # Listing gallery, amenities grid, and review cards
+│   │   ├── global.css        # Design tokens (HSL colors, typography, buttons, toasts)
+│   │   ├── home.css          # Hero banner, search bar, navbar, and mobile drawer
+│   │   ├── landing.css       # Role selector gateway & welcome hero
+│   │   ├── listings.css      # Property card grid layouts with hover micro-interactions
+│   │   └── profile.css       # Profile manager, avatar preview, and settings forms
+│   ├── images/
+│   │   ├── logo-primary.svg  # Horizontal SVG logo with CSS shimmer animations
+│   │   ├── logo-stacked.svg  # Vertical stacked branding asset
+│   │   ├── logo-icon.svg     # Standalone icon mark
+│   │   ├── logo-dark.svg     # Dark-mode navbar & sidebar logo
+│   │   ├── logo-favicon.svg  # Pixel-perfect 32x32 favicon
+│   │   └── hotel_background.png # High-res authentication backdrop
+│   └── js/
+│       └── admin.js          # Dynamic AJAX logic for admin SPA subpanels
+├── src/
+│   ├── dbService.js          # Dual database adapter (MongoDB / JSON fallback)
+│   └── db.json               # Seed database for local/offline development
+├── views/                    # EJS dynamic UI templates
+│   ├── adminDashboard.ejs    # Admin control center
+│   ├── adminLogin.ejs        # Administrator login
+│   ├── adminSignup.ejs       # Admin registration form
+│   ├── home.ejs              # Main search & explore page
+│   ├── hotels.ejs            # Hotel category filtered listings
+│   ├── landing.ejs           # Entry role selector portal
+│   ├── listingDetail.ejs     # Detailed property overview & booking modal
+│   ├── lodges.ejs            # Lodge category filtered listings
+│   ├── myBookings.ejs        # User reservations list & PDF receipt generator
+│   ├── rentals.ejs           # Rental category filtered listings
+│   ├── userLogin.ejs         # User login form
+│   ├── userProfile.ejs       # User account details and avatar editor
+│   └── userSignup.ejs        # User registration form
+├── .env                      # Environment configuration
+├── package.json              # Project metadata & npm dependencies
+└── vercel.json               # Vercel deployment configuration
+```
+
+---
+
+## ⚡ Quick Start
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v16.x or higher)
+- [npm](https://www.npmjs.com/) (v8.x or higher)
+- *Optional:* A free [MongoDB Atlas](https://www.mongodb.com/atlas) connection URI
+
+### 1. Clone & Install
+
+```bash
+# Clone the repository
+git clone https://github.com/RimiD162/StayEase.git
+
+# Navigate into the project directory
+cd StayEase
+
+# Install dependencies
+npm install
+```
+
+### 2. Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+# Server Port
+PORT=5050
+
+# Session Secret Key
+SESSION_SECRET=stayease_secure_session_key_2026
+
+# Database Connection (Leave empty or unset to use automatic JSON fallback)
+mongodb_url=mongodb+srv://<username>:<password>@cluster0.mongodb.net/StayEase?retryWrites=true&w=majority
+```
+
+> **Note:** If `mongodb_url` is omitted or invalid, the app automatically switches to `src/db.json` without any configuration required.
+
+### 3. Run the Application
+
+```bash
+# Production mode
+npm start
+
+# Development mode (with nodemon hot reloading)
+npm run dev
+```
+
+Visit the app in your browser at `http://localhost:5050`.
+
+---
+
+## 🌐 API Routes Reference
 
 ### Public Routes
-| Method | Route | Description |
-|--------|-------|-------------|
-| `GET` | `/` | Portal gateway (Role Selector landing screen) |
-| `GET` | `/user/login` | User login form page |
-| `GET` | `/user/signup` | User signup form page |
-| `POST` | `/user/login` | Validates user session credentials |
-| `POST` | `/user/signup` | Adds user record and redirects to login |
-| `GET` | `/admin/login` | Administrative login page |
-| `POST` | `/admin/login` | Validates admin session credentials |
-| `GET` | `/admin/signup` | Hidden admin registration page |
-| `POST` | `/admin/signup` | Registers new administrator using access key |
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/` | Portal gateway / Role selection screen |
+| `GET` | `/user/login` | User login page |
+| `POST` | `/user/login` | Authenticate user credentials and create session |
+| `GET` | `/user/signup` | User registration page |
+| `POST` | `/user/signup` | Register new user account |
+| `GET` | `/admin/login` | Administrator login page |
+| `POST` | `/admin/login` | Authenticate admin credentials and create session |
+| `GET` | `/admin/signup` | Admin registration page (access code protected) |
+| `POST` | `/admin/signup` | Create administrator account |
 
-### Protected User Routes
-| Method | Route | Description |
-|--------|-------|-------------|
-| `GET` | `/home` | Main home page showing active listings & search bar |
-| `GET` | `/hotels` | Redirects to category filtered Hotel listings page |
-| `GET` | `/lodges` | Redirects to category filtered Lodge listings page |
-| `GET` | `/rentals` | Redirects to category filtered Rental listings page |
-| `GET` | `/home/hotel` | View Hotel grid listings |
-| `GET` | `/home/lodges` | View Lodge grid listings |
-| `GET` | `/home/rentals` | View Rental grid listings |
-| `GET` | `/listing/:id` | View specific property description, gallery & contact detail |
-| `POST` | `/booking/create` | Creates a property booking reservation |
-| `GET` | `/my-bookings` | Lists active and cancelled bookings |
-| `POST` | `/booking/cancel/:id` | Set status of own booking to "Cancelled" |
-| `GET` | `/profile` | Displays profile update page |
-| `POST` | `/profile` | Updates user details & avatar |
-| `POST` | `/user/logout` | Clears user cookie session |
+### Authenticated User Routes (`/middleware/isUserLoggedIn.js`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/home` | Main user exploration dashboard |
+| `GET` | `/hotels` / `/home/hotel` | Filtered Hotel accommodations |
+| `GET` | `/lodges` / `/home/lodges` | Filtered Lodge accommodations |
+| `GET` | `/rentals` / `/home/rentals` | Filtered Vacation Rental accommodations |
+| `GET` | `/listing/:id` | Detailed view for a specific property |
+| `POST` | `/booking/create` | Submit and confirm a new property reservation |
+| `GET` | `/my-bookings` | View user's active, past, and cancelled reservations |
+| `POST` | `/booking/cancel/:id` | Cancel an active reservation |
+| `GET` | `/profile` | View user profile editor |
+| `POST` | `/profile` | Update profile information and avatar image |
+| `POST` | `/user/logout` | Terminate user session and clear cookies |
 
-### Admin Routes and AJAX APIs
-| Method | Route | Description |
-|--------|-------|-------------|
-| `GET` | `/admin/dashboard` | Main dashboard control layout |
-| `GET` | `/admin/listings` | Administrative listing subpanel EJS view |
-| `GET` | `/admin/users` | Administrative user management subpanel EJS view |
-| `GET` | `/admin/bookings` | Administrative booking management subpanel EJS view |
-| `GET` | `/admin/profile` | Administrative profile manager subpanel EJS view |
-| `GET` | `/api/listings` | Fetch all properties (JSON) |
-| `GET` | `/api/listings/:id` | Fetch specific property details (JSON) |
-| `POST` | `/api/listings` | Create a new property listing (JSON) |
-| `PUT` | `/api/listings/:id` | Update property listing information (JSON) |
-| `DELETE` | `/api/listings/:id` | Remove a property listing (JSON) |
-| `GET` | `/api/admin/bookings` | Fetch all active bookings (JSON) |
-| `POST` | `/admin/booking/status/:id` | Change status of any booking |
-| `POST` | `/admin/booking/delete/:id` | Remove booking from database |
-| `GET` | `/api/admin/bookings/export` | Export bookings list as CSV |
-| `GET` | `/api/admin/users` | Fetch registered user list (JSON) |
-| `PUT` | `/api/admin/users/:id/toggle` | Toggle user active / suspended status |
-| `DELETE` | `/api/admin/users/:id` | Permanently remove user record |
-| `POST` | `/admin/logout` | Clears administrative cookie session |
+### Protected Admin Routes (`/middleware/isAdminLoggedIn.js`)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/admin/dashboard` | Main admin control center |
+| `GET` | `/admin/listings` | Render listing management subpanel |
+| `GET` | `/admin/users` | Render user management subpanel |
+| `GET` | `/admin/bookings` | Render booking management subpanel |
+| `GET` | `/admin/profile` | Render admin profile subpanel |
+| `GET` | `/api/listings` | Get all listings (JSON) |
+| `POST` | `/api/listings` | Create a new listing (JSON) |
+| `PUT` | `/api/listings/:id` | Update an existing listing (JSON) |
+| `DELETE` | `/api/listings/:id` | Delete a listing (JSON) |
+| `GET` | `/api/admin/bookings` | Fetch all system bookings (JSON) |
+| `POST` | `/admin/booking/status/:id` | Update lifecycle status of any booking |
+| `POST` | `/admin/booking/delete/:id` | Permanently remove a booking record |
+| `GET` | `/api/admin/bookings/export` | Export bookings database to CSV format |
+| `GET` | `/api/admin/users` | Fetch list of registered users (JSON) |
+| `PUT` | `/api/admin/users/:id/toggle`| Toggle user active/suspended state |
+| `DELETE` | `/api/admin/users/:id` | Delete user profile |
+| `POST` | `/admin/logout` | Terminate admin session |
 
 ---
 
-## Database
+## 🗄️ Database Models
 
-### Dual-Mode Storage Architecture
-
-The application has a hybrid database system that runs out-of-the-box using either **MongoDB** or a **JSON local file** fallback, managed by [dbService.js](file:///c:/Users/rimid/OneDrive/Desktop/Stay%20Ease/src/dbService.js):
-
-```mermaid
-graph LR
-    A[App Starts] --> B{Check mongodb_url}
-    B -->|Valid URL| C[Connect MongoDB]
-    B -->|Placeholder/Empty| D[Use db.json]
-    C -->|Connection Success| E[MongoDB Mode]
-    C -->|Connection Failed| D
-    D --> F[JSON File Mode]
-    E --> G[App Running]
-    F --> G
-```
-
-### Data Models Overview
-
-<details>
-<summary>Listing Schema (models/Listing.js)</summary>
-
-```json
+### Listing Model (`models/Listing.js`)
+```typescript
 {
-  "name": "The Grand Imperial",
-  "category": "Hotel",
-  "location": "Mumbai, Maharashtra",
-  "price": 8500,
-  "description": "Luxurious 5-star hotel featuring an infinity pool, dynamic dining, and spa facilities.",
-  "amenities": ["WiFi", "AC", "Pool", "Parking", "Breakfast"],
-  "rating": 5,
-  "available": true,
-  "image": "data:image/png;base64,iVBORw0KGgo...",
-  "image2": "",
-  "image3": "",
-  "image4": "",
-  "createdAt": "2026-06-29T08:00:00.000Z"
+  name: string;           // Property title
+  category: string;       // "Hotel" | "Lodge" | "Rental"
+  location: string;       // City, State or Island destination
+  price: number;          // Base price per night in INR
+  description: string;    // Comprehensive overview of the stay
+  amenities: string[];    // ["WiFi", "AC", "Pool", "Parking", "Breakfast", ...]
+  rating: number;         // 1 to 5 star rating
+  available: boolean;     // Availability status flag
+  image: string;          // Primary image URL or base64 data string
+  image2?: string;        // Gallery image 2
+  image3?: string;        // Gallery image 3
+  image4?: string;        // Gallery image 4
+  createdAt: Date;        // Timestamp
 }
 ```
-</details>
 
-<details>
-<summary>User Schema (models/User.js)</summary>
-
-```json
+### Booking Model (`models/Booking.js`)
+```typescript
 {
-  "fullName": "Rimi Dutta",
-  "username": "rimi_dutta",
-  "email": "rimi@example.com",
-  "phone": "9876543210",
-  "gender": "Female",
-  "dateOfBirth": "1998-05-15T00:00:00.000Z",
-  "city": "Shimla",
-  "avatar": "data:image/jpeg;base64,/9j/4AAQSkZJRg...",
-  "isActive": true,
-  "createdAt": "2026-06-29T08:15:00.000Z",
-  "lastLogin": "2026-06-29T08:45:00.000Z"
+  bookingId: string;       // Unique ID (e.g., "SE-2026-4821")
+  listingId: string;       // Reference ID of the booked listing
+  listingName: string;     // Property name snapshot
+  category: string;        // Category snapshot
+  location: string;        // Location snapshot
+  listingImage: string;    // Image snapshot for display
+  guestName: string;       // Full name of primary guest
+  guestEmail: string;      // Guest email address
+  guestPhone: string;      // Guest contact phone number
+  userId: string;          // User account reference
+  checkIn: Date;           // Check-in date
+  checkOut: Date;          // Check-out date
+  nights: number;          // Total calculated nights
+  guests: number;          // Total guest count (Adults + Children)
+  roomType: string;        // "Standard" | "Deluxe" | "Suite"
+  pricePerNight: number;   // Base daily rate
+  subtotal: number;        // Calculated rate * nights
+  tax: number;             // 18% GST calculation
+  totalAmount: number;     // Grand total payable
+  paymentMethod: string;   // "Pay at Property" | "Online"
+  specialRequests?: string;// Optional guest requests
+  status: string;          // "Confirmed" | "Pending" | "Cancelled"
+  createdAt: Date;         // Timestamp
 }
 ```
-</details>
-
-<details>
-<summary>Booking Schema (models/Booking.js)</summary>
-
-```json
-{
-  "bookingId": "SE-2026-4821",
-  "listingId": "65b5c907a9e0f6b15865e239",
-  "listingName": "The Grand Imperial",
-  "category": "Hotel",
-  "location": "Mumbai, Maharashtra",
-  "listingImage": "data:image/png;base64,iVBORw0KGgo...",
-  "guestName": "Rimi Dutta",
-  "guestEmail": "rimi@example.com",
-  "guestPhone": "9876543210",
-  "userId": "65b5c907a9e0f6b15865e230",
-  "checkIn": "2026-07-15T00:00:00.000Z",
-  "checkOut": "2026-07-17T00:00:00.000Z",
-  "nights": 2,
-  "guests": 2,
-  "roomType": "Deluxe",
-  "pricePerNight": 8500,
-  "subtotal": 17000,
-  "tax": 3060,
-  "totalAmount": 20060,
-  "paymentMethod": "Pay at Property",
-  "specialRequests": "Late check-in requested",
-  "status": "Confirmed",
-  "createdAt": "2026-06-29T08:48:00.000Z"
-}
-```
-</details>
 
 ---
 
-## Project Stats
+## 🎨 UI/UX & Mobile Responsive System
 
-<div align="center">
+The application features a modern, bespoke design system with zero external UI framework dependencies:
 
-<!-- Animated stat cards using shields.io -->
-![Hotels](https://img.shields.io/badge/Hotels-120+_Listings-1a1f36?style=for-the-badge)
-![Lodges](https://img.shields.io/badge/Lodges-80+_Listings-0abf8a?style=for-the-badge)
-![Rentals](https://img.shields.io/badge/Rentals-60+_Listings-f5a623?style=for-the-badge)
-![Users](https://img.shields.io/badge/Users-500+_Registered-6c5ce7?style=for-the-badge)
-
-</div>
-
----
-
-## Property Categories
-
-<div align="center">
-
-### Hotels
-*Luxury stays with world-class amenities*
-
-![Hotel](https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=300&q=80&fit=crop)
+- **Glassmorphism & Depth:** Soft glass backdrops (`backdrop-filter: blur(12px)`), multi-layered drop shadows, and subtle gradient borders.
+- **Color Tokens (HSL):**
+  - **Primary Navy:** `#1a1f36` (`hsl(228, 35%, 16%)`)
+  - **Warm Gold Accent:** `#f5a623` (`hsl(38, 92%, 55%)`)
+  - **Fresh Teal Accent:** `#0abf8a` (`hsl(162, 90%, 39%)`)
+- **Responsive Navigation:** Hamburger drawer menu with smooth `slideDrawerDown` keyframe animation for phone viewports.
+- **Mobile-Specific Optimization:**
+  - Standardized `44px` minimum touch targets for buttons and interactive controls.
+  - Inputs with `font-size: 16px` to prevent automatic zoom on iOS devices.
+  - Single-column stacked layouts for booking summaries, filter sidebars, and profile managers on screens `<= 480px`.
+  - Floating auto-dismiss toast alerts pinned safely to the viewport edges.
 
 ---
 
-### Lodges
-*Cozy mountain retreats close to nature*
+## 🤝 Contributing
 
-![Lodge](https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=800&h=300&q=80&fit=crop)
+Contributions are welcome! If you'd like to improve StayAndaman:
 
----
-
-### Rentals
-*Private homes and villas for a personal touch*
-
-![Rental](https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&h=300&q=80&fit=crop)
-
-</div>
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/NewFeature`
+3. **Commit** your changes: `git commit -m "feat: add NewFeature"`
+4. **Push** to your branch: `git push origin feature/NewFeature`
+5. **Open** a Pull Request
 
 ---
 
-## UI Highlights
+## 📄 License
 
-| Feature | Details |
-|---------|---------|
-| **Design Style** | Premium Glassmorphism overlay + modern flat layout grids |
-| **Color Palette** | Navy `#1a1f36` (Dominant) • Gold `#f5a623` (Accents) • Teal `#0abf8a` (Highlights) |
-| **Typography** | Playfair Display (Serif headings) + Inter (Clean sans-serif reading text) |
-| **Logo System** | 6 SVG logo variations (primary, stacked, icon, dark, mono, favicon) with CSS animations |
-| **Favicon** | Custom SVG favicon (Roof + Pin icon) displayed on every page across the app |
-| **Animations** | Responsive micro-interactions, springy hover card lifts, and smooth page fades |
-| **Responsive** | Dynamic media queries tailoring components for Mobile, Tablet, and Desktop screen widths |
-| **Admin Theme** | Deep navy sidebar configuration paired with a high-contrast clean content workspace |
-| **Cards** | Subtle shadow elevation offsets matched with scale-based image zooms on hover |
-| **Toasts** | Auto-dismissing success, deactivation warnings, and database connection notifications |
-
----
-
-## Contributing
-
-We welcome contributions to Stayandaman! To contribute, follow these guidelines:
-
-1. **Fork the Repository** on GitHub.
-2. **Create a Feature Branch**:
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
-3. **Commit Your Changes** with descriptive comments:
-   ```bash
-   git commit -m "Add some AmazingFeature"
-   ```
-4. **Push to the Branch**:
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
-5. **Open a Pull Request** explaining your implementation details.
-
-### Found a Bug?
-Create a new GitHub Issue using the `bug` label. Please describe:
-- What happened (unexpected behavior details).
-- What you expected to happen.
-- Steps to reproduce the issue.
-
----
-
-## License
-
-This project is licensed under the terms of the **MIT License**. Feel free to use, modify, and distribute it in accordance with the license.
+This project is open source and available under the [MIT License](LICENSE).
