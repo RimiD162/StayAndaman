@@ -161,7 +161,10 @@
             <div class="booking-card-price-row">
               <div class="booking-card-price">
                 ₹<span id="price-per-night"><%= listing.price %></span>
-                <span>/ person / night</span>
+                <span>/ adult / night</span>
+              </div>
+              <div style="font-size: 0.85rem; color: var(--text-soft); font-weight: 500; margin-top: 4px;">
+                Child: ₹<span id="child-price-per-night"><%= listing.childPrice != null ? listing.childPrice : 0 %></span> / child / night
               </div>
             </div>
 
@@ -183,25 +186,40 @@
             </div>
 
             <!-- Guest Count Select -->
-            <div class="guest-picker-container">
-              <div class="date-picker-label">Guests</div>
-              <select id="guest-count" class="guest-picker-select" onchange="onGuestsChanged()">
-                <% for (let i = 1; i <= 10; i++) { %>
-                  <option value="<%= i %>"><%= i %> Adult<%= i > 1 ? 's' : '' %></option>
-                <% } %>
-              </select>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: var(--space-4);">
+              <div class="guest-picker-container" style="margin-bottom:0;">
+                <div class="date-picker-label">Adults</div>
+                <select id="guest-count" class="guest-picker-select" onchange="onGuestsChanged()">
+                  <% for (let i = 1; i <= 10; i++) { %>
+                    <option value="<%= i %>"><%= i %> Adult<%= i > 1 ? 's' : '' %></option>
+                  <% } %>
+                </select>
+              </div>
+              <div class="guest-picker-container" style="margin-bottom:0;">
+                <div class="date-picker-label">Children</div>
+                <select id="child-count" class="guest-picker-select" onchange="onGuestsChanged()">
+                  <option value="0" selected>0 Children</option>
+                  <% for (let i = 1; i <= 6; i++) { %>
+                    <option value="<%= i %>"><%= i %> Child<%= i > 1 ? 'ren' : '' %></option>
+                  <% } %>
+                </select>
+              </div>
             </div>
 
             <!-- Price Breakdown Container -->
             <div id="breakdown-area" style="display: none;">
               <div class="price-breakdown">
-                <div class="breakdown-row">
-                  <span id="subtotal-calc-label">1 night = ₹3,455</span>
-                  <span id="subtotal-calc-val">₹3,455</span>
+                <div class="breakdown-row" id="adult-breakdown-row">
+                  <span id="adult-calc-label">1 Adult × 1 night</span>
+                  <span id="adult-calc-val">₹0</span>
+                </div>
+                <div class="breakdown-row" id="child-breakdown-row" style="display: none;">
+                  <span id="child-calc-label">0 Children × 1 night</span>
+                  <span id="child-calc-val">₹0</span>
                 </div>
                 <div class="breakdown-row total">
                   <span>Total</span>
-                  <span id="total-amount-val">₹4,077</span>
+                  <span id="total-amount-val">₹0</span>
                 </div>
               </div>
             </div>
@@ -265,13 +283,6 @@
                 <% } %>
                 <span><%= sim.rating || 0 %>/5</span>
               </div>
-              <% if (sim.amenities && sim.amenities.length > 0) { %>
-                <div class="grid-card-amenities">
-                  <% sim.amenities.slice(0, 4).forEach(function(a) { %>
-                    <span class="amenity-tag"><%= a %></span>
-                  <% }); %>
-                </div>
-              <% } %>
               <div class="grid-card-footer">
                 <div class="grid-card-price">₹<%= sim.price ? sim.price.toLocaleString('en-IN') : '—' %> <span>/ night</span></div>
                 <div class="grid-card-buttons">
@@ -391,12 +402,23 @@
                   <span class="error-message">Check-out must be after check-in.</span>
                 </div>
 
-                <!-- Guest count -->
+                <!-- Adult count -->
                 <div class="booking-field-group">
-                  <label class="booking-input-label" for="modal-guests-field">Number of Guests *</label>
+                  <label class="booking-input-label" for="modal-guests-field">Number of Adults *</label>
                   <select id="modal-guests-field" class="booking-input-field" required onchange="syncGuestsFromModal()">
                     <% for (let i = 1; i <= 10; i++) { %>
-                      <option value="<%= i %>"><%= i %> Guest<%= i > 1 ? 's' : '' %></option>
+                      <option value="<%= i %>"><%= i %> Adult<%= i > 1 ? 's' : '' %></option>
+                    <% } %>
+                  </select>
+                </div>
+
+                <!-- Children count -->
+                <div class="booking-field-group">
+                  <label class="booking-input-label" for="modal-children-field">Number of Children</label>
+                  <select id="modal-children-field" class="booking-input-field" onchange="syncGuestsFromModal()">
+                    <option value="0" selected>0 Children</option>
+                    <% for (let i = 1; i <= 6; i++) { %>
+                      <option value="<%= i %>"><%= i %> Child<%= i > 1 ? 'ren' : '' %></option>
                     <% } %>
                   </select>
                 </div>
@@ -742,13 +764,15 @@
 
   <!-- ===== LIVE PRICING CALCULATION JS ===== -->
   <script>
-    const pricePerNight = parseFloat(document.getElementById('price-per-night').textContent);
+    const pricePerNight = parseFloat(document.getElementById('price-per-night')?.textContent) || 0;
+    const childPricePerNight = parseFloat(document.getElementById('child-price-per-night')?.textContent) || 0;
     
     let stayDetails = {
       checkIn: null,
       checkOut: null,
       nights: 1,
       guests: 1,
+      children: 0,
       subtotal: pricePerNight,
       tax: 0,
       total: pricePerNight
@@ -779,6 +803,11 @@
         if (!checkoutEl.value) checkoutEl.value = dayAfterStr;
       }
       
+      const guestEl = document.getElementById('guest-count');
+      const childEl = document.getElementById('child-count');
+      if (guestEl) stayDetails.guests = parseInt(guestEl.value) || 1;
+      if (childEl) stayDetails.children = parseInt(childEl.value) || 0;
+
       onDatesChanged();
     });
 
@@ -818,22 +847,58 @@
       const diffTime = Math.abs(date2 - date1);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
       const guestCount = stayDetails.guests || 1;
+      const childCount = stayDetails.children || 0;
       
       stayDetails.checkIn = checkinStr;
       stayDetails.checkOut = checkoutStr;
       stayDetails.nights = diffDays;
-      stayDetails.subtotal = diffDays * pricePerNight * guestCount;
+      
+      const adultSubtotal = guestCount * pricePerNight * diffDays;
+      const childSubtotal = childCount * childPricePerNight * diffDays;
+      const totalAmount = adultSubtotal + childSubtotal;
+      
+      stayDetails.adultSubtotal = adultSubtotal;
+      stayDetails.childSubtotal = childSubtotal;
+      stayDetails.subtotal = totalAmount;
       stayDetails.tax = 0;
-      stayDetails.total = stayDetails.subtotal;
+      stayDetails.total = totalAmount;
 
       // Update Card Breakdown UI
-      document.getElementById('subtotal-calc-label').innerText = `${guestCount} guest${guestCount > 1 ? 's' : ''} × ${diffDays} night${diffDays > 1 ? 's' : ''} (₹${pricePerNight.toLocaleString('en-IN')}/person)`;
-      document.getElementById('subtotal-calc-val').innerText = `₹${stayDetails.subtotal.toLocaleString('en-IN')}`;
-      document.getElementById('total-amount-val').innerText = `₹${stayDetails.total.toLocaleString('en-IN')}`;
+      const adultLabelEl = document.getElementById('adult-calc-label');
+      const adultValEl = document.getElementById('adult-calc-val');
+      const childRowEl = document.getElementById('child-breakdown-row');
+      const childLabelEl = document.getElementById('child-calc-label');
+      const childValEl = document.getElementById('child-calc-val');
+      const totalValEl = document.getElementById('total-amount-val');
+
+      if (adultLabelEl) {
+        adultLabelEl.innerText = `${guestCount} Adult${guestCount > 1 ? 's' : ''} × ${diffDays} night${diffDays > 1 ? 's' : ''}`;
+      }
+      if (adultValEl) {
+        adultValEl.innerText = `₹${adultSubtotal.toLocaleString('en-IN')}`;
+      }
+
+      if (childRowEl) {
+        if (childCount > 0) {
+          childRowEl.style.display = 'flex';
+          if (childLabelEl) {
+            childLabelEl.innerText = `${childCount} Child${childCount > 1 ? 'ren' : ''} × ${diffDays} night${diffDays > 1 ? 's' : ''}`;
+          }
+          if (childValEl) {
+            childValEl.innerText = `₹${childSubtotal.toLocaleString('en-IN')}`;
+          }
+        } else {
+          childRowEl.style.display = 'none';
+        }
+      }
+
+      if (totalValEl) {
+        totalValEl.innerText = `₹${totalAmount.toLocaleString('en-IN')}`;
+      }
       
       // Update Button label
       if (openBtn) {
-        openBtn.innerText = `🔒 Book Now — ₹${stayDetails.total.toLocaleString('en-IN')}`;
+        openBtn.innerText = `🔒 Book Now — ₹${totalAmount.toLocaleString('en-IN')}`;
         openBtn.disabled = false;
       }
       
@@ -854,13 +919,17 @@
 
     function onGuestsChanged() {
       const select = document.getElementById('guest-count');
-      stayDetails.guests = parseInt(select.value) || 1;
+      const childSelect = document.getElementById('child-count');
+      stayDetails.guests = parseInt(select?.value) || 1;
+      stayDetails.children = parseInt(childSelect?.value) || 0;
       
       // Update Modal dropdown
       const modalGuests = document.getElementById('modal-guests-field');
-      if (modalGuests) modalGuests.value = select.value;
+      const modalChildren = document.getElementById('modal-children-field');
+      if (modalGuests && select) modalGuests.value = select.value;
+      if (modalChildren && childSelect) modalChildren.value = childSelect.value;
 
-      // Recalculate with new guest count
+      // Recalculate with new guest & child count
       onDatesChanged();
     }
   </script>
@@ -887,7 +956,12 @@
       document.getElementById('modal-summary-checkin').innerText = formatDateStr(stayDetails.checkIn);
       document.getElementById('modal-summary-checkout').innerText = formatDateStr(stayDetails.checkOut);
       document.getElementById('modal-summary-nights').innerText = stayDetails.nights;
-      document.getElementById('modal-summary-guests').innerText = stayDetails.guests;
+      
+      let guestSummary = `${stayDetails.guests} Adult${stayDetails.guests > 1 ? 's' : ''}`;
+      if (stayDetails.children > 0) {
+        guestSummary += `, ${stayDetails.children} Child${stayDetails.children > 1 ? 'ren' : ''}`;
+      }
+      document.getElementById('modal-summary-guests').innerText = guestSummary;
       document.getElementById('modal-summary-total').innerText = `₹${stayDetails.total.toLocaleString('en-IN')}`;
       
       // Update Payment Advance / Total Displays
@@ -940,10 +1014,25 @@
     }
 
     function syncGuestsFromModal() {
-      const val = document.getElementById('modal-guests-field').value;
-      document.getElementById('guest-count').value = val;
-      stayDetails.guests = parseInt(val) || 1;
-      document.getElementById('modal-summary-guests').innerText = val;
+      const modalGuests = document.getElementById('modal-guests-field');
+      const modalChildren = document.getElementById('modal-children-field');
+      const adults = parseInt(modalGuests?.value) || 1;
+      const children = parseInt(modalChildren?.value) || 0;
+
+      const select = document.getElementById('guest-count');
+      const childSelect = document.getElementById('child-count');
+      if (select) select.value = adults;
+      if (childSelect) childSelect.value = children;
+
+      stayDetails.guests = adults;
+      stayDetails.children = children;
+
+      let guestSummary = `${adults} Adult${adults > 1 ? 's' : ''}`;
+      if (children > 0) {
+        guestSummary += `, ${children} Child${children > 1 ? 'ren' : ''}`;
+      }
+      document.getElementById('modal-summary-guests').innerText = guestSummary;
+
       onDatesChanged();
       document.getElementById('modal-summary-total').innerText = `₹${stayDetails.total.toLocaleString('en-IN')}`;
       updatePaymentCalculations();
@@ -955,6 +1044,10 @@
       const total = stayDetails.total || 0;
       const upiBadge = document.getElementById('upi-pay-amount-badge');
       if (upiBadge) upiBadge.innerText = `₹${total.toLocaleString('en-IN')}`;
+
+      document.querySelectorAll('.upi-display-amount').forEach(el => {
+        el.innerText = total.toLocaleString('en-IN');
+      });
 
       // Update dynamic UPI intent links
       const directLink = document.getElementById('upi-direct-link');
@@ -1223,8 +1316,10 @@
           checkOut: checkout,
           nights: stayDetails.nights,
           guests: guests,
+          children: stayDetails.children || 0,
           roomType: roomType,
           pricePerNight: pricePerNight,
+          childPricePerNight: childPricePerNight,
           subtotal: stayDetails.subtotal,
           tax: stayDetails.tax,
           totalAmount: stayDetails.total,

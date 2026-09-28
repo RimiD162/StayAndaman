@@ -528,8 +528,8 @@ app.post("/booking/create", async (req, res) => {
     const {
       listingId, listingName, category, location, listingImage,
       guestName, guestEmail, guestPhone,
-      checkIn, checkOut, nights, guests, roomType,
-      pricePerNight, subtotal, tax, totalAmount, paymentMethod, specialRequests
+      checkIn, checkOut, nights, guests, children, roomType,
+      pricePerNight, childPricePerNight, subtotal, tax, totalAmount, paymentMethod, specialRequests
     } = req.body;
 
     // Server-side validation
@@ -551,7 +551,13 @@ app.post("/booking/create", async (req, res) => {
       return res.status(400).json({ success: false, error: "Check-out date must be after check-in." });
     }
 
-    const calculatedSubtotal = parseFloat(pricePerNight) * (parseInt(nights) || 1) * (parseInt(guests) || 1);
+    const adultCount = parseInt(guests) || 1;
+    const childCount = parseInt(children) || 0;
+    const stayNights = parseInt(nights) || 1;
+    const adultRate = parseFloat(pricePerNight) || 0;
+    const childRate = parseFloat(childPricePerNight) || 0;
+
+    const calculatedSubtotal = (adultRate * adultCount + childRate * childCount) * stayNights;
     const finalSubtotal = parseFloat(subtotal) || calculatedSubtotal;
     const parsedTotal = parseFloat(totalAmount) || finalSubtotal;
     const isOnline = paymentMethod.includes("UPI");
@@ -618,11 +624,13 @@ app.post("/booking/create", async (req, res) => {
       userId: assignedUserId,
       checkIn: new Date(checkIn),
       checkOut: new Date(checkOut),
-      nights: parseInt(nights) || 1,
-      guests: parseInt(guests) || 1,
+      nights: stayNights,
+      guests: adultCount,
+      children: childCount,
       roomType,
-      pricePerNight: parseFloat(pricePerNight),
-      subtotal: parseFloat(subtotal),
+      pricePerNight: adultRate,
+      childPricePerNight: childRate,
+      subtotal: finalSubtotal,
       tax: parseFloat(tax) || 0,
       totalAmount: parsedTotal,
       paymentMethod,

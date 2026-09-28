@@ -633,10 +633,16 @@
                             </datalist>
                         </div>
 
-                        <!-- Price -->
+                        <!-- Price (Adult) -->
                         <div class="form-group">
                             <label class="form-label" for="listing-price">Price per Person / Night (₹) *</label>
                             <input class="form-input" type="number" id="listing-price" name="price" required min="0" placeholder="e.g., 3500">
+                        </div>
+
+                        <!-- Price (Child) -->
+                        <div class="form-group">
+                            <label class="form-label" for="listing-child-price">Price per Child / Night (₹)</label>
+                            <input class="form-input" type="number" id="listing-child-price" name="childPrice" min="0" placeholder="e.g., 1500">
                         </div>
 
                         <!-- Contact (Hidden) -->
@@ -661,32 +667,7 @@
                             <textarea class="form-textarea" id="listing-description" name="description" placeholder="Describe the property..."></textarea>
                         </div>
 
-                        <!-- Amenities -->
-                        <div class="form-group full-width">
-                            <label class="form-label">Amenities</label>
-                            <div class="amenities-grid" id="amenities-grid">
-                                <label class="amenity-chip" data-amenity="WiFi">
-                                    <input type="checkbox" name="amenities" value="WiFi">
-                                    <span class="amenity-chip-icon"></span> WiFi
-                                </label>
-                                <label class="amenity-chip" data-amenity="Parking">
-                                    <input type="checkbox" name="amenities" value="Parking">
-                                    <span class="amenity-chip-icon"></span> Parking
-                                </label>
-                                <label class="amenity-chip" data-amenity="AC">
-                                    <input type="checkbox" name="amenities" value="AC">
-                                    <span class="amenity-chip-icon"></span> AC
-                                </label>
-                                <label class="amenity-chip" data-amenity="Pool">
-                                    <input type="checkbox" name="amenities" value="Pool">
-                                    <span class="amenity-chip-icon"></span> Pool
-                                </label>
-                                <label class="amenity-chip" data-amenity="Breakfast">
-                                    <input type="checkbox" name="amenities" value="Breakfast">
-                                    <span class="amenity-chip-icon"></span> Breakfast
-                                </label>
-                            </div>
-                        </div>
+
 
                         <!-- Multi-Image Upload (4 picture option) -->
                         <div class="form-group full-width">

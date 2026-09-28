@@ -66,6 +66,12 @@ const bookingSchema = new mongoose.Schema({
     min: 1,
     max: 10,
   },
+  children: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 10,
+  },
   roomType: {
     type: String,
     required: true,
@@ -76,6 +82,11 @@ const bookingSchema = new mongoose.Schema({
   pricePerNight: {
     type: Number,
     required: true,
+    min: 0,
+  },
+  childPricePerNight: {
+    type: Number,
+    default: 0,
     min: 0,
   },
   subtotal: {

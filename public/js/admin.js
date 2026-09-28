@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchBookings();
     setupNavigation();
     setupStarRating();
-    setupAmenityChips();
     setupAvailabilityToggle();
     setupMobileMenu();
     setupUserFilters();
@@ -547,31 +546,6 @@ function resetUserFilters() {
     renderUsersTable();
 }
 
-// ===== Amenity Chips =====
-function setupAmenityChips() {
-    document.querySelectorAll('.amenity-chip').forEach(chip => {
-        const checkbox = chip.querySelector('input[type="checkbox"]');
-        chip.addEventListener('click', (e) => {
-            if (e.target.tagName === 'INPUT') return;
-            checkbox.checked = !checkbox.checked;
-            chip.classList.toggle('checked', checkbox.checked);
-        });
-        checkbox.addEventListener('change', () => {
-            chip.classList.toggle('checked', checkbox.checked);
-        });
-    });
-}
-
-function setAmenities(amenities) {
-    document.querySelectorAll('.amenity-chip').forEach(chip => {
-        const checkbox = chip.querySelector('input[type="checkbox"]');
-        const val = chip.dataset.amenity;
-        const isChecked = amenities.includes(val);
-        checkbox.checked = isChecked;
-        chip.classList.toggle('checked', isChecked);
-    });
-}
-
 // ===== Availability Toggle =====
 function setupAvailabilityToggle() {
     const toggle = document.getElementById('listing-available');
@@ -677,6 +651,7 @@ function openForm(category) {
     document.getElementById('listing-form').reset();
     document.getElementById('listing-id').value = '';
     document.getElementById('listing-category').value = category;
+    document.getElementById('listing-child-price').value = '';
     
     for (let slot = 1; slot <= 4; slot++) {
         const preview = document.getElementById(`image-preview-${slot}`);
@@ -687,7 +662,6 @@ function openForm(category) {
     document.getElementById('toggle-label-text').textContent = 'Available';
 
     setStarRating(3);
-    setAmenities([]);
 
     formModal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -711,13 +685,13 @@ function openEditForm(id) {
     document.getElementById('listing-category').value = listing.category || 'Hotel';
     document.getElementById('listing-location').value = listing.location || '';
     document.getElementById('listing-price').value = listing.price != null ? listing.price : '';
+    document.getElementById('listing-child-price').value = listing.childPrice != null ? listing.childPrice : '';
     document.getElementById('listing-description').value = listing.description || '';
     document.getElementById('listing-contact').value = listing.contact || '';
     document.getElementById('listing-available').checked = listing.available !== false;
     document.getElementById('toggle-label-text').textContent = listing.available !== false ? 'Available' : 'Not Available';
 
     setStarRating(listing.rating || 3);
-    setAmenities(listing.amenities || []);
 
     // Load up to 4 images
     currentImageBase64_1 = listing.image || '';
@@ -757,12 +731,8 @@ async function handleFormSubmit(event) {
     submitBtn.classList.add('loading');
     submitBtn.innerHTML = '<span class="loading-spinner"></span> Saving...';
 
-    const amenitiesChecked = [];
-    document.querySelectorAll('.amenity-chip input[type="checkbox"]:checked').forEach(cb => {
-        amenitiesChecked.push(cb.value);
-    });
-
     const priceVal = parseFloat(document.getElementById('listing-price').value);
+    const childPriceVal = parseFloat(document.getElementById('listing-child-price').value);
     const ratingVal = parseInt(document.getElementById('listing-rating').value);
 
     const data = {
@@ -770,10 +740,11 @@ async function handleFormSubmit(event) {
         category: document.getElementById('listing-category').value,
         location: document.getElementById('listing-location').value.trim(),
         price: isNaN(priceVal) ? 0 : priceVal,
+        childPrice: isNaN(childPriceVal) ? 0 : childPriceVal,
         description: document.getElementById('listing-description').value.trim(),
         contact: document.getElementById('listing-contact').value.trim(),
         rating: isNaN(ratingVal) ? 3 : ratingVal,
-        amenities: amenitiesChecked,
+        amenities: [],
         available: document.getElementById('listing-available').checked,
         image: currentImageBase64_1 || '',
         image2: currentImageBase64_2 || '',

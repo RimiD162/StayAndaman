@@ -175,18 +175,10 @@
                             <%= listing.rating || 0 %>/5
                           </span>
                     </div>
-                    <% if (listing.amenities && listing.amenities.length> 0) { %>
-                      <div class="grid-card-amenities">
-                        <% listing.amenities.slice(0, 4).forEach(function(a) { %>
-                          <span class="amenity-tag">
-                            <%= a %>
-                          </span>
-                          <% }); %>
-                      </div>
-                      <% } %>
                         <div class="grid-card-footer">
-                          <div class="grid-card-price">₹<%= listing.price ? listing.price.toLocaleString('en-IN') : '—'
-                              %> <span>/ night</span></div>
+                          <div class="grid-card-price">₹<%= listing.price ? listing.price.toLocaleString('en-IN') : '—' %> <span>/ night</span>
+                            <% if (listing.childPrice) { %><span style="display:block; font-size:11px; font-weight:500; color:var(--text-soft);">Child: ₹<%= listing.childPrice.toLocaleString('en-IN') %>/night</span><% } %>
+                          </div>
                           <div class="grid-card-buttons">
                             <a href="/listing/<%= listing._id || listing.id %>" class="btn-view-details">View Details
                               &rarr;</a>
