@@ -1,19 +1,24 @@
 {
- "version": 2,
- "builds": [
- {
- "src": "index.js",
- "use": "@vercel/node"
- }
- ],
- "routes": [
- {
- "src": "/api/(.*)",
- "dest": "index.js"
- }
- ],
- "env": {
- "DATABASE_URL": "mongodb+srv://duttaRimi:rimi9999@cluster0.xxxxx.mongodb.net/ ",
- "API_KEY": "@api_key"
- }
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "views/**",
+          "public/**",
+          "src/**",
+          "models/**",
+          "middleware/**"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
+    }
+  ]
 }

@@ -1165,6 +1165,10 @@ app.put("/api/admin/profile", requireAdmin, async (req, res) => {
 //  START SERVER
 // =============================================
 
-app.listen(port, () => {
-  console.log(`app is listening on port ${port}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`app is listening on port ${port}`);
+  });
+}
+
+export default app;
