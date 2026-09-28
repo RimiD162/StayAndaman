@@ -1,3 +1,4 @@
+import "dotenv/config";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -15,8 +16,7 @@ let useJsonDb = false;
 
 // Determine if we should use the JSON fallback based on connection URL
 const mongoUrl = process.env.mongodb_url;
-if (!mongoUrl || mongoUrl.includes("xxxxx")) {
-  console.log("MongoDB URL is missing or is a placeholder. Using local JSON database (db.json).");
+if (!mongoUrl || mongoUrl.includes("xxxxx") || mongoUrl.includes("<db_password>") || mongoUrl.includes("<password>")) {
   useJsonDb = true;
 }
 

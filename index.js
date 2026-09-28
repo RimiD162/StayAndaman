@@ -1,7 +1,7 @@
+import "dotenv/config";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
@@ -13,8 +13,6 @@ import Booking from "./models/Booking.js";
 import isUserLoggedIn from "./middleware/isUserLoggedIn.js";
 import isAdminLoggedIn from "./middleware/isAdminLoggedIn.js";
 import QRCode from "qrcode";
-
-dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5050;
@@ -79,30 +77,41 @@ app.locals.getRandomFallback = getRandomFallback;
 app.locals.FALLBACK_IMAGES = FALLBACK_IMAGES;
 
 
-// ===== MongoDB Atlas Connection =====
+// ===== MongoDB Atlas Connection & Session Setup =====
 const mongoUrl = process.env.mongodb_url;
-const isMongoConfigured = Boolean(mongoUrl && !mongoUrl.includes("xxxxx"));
+const isMongoConfigured = Boolean(
+  mongoUrl && 
+  !mongoUrl.includes("xxxxx") && 
+  !mongoUrl.includes("<db_password>") && 
+  !mongoUrl.includes("<password>")
+);
+
+let isMongoConnected = false;
 
 if (isMongoConfigured) {
-  mongoose
-    .connect(mongoUrl, { dbName: "stayandaman", serverSelectionTimeoutMS: 5000 })
-    .then(async () => {
-      console.log("✅ Successfully connected to MongoDB Atlas (Database: stayandaman)");
-      await dbService.syncLocalUsersToMongo();
-    })
-    .catch((err) => {
-      console.error("❌ MongoDB Atlas connection error:", err.message);
-      dbService.setFallbackActive();
+  try {
+    await mongoose.connect(mongoUrl, { 
+      dbName: "stayandaman", 
+      serverSelectionTimeoutMS: 4000 
     });
+    isMongoConnected = true;
+    console.log("✅ Successfully connected to MongoDB Atlas (Database: stayandaman)");
+    await dbService.syncLocalUsersToMongo();
+  } catch (err) {
+    console.error("❌ MongoDB Atlas connection error:", err.message);
+    console.log("ℹ️  dbService switched to local JSON DB fallback.");
+    console.log("👉 Note: To use MongoDB Atlas, whitelist your current IP address (or 0.0.0.0/0) in MongoDB Atlas > Network Access.");
+    dbService.setFallbackActive();
+  }
 } else {
-  console.log("⚠️ MongoDB URL contains placeholder 'xxxxx' or is missing. Please provide your real MongoDB Atlas connection string in .env to store users directly in Atlas.");
+  console.log("⚠️ MongoDB URL contains placeholder '<db_password>' or is missing. Please update your real MongoDB Atlas password in .env to connect to Atlas.");
   dbService.setFallbackActive();
 }
 
-// ===== Session Configuration (MongoDB Atlas Store) =====
+// ===== Session Configuration =====
 const sessionOptions = {
   secret: process.env.SESSION_SECRET || "stayandaman-session-secret-key-2026",
-  resave: true,
+  resave: false,
   saveUninitialized: false,
   cookie: { 
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
@@ -112,14 +121,18 @@ const sessionOptions = {
   },
 };
 
-if (isMongoConfigured) {
-  sessionOptions.store = MongoStore.create({
-    mongoUrl: mongoUrl,
-    dbName: "stayandaman",
-    collectionName: "sessions",
-    ttl: 24 * 60 * 60, // 1 day
-    autoRemove: "native",
-  });
+if (isMongoConnected && mongoose.connection.readyState === 1) {
+  try {
+    sessionOptions.store = MongoStore.create({
+      client: mongoose.connection.getClient(),
+      dbName: "stayandaman",
+      collectionName: "sessions",
+      ttl: 24 * 60 * 60, // 1 day
+      autoRemove: "native",
+    });
+  } catch (storeErr) {
+    console.warn("⚠️ MongoStore initialization failed, falling back to memory session store:", storeErr.message);
+  }
 }
 
 app.use(session(sessionOptions));
