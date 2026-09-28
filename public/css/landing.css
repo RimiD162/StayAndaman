@@ -504,12 +504,83 @@
 }
 
 @media (max-width: 480px) {
+  .landing-nav {
+    padding: var(--space-3);
+  }
+
+  .landing-nav-logo-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .landing-nav-logo {
+    font-size: 18px;
+    gap: var(--space-2);
+  }
+
+  .landing-nav-actions {
+    gap: var(--space-2);
+  }
+
+  .btn-nav-signin,
+  .btn-nav-signup {
+    font-size: 12px;
+    padding: var(--space-2) var(--space-3);
+  }
+
   .landing-logo-text {
-    font-size: 28px;
+    font-size: 24px;
+  }
+
+  .landing-tagline {
+    font-size: 15px;
+    padding: 0 var(--space-2);
+  }
+
+  .landing-container {
+    gap: var(--space-6);
+    padding-top: 80px;
+    padding-bottom: var(--space-6);
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  .portal-card {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .portal-card-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+    margin-bottom: var(--space-3);
   }
 
   .portal-card-title {
-    font-size: 20px;
+    font-size: 18px;
+  }
+
+  .portal-card-desc {
+    font-size: 13px;
+  }
+
+  .portal-card-stats {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+  }
+
+  .portal-stat-val {
+    font-size: 16px;
+  }
+
+  .portal-stat-label {
+    font-size: 10px;
+  }
+
+  .portal-card-btn {
+    font-size: 14px;
+    padding: var(--space-3) var(--space-5);
   }
 
   .landing-trust {
@@ -517,9 +588,8 @@
     gap: var(--space-3);
   }
 
-  .portal-card-stats {
-    flex-wrap: wrap;
-    justify-content: center;
+  .landing-trust-item {
+    font-size: 12px;
   }
 }
 

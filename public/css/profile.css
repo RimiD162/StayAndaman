@@ -319,3 +319,109 @@
     flex-direction: column;
   }
 }
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: var(--space-3);
+    gap: var(--space-4);
+  }
+
+  /* -- Sidebar Phone -- */
+  .profile-sidebar-header {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .profile-avatar-wrap {
+    width: 76px;
+    height: 76px;
+    margin-bottom: var(--space-3);
+  }
+
+  .profile-avatar-placeholder {
+    font-size: 28px;
+  }
+
+  .profile-sidebar-name {
+    font-size: 18px;
+  }
+
+  .profile-sidebar-username {
+    font-size: 13px;
+  }
+
+  .profile-sidebar-info {
+    padding: var(--space-4);
+    gap: var(--space-3);
+  }
+
+  .profile-info-item {
+    font-size: 13px;
+  }
+
+  .profile-sidebar-actions {
+    padding: 0 var(--space-4) var(--space-4);
+  }
+
+  /* -- Content Phone -- */
+  .profile-content-header {
+    padding: var(--space-4);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  .profile-content-title {
+    font-size: 18px;
+  }
+
+  .profile-form {
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+
+  .profile-form-row {
+    gap: var(--space-3);
+  }
+
+  .profile-form-label {
+    font-size: 12px;
+  }
+
+  .profile-form-input {
+    padding: var(--space-3);
+    font-size: 14px;
+  }
+
+  .profile-gender-pill label {
+    padding: var(--space-2) var(--space-2);
+    font-size: 12px;
+  }
+
+  /* -- Avatar Upload Phone -- */
+  .profile-avatar-upload {
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .profile-avatar-upload-preview {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* -- Actions Phone -- */
+  .profile-form-actions {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .profile-form-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .profile-alert-success {
+    padding: var(--space-3);
+    font-size: 13px;
+  }
+}
+

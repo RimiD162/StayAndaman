@@ -660,6 +660,39 @@
   color: rgba(255, 255, 255, 0.3);
 }
 
+/* ===== Mobile Navigation Drawer ===== */
+@keyframes slideDrawerDown {
+  0%   { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.navbar-links.show-mobile {
+  display: flex !important;
+  flex-direction: column;
+  position: absolute;
+  top: 68px;
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(26, 31, 54, 0.12);
+  padding: var(--space-3) var(--space-4);
+  z-index: var(--z-dropdown);
+  animation: slideDrawerDown 0.25s ease-out;
+}
+
+.navbar-links.show-mobile .navbar-link {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+}
+
+.navbar-links.show-mobile .navbar-link:hover,
+.navbar-links.show-mobile .navbar-link.active {
+  background: var(--bg-light);
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 1024px) {
   .categories-grid {
@@ -686,6 +719,23 @@
 
   .navbar-toggle {
     display: flex;
+  }
+
+  /* Hide username on tablet, keep avatar */
+  .navbar-username {
+    display: none;
+  }
+
+  .navbar-chevron {
+    display: none;
+  }
+
+  .navbar-dropdown {
+    position: fixed;
+    top: 68px;
+    left: var(--space-4);
+    right: var(--space-4);
+    width: auto;
   }
 
   .hero {
@@ -739,11 +789,170 @@
 }
 
 @media (max-width: 480px) {
-  .features-grid {
-    grid-template-columns: 1fr;
+  /* -- Navbar Phone -- */
+  .navbar {
+    padding: 0 var(--space-3);
+    height: 60px;
+  }
+
+  .navbar-logo {
+    font-size: 20px;
+  }
+
+  .navbar-links.show-mobile {
+    top: 60px;
+  }
+
+  .navbar-dropdown {
+    top: 60px;
+    left: var(--space-3);
+    right: var(--space-3);
+  }
+
+  /* -- Hero Phone -- */
+  .hero {
+    padding: var(--space-12) var(--space-4) var(--space-10);
+  }
+
+  .hero-greeting {
+    font-size: 13px;
   }
 
   .hero-title {
-    font-size: 28px;
+    font-size: 26px;
+    max-width: 100%;
+  }
+
+  .hero-subtitle {
+    font-size: 14px;
+    margin-bottom: var(--space-6);
+  }
+
+  .hero-search-input {
+    padding: var(--space-4);
+    font-size: 14px;
+  }
+
+  .hero-search-btn {
+    padding: var(--space-3) var(--space-4);
+    font-size: 14px;
+  }
+
+  /* -- Sections Phone -- */
+  .section {
+    padding: var(--space-8) var(--space-3);
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    margin-bottom: var(--space-6);
+  }
+
+  /* -- Category Cards Phone -- */
+  .category-card {
+    height: 180px;
+    padding: var(--space-4);
+  }
+
+  .category-card-name {
+    font-size: 20px;
+  }
+
+  .category-card-btn {
+    opacity: 1;
+    transform: translateY(0);
+    font-size: 12px;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  /* -- Featured Listings Phone -- */
+  .listing-card {
+    flex: 0 0 240px;
+  }
+
+  .listing-card-img {
+    height: 160px;
+  }
+
+  .listing-card-body {
+    padding: var(--space-3);
+  }
+
+  .listing-card-name {
+    font-size: 14px;
+  }
+
+  .listing-card-location {
+    font-size: 12px;
+  }
+
+  .listing-card-price {
+    font-size: 14px;
+  }
+
+  /* -- Features Phone -- */
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .feature-card {
+    padding: var(--space-5) var(--space-4);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: var(--space-4);
+  }
+
+  .feature-icon {
+    margin: 0;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    font-size: 22px;
+  }
+
+  .feature-title {
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .feature-desc {
+    font-size: 12px;
+  }
+
+  /* -- Footer Phone -- */
+  .site-footer {
+    padding: var(--space-10) var(--space-4) var(--space-6);
+  }
+
+  .footer-grid {
+    gap: var(--space-5);
+  }
+
+  .footer-brand-logo {
+    font-size: 20px;
+  }
+
+  .footer-brand-text {
+    font-size: 13px;
+  }
+
+  .footer-heading {
+    font-size: 13px;
+    margin-bottom: var(--space-3);
+  }
+
+  .footer-link {
+    font-size: 13px;
+  }
+
+  .footer-bottom {
+    font-size: 12px;
   }
 }

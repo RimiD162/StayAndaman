@@ -553,6 +553,142 @@
     grid-template-columns: 1fr;
   }
   .booking-field-group {
-    grid-column: span 2;
+    grid-column: span 1;
+  }
+  .booking-field-group.full-width {
+    grid-column: span 1;
   }
 }
+
+@media (max-width: 480px) {
+  /* -- Summary Bar Phone -- */
+  .booking-summary-bar {
+    grid-template-columns: 1fr;
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-2);
+  }
+
+  .summary-details-col {
+    justify-content: flex-start;
+    gap: var(--space-4);
+    text-align: left;
+  }
+
+  /* -- Modal Header Phone -- */
+  .booking-modal-header {
+    padding: var(--space-4) var(--space-4);
+  }
+
+  .booking-modal-title {
+    font-size: 18px;
+  }
+
+  .booking-modal-subtitle {
+    font-size: 12px;
+  }
+
+  .booking-modal-close {
+    top: 16px;
+    right: 16px;
+    font-size: 18px;
+  }
+
+  /* -- Modal Body Phone -- */
+  .booking-modal-body {
+    padding: var(--space-4);
+  }
+
+  .booking-form-section {
+    margin-bottom: var(--space-4);
+  }
+
+  .booking-form-section-title {
+    font-size: 13px;
+    margin-bottom: var(--space-2);
+  }
+
+  .booking-input-field {
+    padding: var(--space-3);
+    font-size: 14px;
+  }
+
+  /* -- Payment Phone -- */
+  .payment-radio-card {
+    padding: var(--space-3);
+    border-radius: 8px;
+  }
+
+  .payment-radio-title {
+    font-size: 13px;
+  }
+
+  .payment-radio-desc {
+    font-size: 10px;
+  }
+
+  /* -- Modal Footer Phone -- */
+  .booking-modal-footer {
+    padding: var(--space-3) var(--space-4) var(--space-4);
+  }
+
+  .modal-footer-btns {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .modal-footer-btns .btn {
+    padding: var(--space-3);
+    font-size: 13px;
+  }
+
+  /* -- Success Screen Phone -- */
+  .booking-success-screen {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .success-icon-wrap {
+    width: 60px;
+    height: 60px;
+  }
+
+  .success-icon-wrap svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .success-title {
+    font-size: 20px;
+  }
+
+  .success-desc {
+    font-size: 13px;
+  }
+
+  .success-details-card {
+    padding: var(--space-3) var(--space-4);
+    border-radius: 10px;
+  }
+
+  .success-detail-row {
+    font-size: 12px;
+  }
+
+  .success-detail-row.bold-total {
+    font-size: 14px;
+  }
+
+  .success-actions {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .success-actions .btn {
+    font-size: 13px;
+    padding: var(--space-3);
+  }
+
+  .security-tagline {
+    font-size: 10px;
+  }
+}
+

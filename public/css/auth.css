@@ -942,19 +942,62 @@ body.admin-auth-theme .gender-pill input:checked + label {
 
 @media (max-width: 480px) {
   .auth-title {
-    font-size: 26px;
+    font-size: 24px;
+  }
+
+  .auth-subtitle {
+    font-size: 13px;
   }
 
   .auth-form-panel {
-    padding: var(--space-5) var(--space-4);
+    padding: var(--space-4) var(--space-3);
   }
 
   .admin-auth-card {
-    padding: var(--space-8) var(--space-5);
+    padding: var(--space-6) var(--space-4);
   }
 
   .gender-pills {
     flex-direction: column;
+  }
+
+  /* -- Center Layout Phone -- */
+  .auth-center-body {
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .auth-center-container {
+    max-width: 100%;
+    gap: var(--space-3);
+  }
+
+  .auth-center-logo {
+    font-size: 26px;
+  }
+
+  .auth-center-card {
+    padding: var(--space-5) var(--space-4);
+    border-radius: var(--radius-lg);
+  }
+
+  /* -- Avatar Upload Phone -- */
+  .avatar-upload-compact {
+    width: 80px;
+    height: 80px;
+  }
+
+  .avatar-upload-compact .avatar-edit-badge {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* -- Form Inputs Phone -- */
+  .form-input {
+    padding: var(--space-3) !important;
+  }
+
+  .form-label {
+    font-size: 12px;
   }
 }
 

@@ -574,3 +574,104 @@
   }
 }
 
+@media (max-width: 480px) {
+  /* -- Header Phone -- */
+  .listing-header {
+    padding: var(--space-10) var(--space-3) var(--space-6);
+  }
+
+  .listing-header-title {
+    font-size: 26px;
+  }
+
+  .listing-header-breadcrumb {
+    font-size: 12px;
+    margin-bottom: var(--space-3);
+  }
+
+  .listing-header-count {
+    font-size: 12px;
+    padding: var(--space-1) var(--space-3);
+  }
+
+  /* -- Content Layout Phone -- */
+  .listing-content {
+    padding: var(--space-4) var(--space-3);
+    gap: var(--space-4);
+  }
+
+  /* -- Filter Sidebar Phone -- */
+  .filter-card {
+    padding: var(--space-4);
+    gap: var(--space-3);
+  }
+
+  .filter-title {
+    font-size: 14px;
+  }
+
+  .filter-label {
+    font-size: 12px;
+  }
+
+  .filter-input {
+    font-size: 13px;
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .filter-star-btn {
+    padding: var(--space-1) var(--space-2);
+    font-size: 12px;
+  }
+
+  /* -- Grid Cards Phone -- */
+  .grid-card-body {
+    padding: var(--space-3);
+  }
+
+  .grid-card-title {
+    font-size: 15px;
+  }
+
+  .grid-card-location {
+    font-size: 12px;
+  }
+
+  .grid-card-price {
+    font-size: 17px;
+  }
+
+  .grid-card-price span {
+    font-size: 11px;
+  }
+
+  .btn-view-details {
+    padding: var(--space-3) var(--space-4);
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  .btn-save {
+    padding: var(--space-3);
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  /* -- Card Image -- */
+  .card-img-wrapper {
+    height: 180px;
+  }
+
+  /* -- Grid Card Badges Phone -- */
+  .grid-card-badge {
+    font-size: 10px !important;
+    padding: 2px 8px !important;
+  }
+
+  .grid-card-avail {
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+  }
+}
+
+

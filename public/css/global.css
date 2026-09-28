@@ -772,3 +772,79 @@ img::after {
   border-color: var(--accent) !important;
   box-shadow: 0 0 0 4px rgba(10, 191, 138, 0.15) !important;
 }
+
+/* ===== Global Mobile Responsive ===== */
+@media (max-width: 768px) {
+  .toast-container {
+    top: auto;
+    bottom: var(--space-4);
+    right: var(--space-3);
+    left: var(--space-3);
+  }
+
+  .toast {
+    min-width: 0;
+    max-width: 100%;
+    font-size: 13px;
+  }
+
+  .page-banner {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 15px;
+  }
+
+  .toast {
+    padding: var(--space-3) var(--space-4);
+    font-size: 13px;
+    border-radius: var(--radius-sm);
+  }
+
+  .btn-lg {
+    padding: var(--space-3) var(--space-6);
+    font-size: 14px;
+  }
+
+  .btn-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .category-card {
+    height: 200px;
+  }
+
+  .dest-card {
+    height: 150px;
+  }
+
+  .page-banner {
+    height: 160px;
+  }
+
+  .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+  }
+
+  /* Ensure touch targets */
+  button, a, input, select, textarea {
+    min-height: 44px;
+  }
+
+  input[type="date"],
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px !important; /* Prevent iOS zoom */
+  }
+}
+
