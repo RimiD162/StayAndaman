@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
   <link rel="icon" type="image/svg+xml" href="/images/logo-favicon.svg">
+  <link rel="apple-touch-icon" href="/images/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Sign in to StayAndaman with your email. Fast, passwordless access to verified hotels, lodges, and luxury rentals across Andaman.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -424,10 +426,19 @@
         max-width: 100%;
       }
       .auth-card {
-        padding: 30px 22px 26px;
+        padding: 30px 20px 26px;
       }
       .card-title {
         font-size: 26px;
+      }
+      .text-input {
+        padding: 13px 14px 13px 44px;
+        font-size: 14px;
+      }
+      .input-icon {
+        left: 14px;
+        width: 18px;
+        height: 18px;
       }
     }
   </style>
@@ -504,7 +515,7 @@
               id="login-email"
               name="email"
               class="text-input"
-              placeholder="e.g. name@example.com"
+              placeholder="name@example.com"
               autocomplete="email"
               required
               value="<%= typeof oldValues !== 'undefined' && oldValues.email ? oldValues.email : '' %>"
